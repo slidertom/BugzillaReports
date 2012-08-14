@@ -24,6 +24,26 @@ function parse_row_to_bug_data($row, &$users, &$products)
 	return $bug;
 }
 
+function bugs_status_to_sql($defines)
+{
+	$first = true;
+	$status_sql;
+	foreach ($defines as $def)
+	{	
+		if ( $first )
+		{
+			$status_sql = "bug_status='".$def."'";
+			$first = false;
+		}
+		else
+		{
+			$status_sql = $status_sql."OR bug_status='".$def."'";
+		}
+	}
+	
+	return $status_sql;	
+}
+
 function bugs_get(&$dbh, &$users, &$products, $sql)
 {
 	$bugs = $dbh->query($sql);
@@ -49,7 +69,9 @@ function get_bug_work_time(&$dbh, $bug_id)
 
 function bugs_get_by_developer(&$dbh, &$users, &$products, $developer_id)
 {
-	$sql = "SELECT * FROM bugs where (bug_status='NEW' OR bug_status='ASSIGNED' OR bug_status='REOPENED') AND assigned_to ='$developer_id'";
+	$defines    = get_bugs_open_defines();
+	$status_sql	= bugs_status_to_sql($defines);
+	$sql = "SELECT * FROM bugs where (".$status_sql.") AND assigned_to ='$developer_id'";
 	return bugs_get($dbh, $users, $products, $sql);
 }
 
@@ -61,7 +83,9 @@ function bugs_get_assigned_by_developer(&$dbh, &$users, &$products, $developer_i
 
 function bugs_get_open_by_product(&$dbh, &$users, &$products, $product_id)
 {
-	$sql = "SELECT * FROM bugs where (bug_status='NEW' OR bug_status='ASSIGNED' OR bug_status='REOPENED') AND product_id ='$product_id' ORDER BY bug_severity";
+	$defines    = get_bugs_open_defines();
+	$status_sql	= bugs_status_to_sql($defines);
+	$sql = "SELECT * FROM bugs where (".$status_sql.") AND product_id ='$product_id' ORDER BY bug_severity";
 	return bugs_get($dbh, $users, $products, $sql);
 }
 
@@ -73,7 +97,9 @@ function bugs_get_assigned_by_product(&$dbh, &$users, &$products, $product_id)
 
 function bugs_get_open_by_milestone(&$dbh, &$users, &$products, $product_id, $mile)
 {
-	$sql = "SELECT * FROM bugs where (bug_status='NEW' OR bug_status='ASSIGNED' OR bug_status='REOPENED') AND product_id ='$product_id' AND target_milestone='$mile' ORDER BY bug_severity";
+	$defines    = get_bugs_open_defines();
+	$status_sql	= bugs_status_to_sql($defines);
+	$sql = "SELECT * FROM bugs where (".$status_sql.") AND product_id ='$product_id' AND target_milestone='$mile' ORDER BY bug_severity";
 	return bugs_get($dbh, $users, $products, $sql);
 }
 
@@ -88,7 +114,10 @@ function get_developer_bugs_count($dbh, $developer_id)
 	$result = 0;
 	try
 	{
-		$sql = "SELECT COUNT(*) FROM bugs where (bug_status='NEW' OR bug_status='ASSIGNED' OR bug_status='REOPENED') AND assigned_to ='$developer_id'";
+		$defines = get_bugs_open_defines();
+		$status_sql	= bugs_status_to_sql($defines);
+		
+		$sql = "SELECT COUNT(*) FROM bugs where (".$status_sql.") AND assigned_to ='$developer_id'";
 		$result = $dbh->query($sql);
 	}
 	catch(PDOException $e)

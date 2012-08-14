@@ -9,25 +9,25 @@ class CGenerateDeveloperPage extends CGeneratePage
 {
 	protected function GenerateHeadData() 
 	{
-		echo "<link rel='stylesheet' type='text/css' href='_Bugzilla/bugzilla.css'          />\n";
-		echo "<link rel='stylesheet' type='text/css' href='_Bugzilla/sort_style.css'        />\n";
-		echo "<link rel='stylesheet' type='text/css' href='jquery/jgplot/jquery.jqplot.css' />\n";
+		echo "<link rel='stylesheet' type='text/css' href='../_Bugzilla/bugzilla.css'          />\n";
+		echo "<link rel='stylesheet' type='text/css' href='../_Bugzilla/sort_style.css'        />\n";
+		echo "<link rel='stylesheet' type='text/css' href='../jquery/jgplot/jquery.jqplot.css' />\n";
 		echo "<style type='text/css'>#bugs_pie_chart .jqplot-data-label { color:rgb(255,255,255); }</style>\n";
 	}
 	
 	protected function GenerateJsData()   
 	{
-		echo "<script type='text/javascript' src='jquery/jquery-latest.js'></script>";
-		echo "<script type='text/javascript' src='jquery/table_hover.js'></script>"; 
-		echo "<script type='text/javascript' src='jquery/jquery.tablesorter.js'></script>"; 
-		echo "<script type='text/javascript' src='jquery/priority_sort.js'></script>"; 
-		echo "<script type='text/javascript' src='jquery/ajaxPost.js'></script>"; 
+		echo "<script type='text/javascript' src='../jquery/jquery-latest.js'></script>";
+		echo "<script type='text/javascript' src='../jquery/table_hover.js'></script>"; 
+		echo "<script type='text/javascript' src='../jquery/jquery.tablesorter.js'></script>"; 
+		echo "<script type='text/javascript' src='../jquery/priority_sort.js'></script>"; 
+		echo "<script type='text/javascript' src='../jquery/ajaxPost.js'></script>"; 
 
-		echo "<script type='text/javascript' src='jquery/jgplot/jquery.jqplot.min.js'></script>";
-		echo "<script type='text/javascript' src='jquery/jgplot/plugins/jqplot.pieRenderer.min.js'></script>";
-		echo "<script type='text/javascript' src='jquery/jgplot/plugins/jqplot.donutRenderer.min.js'></script>";
+		echo "<script type='text/javascript' src='../jquery/jgplot/jquery.jqplot.min.js'></script>";
+		echo "<script type='text/javascript' src='../jquery/jgplot/plugins/jqplot.pieRenderer.min.js'></script>";
+		echo "<script type='text/javascript' src='../jquery/jgplot/plugins/jqplot.donutRenderer.min.js'></script>";
 
-		echo "<script type='text/javascript' src='_Bugzilla/developer_change.js'></script>"; 
+		echo "<script type='text/javascript' src='developer_change.js'></script>"; 
 	}
 	
 	protected function GenerateModule() 

@@ -105,7 +105,9 @@ function bugs_get_open_by_milestone(&$dbh, &$users, &$products, $product_id, $mi
 
 function bugs_get_closed_by_milestone(&$dbh, &$users, &$products, $product_id, $mile)
 {
-	$sql = "SELECT * FROM bugs where (bug_status='VERIFIED' OR bug_status='UNCONFIRMED' OR bug_status='CLOSED' OR bug_status='RESOLVED') AND product_id ='$product_id' AND target_milestone='$mile' ORDER BY bug_severity";
+	$defines = get_bugs_close_defines();
+	$status_sql	= bugs_status_to_sql($defines);
+	$sql = "SELECT * FROM bugs where (".$status_sql.") AND product_id ='$product_id' AND target_milestone='$mile' ORDER BY bug_severity";
 	return bugs_get($dbh, $users, $products, $sql);
 }
 

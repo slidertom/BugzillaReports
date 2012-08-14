@@ -1,0 +1,56 @@
+/*.row0 { background-color: white;   color: black;   }*/
+/*.row1 { background-color: #E0FFFF; color: black; }  */
+/*
+.header  { 
+	background-color: #BBFFFF; 
+	color: black;  
+	text-align: center; 
+	font-weight: bold; 
+}
+*/
+/*.summary { background-color: white; color: black;  text-align: left;   font-weight: bold; }*/
+
+.unestimated { color: red;  font-weight: bold; }
+
+.blocker      { font-weight: bold; color: red; }
+.critical     { color: red;                   }
+.major        { font-weight: bold;            }
+.normal       {background-color: #8dbdd8; }
+.minor        { }
+.trivial      { }
+.enhancement  { color: grey; }
+
+.center       { text-align: center; }
+
+table.summary {
+	font-family:arial;
+	font-size: 10pt;
+	font-weight: bold;
+	background-color: #CDCDCD;
+	margin:10px 0pt 15px;
+	/*width: 100%;*/
+	text-align: left;
+}
+
+table.summary thead tr th, table.summary tfoot tr th {
+	background-color: #e6EEEE;
+	border: 1px solid #FFF;
+	/*font-size: 8pt;*/
+	padding: 4px;
+}
+table.summary thead tr .summary {
+	background-repeat: no-repeat;
+	background-position: center right;
+	cursor: pointer;
+}
+table.summary tbody td {
+	/*color: #3D3D3D;*/
+	padding: 4px;
+	background-color: #FFF;
+	vertical-align: top;
+	font-weight: bold;
+}
+
+.GanttBug {
+	text-decoration:underline;
+}

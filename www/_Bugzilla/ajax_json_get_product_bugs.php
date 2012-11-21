@@ -5,6 +5,11 @@
 	To use this component please contact slidertom@gmail.com to obtain a license.
 */
 
+if ( !ob_start("ob_gzhandler") )
+{
+	echo "Client does not support gzip!";
+}
+
 require_once("../bugzilla_base/connect_to_bugzilla_db.php");
 require_once("bugs_fnc.php");
 require_once("init_product_bugs_dates.php");

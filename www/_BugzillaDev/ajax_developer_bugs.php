@@ -5,6 +5,8 @@
 	To use this component please contact slidertom@gmail.com to obtain a license.
 */
 
+ob_start("ob_gzhandler");
+
 require_once("../_Bugzilla/bugs_fnc.php");
 require_once("../_Bugzilla/bugs_start_end_dates.php");
 require_once("../bugzilla_base/connect_to_bugzilla_db.php");

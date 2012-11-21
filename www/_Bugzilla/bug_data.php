@@ -13,6 +13,7 @@ class CBugData
 	public $m_severity;
 	public $m_priority;
 	public $m_assigned_to;
+	public $m_reporter;
 	public $m_summary;
 	public $m_estimated_time;
 	public $m_remaining_time;
@@ -166,7 +167,6 @@ function bug_echo_row_summary(&$bug)
 	$unest_class    = $unestimated ? "class='unestimated'" : "";
 	$bug_class      = $bug->m_severity;
 
-	$link           = generate_bug_link($bug->m_bug_id);
 	$worked_time    = $bug->m_worked_time;
 	$complete       = $bug->get_complete();
 	$remaining_time = $unestimated ? "X" : $bug->get_bug_remaining_time();
@@ -185,7 +185,7 @@ function bug_echo_row_summary(&$bug)
 	}
 	
 	echo "<tr>\n";
-	/* 1*/echo "\t<td>                      <a href='$link'>         $bug->m_bug_id      </a>   </td>\n";
+	/* 1*/echo "\t<td>".generate_bug_link_href($bug->m_bug_id)."                                </td>\n";
 	/* 2*/echo "\t<td class = '$bug_class'>                          $bug->m_severity           </td>\n";
 	/* 3*/echo "\t<td>                                               $bug->m_priority           </td>\n";
 	/* 4*/echo "\t<td>                      <a href=mailto:'$email'> $name               </a>   </td>\n";

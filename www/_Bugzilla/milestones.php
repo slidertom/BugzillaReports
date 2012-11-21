@@ -39,7 +39,7 @@ function get_milestone_opened_bugs_count($dbh, $product_id, $mile)
 
 function milestones_get_by_product_id($dbh, $product_id)
 {
-	$sql = "SELECT * FROM milestones where product_id=$product_id";
+	$sql = "SELECT * FROM milestones where product_id=$product_id ORDER BY sortkey";
 	//echo "$sql";
 	$qr = $dbh->query($sql);
 	$milestones = array();

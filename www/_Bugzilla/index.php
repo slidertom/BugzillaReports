@@ -56,6 +56,7 @@ class CGenerateBugzillaPage extends CGeneratePage
 		echo "<link rel='stylesheet' type='text/css' href='bugzilla.css' />\n";
 		echo "<link rel='stylesheet' type='text/css' href='sort_style.css' />\n";
 		echo "<link rel='stylesheet' type='text/css' href='gantt/css/style.css' />\n";
+		echo "<link rel='stylesheet' type='text/css' href='../jquery/opentip/opentip.css' />";
 	}
 	
 	protected function GenerateJsData()   
@@ -66,6 +67,12 @@ class CGenerateBugzillaPage extends CGeneratePage
 		echo "<script type='text/javascript' src='../jquery/table_hover.js'></script>\n";
 		echo "<script type='text/javascript' src='../jquery/ajaxPost.js'></script>\n";
 		echo "<script type='text/javascript' src='gantt/js/jquery.fn.gantt.js'></script>\n";
+		// opentip
+		echo "<script type='text/javascript' src='../jquery/prototype.js'></script>";
+		echo "<script type='text/javascript' src='../jquery/opentip/test/scriptaculous-1.9.0/scriptaculous.js'></script>"; 
+		echo "<script type='text/javascript' src='../jquery/opentip/opentip.js'></script>"; 
+		echo "<script type='text/javascript' src='../jquery/opentip/excanvas.js'></script>";
+		// end opentip
 		echo "<script type='text/javascript' src='bugzilla_product.js'></script>\n"; 
 	}
 }

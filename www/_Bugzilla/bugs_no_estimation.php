@@ -7,10 +7,40 @@
 	Allowed extension by Gediminas Luzys.
 */
 
+//require_once("../bugzilla_base/_bugzilla_reports_settings.php");
+//require_once("../bugzilla_base/connect_to_bugzilla_db.php");
+function connect_to_bugzilla_db1()
+{   // connect_to_bugzilla_db does not work from the command line -> global variables fails.
+	try 
+	{
+		$hostanme  = '172.17.0.202';
+		$bugs_name = 'bugs';
+		$username  = 'reporter';
+		$password  = '';
+		
+		$dbh = new PDO("mysql:host=$hostanme;dbname=$bugs_name", $username, $password);
+		
+		// echo a message saying we have connected 
+		$dbh->exec('SET CHARACTER SET utf8');
+
+		return $dbh;
+	}
+	catch(PDOException $e)
+	{
+		echo $e->getMessage();
+	}
+	
+	return NULL;
+}
+function generate_bug_link1($bug_id)
+{
+	return "http://bugzilla.matrixlt.local"."/show_bug.cgi?id=".$bug_id;
+}
+
+
 require_once("bugs_fnc.php");
 require_once("profiles.php");
 require_once("products.php");
-require_once("../bugzilla_base/connect_to_bugzilla_db.php");
 
 function bugs_get_open($dbh, $product_id, $milestone, &$users, &$products)
 {
@@ -31,7 +61,7 @@ function bugs_get_no_estimation($bugs)
 	$bugs_no_est = array();
 	foreach ($bugs as $bug)
 	{
-		if ( $bug->m_estimated_time <= 0 )
+		if ( $bug->get_bug_remaining_time() <= 0 )
 		{
 			$bugs_no_est[] = $bug;
 		}
@@ -44,18 +74,19 @@ function bugs_no_estimation_notify($product_name, $milestone, $supervisors, $wee
 {
 	$fs = "<font color='red'> <b>";
 	$fe = "</b> </font>";
-
-	$hostanme  = get_bugs_db_hostname();
 	
-	echo "Connecting to database [$hostname]\n";
-	$dbh = connect_to_bugzilla_db();
+	$hostname = '172.17.0.202';//get_bugs_db_hostname();	
+	echo "Connecting to database [$hostname].\n";
+	
+	$dbh = connect_to_bugzilla_db1();
 	
 	if ($dbh) 
 	{
-		echo "Connected to database [$hostname]\n";
+		echo "Connected to database [$hostname].\n";
 	}
 	else
 	{
+		echo "Connection to database [$hostname] failed.\n";
 		return;
 	}
 	
@@ -76,6 +107,7 @@ function bugs_no_estimation_notify($product_name, $milestone, $supervisors, $wee
 	}
 
 	$bugs           = bugs_get_open($dbh, $product_id, $milestone, $users, $products);
+	bugs_update_worked_time($dbh, $bugs);
 	$total_bugs_cnt = count($bugs);
 	//echo "\nOPENED BUGS ($total_bugs_cnt):\n";
 	//foreach ($bugs as $bug) print_r($bug);
@@ -144,7 +176,7 @@ function bugs_no_estimation_notify($product_name, $milestone, $supervisors, $wee
 		{
 			$user_prod_milestones[] = $bug->m_target_milestone;
 			
-			$link = generate_bug_link($bug->m_bug_id);
+			$link = generate_bug_link1($bug->m_bug_id);
 		
 			$body .= "	<tr>
 						<td> <a href = '$link'> #{$bug->m_bug_id} </a> </td>

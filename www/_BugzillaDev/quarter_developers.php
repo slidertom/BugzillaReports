@@ -11,7 +11,8 @@ require_once("../bugzilla_base/bugs_sql.php");
 
 function bugs_get_developer_quarter_bugs(&$dbh, &$users, &$products, $developer_id)
 {
-	$quat = CurrentQuarter() - 1;
+	//$quat = CurrentQuarter() - 1;
+	$quat = CurrentQuarter();
 	$quat_beg;
 	$quat_end;
 	bugs_get_quarter_begin_end($quat, $quat_beg, $quat_end);

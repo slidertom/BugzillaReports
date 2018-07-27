@@ -37,14 +37,12 @@ function SelectMilestone(milestone_str)
 
 function Product_ChangeWithMilestone(str, milestone) 
 { 
-	if (str=="")
-	{
+	if (str=="") {
 		document.getElementById("milestoneHint").innerHTML="";
 		return "";
 	} 
 	
-	var values  = "Product="+str+"&Milestone="+milestone;
-	
+	let values  = "Product="+str+"&Milestone="+milestone;
 	ajaxPostSync("milestones.php?"+values, "", function(data) 
 	{
 		document.getElementById("milestoneHint").innerHTML=data;
@@ -125,8 +123,7 @@ function HashGetProduct()
 	var hash = window.location.hash.substring(1);
 	var pos  = hash.indexOf("?");
 	
-	if ( pos == -1 )
-	{
+	if ( pos == -1 ) {
 		return "";
 	}
 	var product   = hash.substring(0, pos);
@@ -218,14 +215,12 @@ function get_bug_title(obj)
 
 function create_gantt_chart(product, milestone)
 {
-	var values  = "Product="+product+"&Milestone="+milestone;
-	
-	//ajaxPost("ajax_json_get_product_bugs.php?"+values, "", function(gantt_data) 
+	let values  = "Product="+product+"&Milestone="+milestone;
 	jsonPost("ajax_json_get_product_bugs.php?"+values, "", function(gantt_data) 
 	{
-		if ( !gantt_data || gantt_data.length <= 0)
-		{
+		if ( !gantt_data || gantt_data.length <= 0) {
 			$("#product_gantt").html("");
+            return;
 		}
 		
 		var proj = $.trim(product);

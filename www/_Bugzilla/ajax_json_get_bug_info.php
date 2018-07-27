@@ -52,5 +52,4 @@ $json_array['severity']    = $bug->m_severity;
 $json_array['complete']    = $bug->get_complete();
 
 echo json_encode($json_array);
-
 ?>

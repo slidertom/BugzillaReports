@@ -4,6 +4,8 @@
 	To use this component please contact slidertom@gmail.com to obtain a license.
 */
 
+jQuery.noConflict();
+
 function Select_Value_Set(SelectName, Value) 
 {
 	var obj = document.getElementById(SelectName);
@@ -37,12 +39,14 @@ function SelectMilestone(milestone_str)
 
 function Product_ChangeWithMilestone(str, milestone) 
 { 
-	if (str=="") {
+	if (str=="")
+	{
 		document.getElementById("milestoneHint").innerHTML="";
 		return "";
 	} 
 	
-	let values  = "Product="+str+"&Milestone="+milestone;
+	var values  = "Product="+str+"&Milestone="+milestone;
+	
 	ajaxPostSync("milestones.php?"+values, "", function(data) 
 	{
 		document.getElementById("milestoneHint").innerHTML=data;
@@ -71,22 +75,22 @@ function Milestone_ChangeWithProduct(str, product)
 	ajaxPostSync("ajax_product_bugs.php?"+values, "", function(data) 
 	{
 		document.getElementById("OpenedHint").innerHTML=data;
-		$(".openTable").tablesorter( { sortList: [[2,0], [1, 0]], widgets: ['zebra']}); 
-		$(".closeTable").tablesorter({ sortList: [[2,0], [1, 0]], widgets: ['zebra']}); 
+		jQuery(".openTable").tablesorter( { sortList: [[2,0], [1, 0]], widgets: ['zebra']}); 
+		jQuery(".closeTable").tablesorter({ sortList: [[2,0], [1, 0]], widgets: ['zebra']}); 
 		
-		if ( !$(".openTable").hasClass("show_milestone") )
+		if ( !jQuery(".openTable").hasClass("show_milestone") )
 		{
-			$(".openTable").find('td:nth-child(9),th:nth-child(9)').hide();  // TargetM
+			jQuery(".openTable").find('td:nth-child(9),th:nth-child(9)').hide();  // TargetM
 		}
-		$(".openTable").find('td:nth-child(8),th:nth-child(8)').hide();  // Product  
-		$(".openTable").find('td:nth-child(10),th:nth-child(10)').hide(); // start date	
-		$(".openTable").find('td:nth-child(11),th:nth-child(11)').hide(); // end date	
+		jQuery(".openTable").find('td:nth-child(8),th:nth-child(8)').hide();  // Product  
+		jQuery(".openTable").find('td:nth-child(10),th:nth-child(10)').hide(); // start date	
+		jQuery(".openTable").find('td:nth-child(11),th:nth-child(11)').hide(); // end date	
 		
-		$(".closeTable").find('td:nth-child(9),th:nth-child(9)').hide(); // TargetM
-		$(".closeTable").find('td:nth-child(8),th:nth-child(8)').hide(); // Product
-		$(".closeTable").find('td:nth-child(6),th:nth-child(6)').hide(); // Left	
-		$(".closeTable").find('td:nth-child(10),th:nth-child(10)').hide(); // start date	
-		$(".closeTable").find('td:nth-child(11),th:nth-child(11)').hide(); // end date	
+		jQuery(".closeTable").find('td:nth-child(9),th:nth-child(9)').hide(); // TargetM
+		jQuery(".closeTable").find('td:nth-child(8),th:nth-child(8)').hide(); // Product
+		jQuery(".closeTable").find('td:nth-child(6),th:nth-child(6)').hide(); // Left	
+		jQuery(".closeTable").find('td:nth-child(10),th:nth-child(10)').hide(); // start date	
+		jQuery(".closeTable").find('td:nth-child(11),th:nth-child(11)').hide(); // end date	
 	});
 	
 	var release_hint = document.getElementById("ReleaseHint");
@@ -95,7 +99,7 @@ function Milestone_ChangeWithProduct(str, product)
 		ajaxPost("ajax_get_product_release_date.php?"+values, "", function(data) 
 		{
 			//alert(data);
-			data = $.trim(data);
+			data = jQuery.trim(data);
 			
 			if ( data.length > 0 )
 			{
@@ -123,7 +127,8 @@ function HashGetProduct()
 	var hash = window.location.hash.substring(1);
 	var pos  = hash.indexOf("?");
 	
-	if ( pos == -1 ) {
+	if ( pos == -1 )
+	{
 		return "";
 	}
 	var product   = hash.substring(0, pos);
@@ -177,29 +182,29 @@ function InitBugs()
 }
 
 var g_product_change_mode = false;
-$("#Milestone").live("change", function() 
+jQuery("#Milestone").live("change", function() 
 {
 	if ( g_product_change_mode )
 	{
 		return;
 	}
 	g_product_change_mode = true;
-	var milestone = $("#Milestone").val();
+	var milestone = jQuery("#Milestone").val();
 	Milestone_Change(milestone);
 	g_product_change_mode = false;
 });
 
-$("#Product").live("change", function() 
+jQuery("#Product").live("change", function() 
 {
 	if ( g_product_change_mode )
 	{
 		return;
 	}
 	g_product_change_mode = true;
-	var product = $("#Product").val();
+	var product = jQuery("#Product").val();
 	var hash = Product_ChangeWithMilestone(product, "");
 	set_hash(hash);
-	var milestone = $("#Milestone").val();
+	var milestone = jQuery("#Milestone").val();
 	Milestone_Change(milestone);
 	g_product_change_mode = false;
 });
@@ -213,60 +218,129 @@ function get_bug_title(obj)
 	return "bug_title";
 }
 
-function create_gantt_chart(product, milestone)
+function open_in_new_tab(url)
 {
-	let values  = "Product="+product+"&Milestone="+milestone;
-	jsonPost("ajax_json_get_product_bugs.php?"+values, "", function(gantt_data) 
-	{
-		if ( !gantt_data || gantt_data.length <= 0) {
-			$("#product_gantt").html("");
-            return;
-		}
-		
-		var proj = $.trim(product);
-		var mil  = $.trim(milestone);
-		proj = proj.replace(/\s+/g, ''); // remove spaces
-		mil  = mil.replace(/\s+/g, '');  // remove spaces
-
-		/*
-		var gantt_id = "Product_"+proj+"_Milestone_"+mil;
-		var gantt_div = "<div id='"+gantt_id+"'></div>";
-		//$(".product_gantt").text(gantt_div);
-		document.getElementById("product_gantt").innerHTML = gantt_div;
-		
-		if ( document.getElementById(gantt_id) )
-		{
-			alert("found");
-		}		
-		gantt_id = "#"+gantt_id;
-		*/
-		//alert("#Product_2_Milestone_6.0Beta");
-		$("#product_gantt").gantt({
-			source:gantt_data,
-			scale: "days",
-			minScale: "days",
-			maxScale: "months",
-			onItemClick: function(data) {
-				window.location.href = data;
-				//alert("Item clicked - show some details");
-			},
-			onAddClick: function(dt, rowId) {
-				//alert("Empty space clicked - add an item!");
-			}
-		});
-/*	
-		$("#product_gantt").popover({
-				selector: ".bar",
-				title: get_bug_title($(this)),
-				content: "And I'm the content of said popover."
-		});	
-	*/	
-		
-
-	});
+  window.open(url, '_blank');
+  window.focus();
 }
 
-$(document).ready(function() 
+function create_gantt_chart(product, milestone)
+{
+	try
+	{
+		var values  = "Product="+product+"&Milestone="+milestone;
+		
+		//ajaxPost("ajax_json_get_product_bugs.php?"+values, "", function(gantt_data) 
+		jsonPost("ajax_json_get_product_bugs.php?"+values, "", function(gantt_data) 
+		{
+			if ( !gantt_data || gantt_data.length <= 0)
+			{
+				jQuery("#product_gantt").html("");
+				return;
+			}
+			
+			jQuery("#product_gantt").gantt(
+			{
+				source:gantt_data,
+				scale: "days",
+				minScale: "days",
+				maxScale: "months",
+				onItemClick: function(data) {
+				    if ( jQuery("#bug_tab").val() == "true" )
+				    {
+						open_in_new_tab(data);
+					}
+					else
+					{
+						window.location.href = data;
+					}
+					//alert("Item clicked - show some details");
+				},
+				onAddClick: function(dt, rowId) {
+					//alert("Empty space clicked - add an item!");
+				}
+			});		
+			//delay(3000);
+			//alert("2");
+			//$("#Product").addTip('Slick', 'Title', { showOn: 'click', style: 'slick', tipJoint: [ 'left', 'middle' ], target: true });
+	
+			//$(".GanttBug").each(function() {	
+				
+				//}
+			//alert("xx");
+		});
+	}
+	catch (e)
+	{
+		alert(e.message);
+	}
+}
+
+function create_bug_tooltip(item_id, bug_id_text, bug_data)
+{
+	try
+	{
+		var title           = bug_id_text+": "      +bug_data.summary;
+		var reporter_div    = "<div>Reporter:       "+bug_data.reporter+"</div>";
+		var remain_time_div = "<div>Remaining time: "+bug_data.remain_time+" h</div>";
+		var priority_div    = "<div>Priority:       "+bug_data.priority+"</div>";
+		var severity_div    = "<div>Severity:       "+bug_data.severity+"</div>";
+		var complete_div    = "<div>Completed:      "+bug_data.complete+"</div>";
+		var worked_div      = "<div>Worked:         "+bug_data.worked_time+" h</div>";
+		
+		var content = priority_div + severity_div + reporter_div + remain_time_div+worked_div+complete_div;
+		// now just create a tooltip
+		$(item_id).addTip(content, title, { target: true, stem: true, tipJoint: [ "left", "middle" ], showOn: "creation", showEffect: 'appear' });
+		// next time please show tooltip on mouseover
+		$(item_id).addTip(content, title, { target: true, stem: true, tipJoint: [ "left", "middle" ], showEffect: 'appear' });
+	}
+	catch (e)
+	{
+		alert(e.message);
+	}
+}
+
+jQuery('.GanttBug').live('mouseover', function() 
+{ 
+	try
+	{
+		var child = jQuery(this).find(".fn-label").first();
+		if ( !child )
+		{
+			return;
+		}
+		
+		//var str_id = parseInt(jQuery(this).attr("id"));
+		var str_id = jQuery(this).attr("id");
+		if ( typeof str_id !== "undefined" )
+		{
+			return;
+		}
+		
+		var bug_id_text = child.text();
+		var values = "bug_id="+bug_id_text;
+		
+		//ajaxPostSync("ajax_json_get_bug_info.php?"+values, "", function(bug_data) 
+		var external_bug_data;
+		jsonPostSync("ajax_json_get_bug_info.php?"+values, "", function(bug_data) 
+		{	
+			external_bug_data = bug_data;
+		});
+		
+		var item_id = "bug_" + bug_id_text;
+		//alert(item_id);
+		jQuery(this).attr("id", item_id);
+	
+		//alert(child.text());
+		create_bug_tooltip(item_id, bug_id_text, external_bug_data);
+	}
+	catch (e)
+	{
+		alert(e.message);
+	}
+});
+
+jQuery(document).ready(function() 
 {
 	g_product_change_mode = true;
 	InitMile();
@@ -274,19 +348,7 @@ $(document).ready(function()
 	g_product_change_mode = false;
 });
 
-$("#product_gantt").live("hover",
-	function () 
-	{
-		alert("ok");
-		//$(this).addClass("hover");
-	},
-	function () 
-	{
-		//$(this).removeClass("hover");
-	}
-);
-
-$(window).bind('hashchange', function() 
+jQuery(window).bind('hashchange', function() 
 {
 	if ( g_product_change_mode )
 	{

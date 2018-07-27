@@ -1,6 +1,6 @@
 function ajaxPostAbs(url, postdata, success, async_val, data_type)
 {
-	return $.ajax({
+	return jQuery.ajax({
 		type: "POST",
 		url: url,
 		data: postdata,
@@ -23,7 +23,7 @@ function jsonPostSync(url, postdata, success)
 
 function ajaxPostSync(url, postdata, success)
 {
-	return $.ajax({
+	return jQuery.ajax({
 		type: "POST",
 		url: url,
 		data: postdata,
@@ -35,7 +35,7 @@ function ajaxPostSync(url, postdata, success)
 
 function ajaxPost(url, postdata, success)
 {
-	return $.ajax({
+	return jQuery.ajax({
 		type: "POST",
 		url: url,
 		data: postdata,

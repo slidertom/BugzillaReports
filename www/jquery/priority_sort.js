@@ -4,7 +4,7 @@ $.tablesorter.addParser({
             // return false so this parser is not auto detected 
             return /^[P?.]/.test(s);
         }, format: function (s) {
-            return $.tablesorter.formatFloat(s.replace(new RegExp(/[P]/g), ""));
+            return jQuery.tablesorter.formatFloat(s.replace(new RegExp(/[P]/g), ""));
         }, type: "numeric"
     });
 	

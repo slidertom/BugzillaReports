@@ -14,6 +14,7 @@ function parse_row_to_bug_data($row, &$users, &$products)
 	$bug->m_severity         = $row['bug_severity'];
 	$bug->m_priority         = $row['priority'];
 	$bug->m_assigned_to      = $users[$row['assigned_to']]; // assigned to
+	$bug->m_reporter         = $users[$row['reporter']]; // reporter
 	$bug->m_summary          = $row['short_desc'];
 	$bug->m_estimated_time   = $row['estimated_time'];
 	$bug->m_remaining_time   = $row['remaining_time'];
@@ -73,6 +74,26 @@ function bugs_get_by_developer(&$dbh, &$users, &$products, $developer_id)
 	$status_sql	= bugs_status_to_sql($defines);
 	$sql = "SELECT * FROM bugs where (".$status_sql.") AND assigned_to ='$developer_id'";
 	return bugs_get($dbh, $users, $products, $sql);
+}
+
+function bug_get_by_bug_id(&$dbh, &$users, &$products, $bug_id)
+{
+	try
+	{
+		$sql = "SELECT * FROM bugs where bug_id ='$bug_id'";
+		//echo "$sql";
+		$bugs = bugs_get($dbh, $users, $products, $sql);
+		foreach ($bugs as $bug ) 
+		{
+			return $bug;
+		}
+	}
+	catch(PDOException $e)
+	{
+		echo $e->getMessage();
+	}
+	
+	return NULL;
 }
 
 function bugs_get_assigned_by_developer(&$dbh, &$users, &$products, $developer_id)

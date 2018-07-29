@@ -25,5 +25,4 @@ if ( $dbh == NULL ) {
 }	
 
 create_developer_filters_combo($dbh, $developer_id, $filter);
-
 ?>

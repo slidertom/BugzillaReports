@@ -5,7 +5,7 @@
 	To use this component please contact slidertom@gmail.com to obtain a license.
 */
 
-function CurrentQuarter(){
+function CurrentQuarter() {
      $n = date('n');
      if($n < 4){
           return "1";

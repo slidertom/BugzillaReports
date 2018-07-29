@@ -5,21 +5,31 @@
 	To use this component please contact slidertom@gmail.com to obtain a license.
 */
 
-require_once("../_Bugzilla/bug_data.php");
-require_once("../_Bugzilla/quarter_operations.php");
-require_once("../bugzilla_base/bugs_sql.php");
+require_once "../_Bugzilla/bug_data.php";
+require_once "../_Bugzilla/quarter_operations.php";
+require_once "../_Bugzilla/month_operations.php";
+require_once "../bugzilla_base/bugs_sql.php";
 
-function bugs_get_developer_quarter_bugs(&$dbh, &$users, &$products, $developer_id)
+function bugs_get_developer_quarter_bugs(&$dbh, &$users, &$products, $developer_id, $quat)
 {
-	//$quat = CurrentQuarter() - 1;
-	$quat = CurrentQuarter();
-	$quat_beg;
+    $quat_beg;
 	$quat_end;
 	bugs_get_quarter_begin_end($quat, $quat_beg, $quat_end);
 
-	$bugs  = get_worked_developer_bugs_by_dates($dbh, $developer_id, $quat_beg, $quat_end, $users, $products);
-	
+	$bugs = get_worked_developer_bugs_by_dates($dbh, $developer_id, $quat_beg, $quat_end, $users, $products);
 	return $bugs;
+}
+
+function prev_bugs_get_developer_quarter_bugs(&$dbh, &$users, &$products, $developer_id)
+{
+	$quat = CurrentQuarter() - 1;
+	return bugs_get_developer_quarter_bugs($dbh, $users, $products, $developer_id, $quat);
+}
+
+function this_bugs_get_developer_quarter_bugs(&$dbh, &$users, &$products, $developer_id)
+{
+	$quat = CurrentQuarter();
+	return bugs_get_developer_quarter_bugs($dbh, $users, $products, $developer_id, $quat);
 }
 
 function get_pie_colors_array()
@@ -30,10 +40,9 @@ function get_pie_colors_array()
 	return $colors;
 }
 
-function quarter_developer_bugs_to_table(&$bugs_array)
+function developer_bugs_to_table_by_product(&$bugs_array)
 {
-	if ( !$bugs_array )
-	{
+	if ( !$bugs_array ) {
 		echo "<h3>There is no bugs fixed.</h3>";
 		return;
 	}
@@ -102,8 +111,7 @@ function quarter_developer_bugs_to_table(&$bugs_array)
 	$json_data = json_encode($pie_data);
 	echo "<div id='bugs_pie_data' style='visibility:hidden'>$json_data</div>";
 	
-	foreach($product_bugs as $product_name => $mile )
-	{
+	foreach($product_bugs as $product_name => $mile ) {
 		echo "<h3> $product_name: </h3>";
 		bugs_echo_table($mile, "", "openTable tablesorter");	
 	}

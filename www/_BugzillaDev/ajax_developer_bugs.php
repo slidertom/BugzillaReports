@@ -7,10 +7,11 @@
 
 ob_start("ob_gzhandler");
 
-require_once("../_Bugzilla/bugs_fnc.php");
-require_once("../_Bugzilla/bugs_start_end_dates.php");
-require_once("../bugzilla_base/connect_to_bugzilla_db.php");
-require_once("quarter_developers.php");
+require_once "../_Bugzilla/bugs_fnc.php";
+require_once "../_Bugzilla/bugs_start_end_dates.php";
+require_once "../bugzilla_base/connect_to_bugzilla_db.php";
+require_once "quarter_developers.php";
+require_once "developer_filters_class.php";
 
 $product_filter;
 function filter_by_product($bug)
@@ -19,42 +20,69 @@ function filter_by_product($bug)
 	return $bug->m_product->m_id == $product_filter;
 }
 
+function bugs_get_developer_month_bugs(&$dbh, &$users, &$products, $developer_id, $month)
+{
+    $month_beg; $month_end;
+    bugs_get_month_begin_end($month, $month_beg, $month_end);
+    $bugs = get_worked_developer_bugs_by_dates($dbh, $developer_id, $month_beg, $month_end, $users, $products);
+    return $bugs;
+}
+
 function bugs_by_developer_echo_table(&$dbh, $developer_id, $filter)
 {
 	$users        = get_user_profiles($dbh); // <userid><login_name>
 	$products     = products_get($dbh);
 	$bugs;
-	if ( $filter == "assigned_bugs" )
-	{
+    
+	if ( $filter == DeveloperFilters::Assigned ) {
 		$bugs = bugs_get_assigned_by_developer($dbh, $users, $products, $developer_id);
 	}
-	else if ( $filter == "quarter_bugs_product" )
-	{
+    else if ( $filter == DeveloperFilters::ThisMonth ) {
+        $month = CurrentMonth();
+        $bugs = bugs_get_developer_month_bugs($dbh, $users, $products, $developer_id, $month);
+        developer_bugs_to_table_by_product($bugs);
+        return;
+    }
+    else if ( $filter == DeveloperFilters::PrevMonth ) {
+        $month = CurrentMonth() - 1;
+        $bugs = bugs_get_developer_month_bugs($dbh, $users, $products, $developer_id, $month);
+        developer_bugs_to_table_by_product($bugs);
+        return;
+    }
+	else if ( $filter == DeveloperFilters::PrevQuaterProd ) {
 		echo "<br>";
-		$bugs = bugs_get_developer_quarter_bugs($dbh, $users, $products, $developer_id);
-		quarter_developer_bugs_to_table($bugs);
+		$bugs = prev_bugs_get_developer_quarter_bugs($dbh, $users, $products, $developer_id);
+		developer_bugs_to_table_by_product($bugs);
 		return;
 	}
-	else if ( $filter == "quarter_bugs" )
-	{
+	else if ( $filter == DeveloperFilters::PrevQuaterMile ) {
 		echo "<br>";
-		$bugs = bugs_get_developer_quarter_bugs($dbh, $users, $products, $developer_id);
+		$bugs = prev_bugs_get_developer_quarter_bugs($dbh, $users, $products, $developer_id);
 		quarter_developer_milestone_bugs_to_table($bugs);
 		return;
 	}
-	else if ( $filter == "open_bugs" )
-	{
+    else if ( $filter == DeveloperFilters::ThisQuaterProd ) {
+		echo "<br>";
+		$bugs = this_bugs_get_developer_quarter_bugs($dbh, $users, $products, $developer_id);
+		developer_bugs_to_table_by_product($bugs);
+		return;
+	}
+	else if ( $filter == DeveloperFilters::ThisQuaterMile ) {
+		echo "<br>";
+		$bugs = this_bugs_get_developer_quarter_bugs($dbh, $users, $products, $developer_id);
+		quarter_developer_milestone_bugs_to_table($bugs);
+		return;
+	}
+	else if ( $filter == DeveloperFilters::Open ) {
 		$bugs = bugs_get_by_developer($dbh, $users, $products, $developer_id);
 	}
-	else if ( strlen($filter) > 0 )
-	{
+	else if ( strlen($filter) > 0 ) {
 		$bugs = bugs_get_by_developer($dbh, $users, $products, $developer_id);
 		global $product_filter;
 		$product_filter = $filter;
 		$bugs = array_filter($bugs, "filter_by_product"); 
 	}
-	else
-	{
+	else {
 		$bugs = bugs_get_by_developer($dbh, $users, $products, $developer_id);
 	}
 	 		
@@ -76,13 +104,12 @@ function bugs_by_developer_echo_table(&$dbh, $developer_id, $filter)
 	bugs_echo_table($bugs, " ", "openTable tablesorter");
 }
 
-if ( !isset($_GET["Developer"]) )
-{
+if ( !isset($_GET['Developer']) ) {
 	return;
 }
 
-$developer_id = $_GET["Developer"];
-$filter       = isset($_GET["Filter"]) ? $_GET["Filter"] : "open_bugs";
+$developer_id = $_GET['Developer'];
+$filter       = isset($_GET['Filter']) ? $_GET['Filter'] : "open_bugs";
 
 $dbh = connect_to_bugzilla_db();
 if ( $dbh == NULL ) {
@@ -90,5 +117,4 @@ if ( $dbh == NULL ) {
 }	
 
 bugs_by_developer_echo_table($dbh, $developer_id, $filter);
-
 ?>

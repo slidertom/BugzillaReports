@@ -39,7 +39,7 @@ class CGenerateDeveloperPage extends CGeneratePage
 	{
 		$dbh = connect_to_bugzilla_db();
 		
-		if ( $dbh == NULL ) {
+		if ($dbh == NULL) {
 			return;
 		}
 	
@@ -71,5 +71,4 @@ class CGenerateDeveloperPage extends CGeneratePage
 
 $gen_page = new CGenerateDeveloperPage();
 $gen_page->Generate();
-
 ?>

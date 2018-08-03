@@ -227,7 +227,6 @@ function bugs_no_estimation_notify($product_name, $milestone, $supervisors, $wee
 					</html>";
 
 		//$mail_to = 'gediminas.luzys@gmail.com'; //DEBUG
-		
 		mail($mail_to, $user_subject, $body, $headers);
 		
 		if (!empty($supervisors))
@@ -243,5 +242,4 @@ function bugs_no_estimation_notify($product_name, $milestone, $supervisors, $wee
 }
 
 //bugs_get_no_estimation_bugs();
-
 ?>

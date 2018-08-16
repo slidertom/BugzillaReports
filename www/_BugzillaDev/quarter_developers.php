@@ -7,7 +7,7 @@
 
 require_once "../_Bugzilla/bug_data.php";
 require_once "../_Bugzilla/quarter_operations.php";
-require_once "../_Bugzilla/month_operations.php";
+require_once "../tools/date_time_util.php";
 require_once "../bugzilla_base/bugs_sql.php";
 
 function bugs_get_developer_quarter_bugs(&$dbh, &$users, &$products, $developer_id, $quat)
@@ -80,7 +80,7 @@ function developer_bugs_to_table_by_product(&$bugs_array)
 			$perc      = percent($work_time, $all_time);
 			
 			$back_color = $colors[$color_index];
-			
+			$work_time  = round($work_time, 3);
 			echo "<tr class = 'summary'>";
 				echo "<td style='color:rgb(255,255,255); background-color:$back_color'>$product_name  </td>";
 				echo "<td>$bug_cnt       </td>";

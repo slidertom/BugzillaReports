@@ -5,8 +5,8 @@
 	To use this component please contact slidertom@gmail.com to obtain a license.
 */
 
-require_once "../_Bugzilla/bugs_fnc.php";
-require_once "developer_filters_class.php";
+require_once '../_Bugzilla/bugs_fnc.php';
+require_once 'developer_filters_class.php';
 
 function get_developer_products($dbh, $developer_id)
 {
@@ -31,13 +31,14 @@ function get_developer_products($dbh, $developer_id)
 	return $dev_products;
 }
 
-function create_filter_option($id, $name, $filter)
+function create_filter_option($filter_id, $filter)
 {
-    if ($filter == $id) {
-        echo "<option selected value='$id'>".$name."</option>";	
+    $name = get_developer_filter_name($filter_id);
+    if ($filter == $filter_id) {
+        echo "<option selected value='$filter_id'>".$name."</option>";	
     }
     else {
-        echo "<option value='$id'>".$name."</option>";	
+        echo "<option value='$filter_id'>".$name."</option>";	
     }
 }
 
@@ -45,29 +46,19 @@ function create_developer_filters_combo($dbh, $sel_dev_id, $filter)
 {
 	$dev_products = get_developer_products($dbh, $sel_dev_id);
 	
-	$open_bugs                 = "&nbsp;- Open Bugs -";
-	$progress_bugs             = "&nbsp;- In Progress Bugs -";
-	$prev_quarter_bugs         = "&nbsp;- Prev. Quarter Bugs by Milestone -";
-    $this_quarter_bugs         = "&nbsp;- This  Quarter Bugs by Milestone -";
-	$prev_quarter_bugs_product = "&nbsp;- Prev. Quarter Bugs by Product   -";
-    $this_quarter_bugs_product = "&nbsp;- This Quarter Bugs by Product    -";
-	
 	echo "<select id='Developer_Filters_Combo'>";
-        create_filter_option(DeveloperFilters::Open,           $open_bugs,                 $filter);
-        create_filter_option(DeveloperFilters::Assigned,       $progress_bugs,             $filter);
-		create_filter_option(DeveloperFilters::PrevQuaterProd, $prev_quarter_bugs_product, $filter);
-        create_filter_option(DeveloperFilters::PrevQuaterMile, $prev_quarter_bugs,         $filter);
-        create_filter_option(DeveloperFilters::ThisQuaterProd, $this_quarter_bugs_product, $filter);
-        create_filter_option(DeveloperFilters::ThisQuaterMile, $this_quarter_bugs,         $filter);
-                
-        $this_month_bugs_product = "&nbsp;- This Month Bugs by Product   -";
-        create_filter_option(DeveloperFilters::ThisMonth, $this_month_bugs_product, $filter);
-        
-        $prev_month_bugs_product = "&nbsp;- Prev. Month Bugs by Product   -";
-        create_filter_option(DeveloperFilters::PrevMonth, $prev_month_bugs_product, $filter);
+        create_filter_option(DeveloperFilters::Open,           $filter);
+        create_filter_option(DeveloperFilters::Assigned,       $filter);
+		create_filter_option(DeveloperFilters::PrevQuaterProd, $filter);
+        create_filter_option(DeveloperFilters::PrevQuaterMile, $filter);
+        create_filter_option(DeveloperFilters::ThisQuaterProd, $filter);
+        create_filter_option(DeveloperFilters::ThisQuaterMile, $filter);
+        create_filter_option(DeveloperFilters::ThisMonth,      $filter);
+        create_filter_option(DeveloperFilters::PrevMonth,      $filter);
+        create_filter_option(DeveloperFilters::ThisYear,       $filter);
+        create_filter_option(DeveloperFilters::PrevYear,       $filter);
 		
-		foreach ($dev_products as $product_id => $product_name ) 
-        {
+		foreach ($dev_products as $product_id => $product_name ) {
 			if ( $filter == $product_id ) {
 				echo "<option selected value='$product_id'>".$product_name."</option>";	
 			}

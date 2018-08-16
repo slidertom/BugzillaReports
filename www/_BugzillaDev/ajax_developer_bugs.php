@@ -5,13 +5,13 @@
 	To use this component please contact slidertom@gmail.com to obtain a license.
 */
 
-ob_start("ob_gzhandler");
+ob_start('ob_gzhandler');
 
-require_once "../_Bugzilla/bugs_fnc.php";
-require_once "../_Bugzilla/bugs_start_end_dates.php";
-require_once "../bugzilla_base/connect_to_bugzilla_db.php";
-require_once "quarter_developers.php";
-require_once "developer_filters_class.php";
+require_once '../_Bugzilla/bugs_fnc.php';
+require_once '../_Bugzilla/bugs_start_end_dates.php';
+require_once '../bugzilla_base/connect_to_bugzilla_db.php';
+require_once 'quarter_developers.php';
+require_once 'developer_filters_class.php';
 
 $product_filter;
 function filter_by_product($bug)
@@ -23,8 +23,16 @@ function filter_by_product($bug)
 function bugs_get_developer_month_bugs(&$dbh, &$users, &$products, $developer_id, $month)
 {
     $month_beg; $month_end;
-    bugs_get_month_begin_end($month, $month_beg, $month_end);
+    get_month_begin_end($month, $month_beg, $month_end);
     $bugs = get_worked_developer_bugs_by_dates($dbh, $developer_id, $month_beg, $month_end, $users, $products);
+    return $bugs;
+}
+
+function bugs_get_developer_year_bugs(&$dbh, &$users, &$products, $developer_id, $year)
+{
+    $year_beg; $year_end;
+    get_year_begin_end($year, $year_beg, $year_end);
+    $bugs = get_worked_developer_bugs_by_dates($dbh, $developer_id, $year_beg, $year_end, $users, $products);
     return $bugs;
 }
 
@@ -37,14 +45,24 @@ function bugs_by_developer_echo_table(&$dbh, $developer_id, $filter)
 	if ( $filter == DeveloperFilters::Assigned ) {
 		$bugs = bugs_get_assigned_by_developer($dbh, $users, $products, $developer_id);
 	}
+    else if ( $filter == DeveloperFilters::ThisYear ) {
+        $year = current_year();
+        $bugs = bugs_get_developer_year_bugs($dbh, $users, $products, $developer_id, $year);
+        developer_bugs_to_table_by_product($bugs);
+    }
+    else if ( $filter == DeveloperFilters::PrevYear ) {
+        $year = current_year() - 1;
+        $bugs = bugs_get_developer_year_bugs($dbh, $users, $products, $developer_id, $year);
+        developer_bugs_to_table_by_product($bugs);
+    }
     else if ( $filter == DeveloperFilters::ThisMonth ) {
-        $month = CurrentMonth();
+        $month = current_month();
         $bugs = bugs_get_developer_month_bugs($dbh, $users, $products, $developer_id, $month);
         developer_bugs_to_table_by_product($bugs);
         return;
     }
     else if ( $filter == DeveloperFilters::PrevMonth ) {
-        $month = CurrentMonth() - 1;
+        $month = current_month() - 1;
         $bugs = bugs_get_developer_month_bugs($dbh, $users, $products, $developer_id, $month);
         developer_bugs_to_table_by_product($bugs);
         return;

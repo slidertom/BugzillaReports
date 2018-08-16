@@ -5,7 +5,7 @@
 	To use this component please contact slidertom@gmail.com to obtain a license.
 */
 
-require_once("_bugzilla_reports_settings.php");
+require_once '_bugzilla_reports_settings.php';
 
 function parse_row_to_bug_data($row, &$users, &$products)
 {

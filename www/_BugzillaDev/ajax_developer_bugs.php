@@ -12,6 +12,7 @@ require_once '../_Bugzilla/bugs_start_end_dates.php';
 require_once '../bugzilla_base/connect_to_bugzilla_db.php';
 require_once 'quarter_developers.php';
 require_once 'developer_filters_class.php';
+require_once 'developer_bugs_year.php';
 
 $product_filter;
 function filter_by_product($bug)
@@ -22,17 +23,10 @@ function filter_by_product($bug)
 
 function bugs_get_developer_month_bugs(&$dbh, &$users, &$products, $developer_id, $month)
 {
+    $year = current_year();
     $month_beg; $month_end;
-    get_month_begin_end($month, $month_beg, $month_end);
+    get_month_begin_end($year, $month, $month_beg, $month_end);
     $bugs = get_worked_developer_bugs_by_dates($dbh, $developer_id, $month_beg, $month_end, $users, $products);
-    return $bugs;
-}
-
-function bugs_get_developer_year_bugs(&$dbh, &$users, &$products, $developer_id, $year)
-{
-    $year_beg; $year_end;
-    get_year_begin_end($year, $year_beg, $year_end);
-    $bugs = get_worked_developer_bugs_by_dates($dbh, $developer_id, $year_beg, $year_end, $users, $products);
     return $bugs;
 }
 
@@ -47,13 +41,13 @@ function bugs_by_developer_echo_table(&$dbh, $developer_id, $filter)
 	}
     else if ( $filter == DeveloperFilters::ThisYear ) {
         $year = current_year();
-        $bugs = bugs_get_developer_year_bugs($dbh, $users, $products, $developer_id, $year);
-        developer_bugs_to_table_by_product($bugs);
+        developer_bugs_year_by_product($dbh, $users, $products, $developer_id, $year);
+        return;
     }
     else if ( $filter == DeveloperFilters::PrevYear ) {
         $year = current_year() - 1;
-        $bugs = bugs_get_developer_year_bugs($dbh, $users, $products, $developer_id, $year);
-        developer_bugs_to_table_by_product($bugs);
+        developer_bugs_year_by_product($dbh, $users, $products, $developer_id, $year);
+        return;
     }
     else if ( $filter == DeveloperFilters::ThisMonth ) {
         $month = current_month();

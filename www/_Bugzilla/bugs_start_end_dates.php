@@ -5,8 +5,8 @@
 	To use this component please contact slidertom@gmail.com to obtain a license.
 */
 
-require_once("bug_data.php");
-require_once("add_work_hours.php");
+require_once 'bug_data.php';
+require_once 'add_work_hours.php';
 
 function compare_priority($a, $b)
 {
@@ -26,7 +26,7 @@ function bugs_init_start_end_dates(&$bugs)
 	
 	$already_worked_this_day = 0;
 	
-	foreach ( $priority as $prior_bugs )
+	foreach ($priority as $prior_bugs)
 	{	
 		//echo "|$prio_key|";
 		$work_hours = get_bugs_work_time($prior_bugs);
@@ -60,9 +60,9 @@ function bugs_init_pseudo_start_end_dates(&$bugs)
 	bugs_explode_by_priority($priority, $bugs);
 	uksort($priority, "compare_priority");
 	
-	foreach ( $priority as $prior_bugs )
+	foreach ($priority as $prior_bugs)
 	{	
-		foreach ( $prior_bugs as $bug )
+		foreach ($prior_bugs as $bug)
 		{
 			$bug_work_hours = $bug->get_bug_remaining_time();
 			

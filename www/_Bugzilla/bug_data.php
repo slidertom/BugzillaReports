@@ -5,7 +5,7 @@
 	To use this component please contact slidertom@gmail.com to obtain a license.
 */
 
-require_once("../bugzilla_base/_bugzilla_reports_settings.php");
+require_once '../bugzilla_base/_bugzilla_reports_settings.php';
 
 class CBugData
 {
@@ -76,13 +76,6 @@ function get_bugs_work_time($bugs)
 	}
 	
 	return $left_time;
-}
-
-function hours_to_days($hours)
-{
-	$all_days = $hours / 8;
-	$all_days = number_format($all_days, 2);
-	return $all_days;
 }
 
 function bugs_explode_by_product(&$product_bugs, &$bugs)

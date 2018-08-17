@@ -5,11 +5,12 @@
 	To use this component please contact slidertom@gmail.com to obtain a license.
 */
 
-require_once("profiles.php");
-require_once("products.php");
-require_once("bug_data.php");
-require_once("quarter_products.php");
-require_once("../bugzilla_base/bugs_sql.php");
+require_once 'profiles.php';
+require_once 'products.php';
+require_once 'bug_data.php';
+require_once 'quarter_products.php';
+require_once '../bugzilla_base/bugs_sql.php';
+require_once '../tools/date_time_util.php';
 
 function bugs_update_worked_time(&$dbh, &$bugs_array)
 {

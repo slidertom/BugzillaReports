@@ -11,6 +11,7 @@ current tasks.
 BugzillaReports/www/bugzilla_base/_bugzilla_reports_settings.php - global variables must be defined.
  
 ### Run
+Windows system: do launch launch.cmd
 
 ### Screenshots
 

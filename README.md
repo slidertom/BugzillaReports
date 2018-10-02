@@ -8,7 +8,7 @@ current tasks.
  
 ### Setup
 
-BugzillaReports/www/bugzilla_base/_bugzilla_reports_settings.php - global variables must be defined.
+/www/bugzilla_base/_bugzilla_reports_settings.php - global variables must be defined.
  ```php
 $g_hostname          = 'localhost';     // bugzilla mysql hostname 
 $g_bugs_db_name      = 'bugs';          // bugzilla mysql database name

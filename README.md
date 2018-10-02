@@ -12,6 +12,7 @@ BugzillaReports/www/bugzilla_base/_bugzilla_reports_settings.php - global variab
  
 ### Run
 Windows system: do launch launch.cmd
+Linux system copy www folder into the Apache server www folder. (Apache php module must be installed)
 
 ### Screenshots
 

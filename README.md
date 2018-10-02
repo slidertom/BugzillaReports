@@ -1,5 +1,6 @@
 # BugzillaReports
-BugzillaReport is an extension for the Bugzilla.
+BugzillaReports is an extension for the [Bugzilla](https://www.bugzilla.org/).
+
 BugzillaReports includes advanced time tracking facilities, great for determining what tasks and projects you have been spending time on, helping to hone estimates, and complete time sheets. BugzillaReports provides full info 
 about project current status, possible release date, developers current tasks.
  

@@ -10,9 +10,9 @@ current tasks.
 
 BugzillaReports/www/bugzilla_base/_bugzilla_reports_settings.php - global variables must be defined.
  
-Run
+### Run
 
-Screenshots
+### Screenshots
 
 ![Alt text](/screenshots/bug_reports.jpg?raw=true "Optional Title")
 ![Alt text](/screenshots/product_report.jpg?raw=true "Optional Title")

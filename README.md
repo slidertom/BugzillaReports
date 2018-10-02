@@ -9,7 +9,14 @@ current tasks.
 ### Setup
 
 BugzillaReports/www/bugzilla_base/_bugzilla_reports_settings.php - global variables must be defined.
- 
+ ```php
+$g_hostname          = 'localhost';     // bugzilla mysql hostname 
+$g_bugs_db_name      = 'bugs';          // bugzilla mysql database name
+$g_username          = 'reporter';      // bugzilla mysql username 
+$g_password          = 'password';      // bugzilla mysql user password
+$g_bugzilla_link     = "http://localhost/bugzilla";  // bugzilla http link, used to generate <a href> bug links, 
+                                                    // do check out generate_bug_link function   
+``` 
 ### Run
 Windows system: do launch launch.cmd and open http://127.0.0.1:89 in the browser.
 

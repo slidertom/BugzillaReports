@@ -81,13 +81,10 @@ function get_bugs_work_time($bugs)
 function bugs_explode_by_product(&$product_bugs, &$bugs)
 {
 	$product_bugs = array();
-	foreach ($bugs as $bug )
-	{
-		if ( !isset($product_bugs[$bug->m_product->m_name]) )
-		{
+	foreach ($bugs as $bug ) {
+		if ( !isset($product_bugs[$bug->m_product->m_name]) ) {
 			$product_bugs[$bug->m_product->m_name] = array();
 		}
-		
 		$product_bugs[$bug->m_product->m_name][] = $bug;
 	}
 }
@@ -123,13 +120,10 @@ function bugs_explode_by_product_id(&$product_bugs, &$bugs)
 function bugs_explode_by_product_developer_id(&$developer_bugs, &$bugs)
 {
 	$developer_bugs = array();
-	foreach ($bugs as $bug )
-	{
-		if ( !isset($developer_bugs[$bug->m_assigned_to->m_id]) )
-		{
+	foreach ($bugs as $bug ) {
+		if ( !isset($developer_bugs[$bug->m_assigned_to->m_id]) ) {
 			$developer_bugs[$bug->m_assigned_to->m_id] = array();
 		}
-		
 		$developer_bugs[$bug->m_assigned_to->m_id][$bug->m_bug_id] = $bug;
 	}
 }

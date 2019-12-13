@@ -155,18 +155,6 @@ function history_update()
 	history.pushState({id: 'dev_page'}, '', page + '?' + new_url_params);
 }
 
-/*
-function history_change()
-{
-	window.addEventListener('popstate', function (event) {
-		let type;
-		if (history.state && history.state.id === 'dev_page') {		
-		
-		}
-	}, false);
-}
-*/
-
 function format_additional_ajax_params()
 {
 	let add_param = "";
@@ -251,7 +239,7 @@ $(document).ready(function()
 			}
 		}
 		return false;
-	}
+	};
 
 	const urlParams = new URLSearchParams(window.location.search);
 	
@@ -269,4 +257,29 @@ $(document).ready(function()
 	
 	bind_select_change('Developer_Filters_Combo');
 	bind_select_change('developer');
+	
+	let bind_history_change = function()
+	{
+		window.addEventListener('popstate', function (event) {
+			if (history.state && history.state.id === 'dev_page') {		
+				const urlParams = new URLSearchParams(window.location.search);
+				const developer = urlParams.get('developer');
+				const filter    = urlParams.get('filter');
+				const year     = urlParams.get('year');
+				const month    = urlParams.get('month');
+				let add_param = "";
+				if ( year ) {
+					add_param += "year="+year; 
+				}
+				if ( month && year ) {
+					add_param += "&";
+				}
+				if ( month ) {
+					add_param += "month="+month;
+				}
+				LoadDeveloperBugs(developer, filter, add_param);
+			}
+		}, false);
+	};
+	bind_history_change();
 });

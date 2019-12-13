@@ -1,6 +1,6 @@
 <?php
 require_once 'developer_bugs_by_product_summary_table.php';
-require_once 'quarter_developers.php';
+require_once 'developer_milestone_table.php';
 require_once '../func/bugs_operations.php';
 require_once '../tools/date_time_util.php';
 require_once '../tools/date_time_select.php';
@@ -155,6 +155,7 @@ function developer_bugs_year_by_product($dbh, $users, $products, $developer_id, 
 	}
     echo "<br>";
 	
+	echo "<b>Year: </b>";
 	create_years_select_impl($year);
 	
     bugs_explode_by_product($product_bugs, $bugs);

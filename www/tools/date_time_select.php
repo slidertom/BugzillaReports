@@ -26,7 +26,7 @@ function create_years_select($id, $years, $year_to_select)
 
 function create_years_select_impl($year_to_select)
 {
-	create_years_select("years_select", get_years(), $year_to_select);
+	create_years_select("year_select", get_years(), $year_to_select);
 }
 
 function create_month_select_impl($month_to_select)

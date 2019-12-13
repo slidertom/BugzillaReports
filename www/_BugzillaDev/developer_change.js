@@ -151,6 +151,9 @@ function LoadDeveloperBugs(developer, filter, add_param=null)
                 draw_developer_pie_chart();
             }
         }
+		
+		bind_year_select_change();  // currently it's additional item every time is regenerated
+		bind_month_select_change(); // currently it's additional item every time is regenerated
     });
 }
 
@@ -166,31 +169,42 @@ function LoadFiltersCombo(developer, filter)
 
 function HashGetDeveloperFilter()
 {
+	const urlParams = new URLSearchParams(window.location.search);
+	let filter = urlParams.get('filter');
+	if ( filter.length > 0 ) {
+		return filter;
+	}
+	
     let hash = window.location.hash.substring(1);
     let pos = hash.indexOf("?");
     if ( pos == -1 ) {
         return "";
     }
-    let filter = hash.substring(pos);
+    filter = hash.substring(pos);
     filter     = filter.substring(1); // drop ?
     return filter;
 }
 
 function HashGetDeveloper()
 {
+	const urlParams = new URLSearchParams(window.location.search);
+	let developer = urlParams.get('developer');
+	if ( developer.length > 0 ) {
+		return developer;
+	}
+
     let hash = window.location.hash.substring(1);
     let pos  = hash.indexOf("?");
     if ( pos == -1 ) {
         return hash;
     }
-    let developer  = hash.substring(0, pos);
+    developer = hash.substring(0, pos);
     return developer;
 }
 
 function Developer_Change(developer) 
 { 
-    var open_hint = document.getElementById("OpenedHint");
-    
+    let open_hint = document.getElementById("OpenedHint");
     if (developer=="")
     {
         window.location.hash = "";
@@ -261,19 +275,6 @@ $('#Developer').change(function()
     g_developer_change_mode = false;
 });
 
-$("#Developer_Filters_Combo").live("change", function() 
-{
-    if ( g_developer_change_mode ) {
-        return;
-    }
-    
-    g_developer_change_mode = true;
-    let developer = $('#Developer').val();
-    let filter = $("#Developer_Filters_Combo").val();
-    set_developer_hash(developer, filter);
-    LoadDeveloperBugs(developer, filter);
-    g_developer_change_mode = false;
-});
 /*
 function history_update()
 {
@@ -305,6 +306,41 @@ function history_change()
 	}, false);
 }
 */
+
+function format_additional_ajax_params()
+{
+	let add_param = "";
+	let added = false;
+	let year_select = document.getElementById("year_select");
+	if ( year_select ) {
+		let year = year_select.value
+		add_param  = "year=";
+        add_param += year;
+		added = true;
+	}
+
+	let month_select = document.getElementById("month_select");
+	if ( month_select ) {
+		if ( added ) {
+			add_param += "&";
+		}
+		let month = month_select.value
+		add_param += "month=";
+        add_param += month;
+	}
+	return add_param;
+}
+	
+function refresh_developer_bugs()
+{
+	let add_param  = format_additional_ajax_params();            
+    let developer = $('#Developer').val();
+    let filter = $("#Developer_Filters_Combo").val();
+	LoadDeveloperBugs(developer, filter, add_param);
+	
+	//history_update();
+}
+
 function bind_year_select_change()
 {
     let year_select = document.getElementById("year_select");
@@ -314,15 +350,39 @@ function bind_year_select_change()
     
     year_select.addEventListener('change', (event) => {
         //alert(event.target.value);
-		let year = event.target.value
-        let add_param  = "year=";
-            add_param += year;
-        let developer = $('#Developer').val();
-        let filter = $("#Developer_Filters_Combo").val();
-        LoadDeveloperBugs(developer, filter, add_param);
-        bind_year_select_change(); // ?? hash change?
-		//history_update();
+		refresh_developer_bugs();
     });
+}
+
+function bind_month_select_change()
+{
+    let month_select = document.getElementById("month_select");
+    if ( !month_select ) {
+        return;
+    }
+    
+    month_select.addEventListener('change', (event) => {
+        refresh_developer_bugs();
+    });
+}
+
+function bind_filter_change()
+{
+	if ( g_developer_change_mode ) {
+        return;
+    }
+	
+	let filter_select = document.getElementById("Developer_Filters_Combo");
+    if ( !filter_select ) {
+        return;
+    }
+	
+	g_developer_change_mode = true;
+    let developer = $('#Developer').val();
+    let filter   = $("#Developer_Filters_Combo").val();
+    set_developer_hash(developer, filter);
+    LoadDeveloperBugs(developer, filter);
+    g_developer_change_mode = false;
 }
 
 $(document).ready(function() 
@@ -330,7 +390,7 @@ $(document).ready(function()
     g_developer_change_mode = true;
     InitDeveloper();
     InitBugs(); 
-    bind_year_select_change();
+	bind_filter_change();
     g_developer_change_mode = false;
 });
 
@@ -343,6 +403,5 @@ $(window).bind('hashchange', function()
     g_developer_change_mode = true;
     InitDeveloper();
     InitBugs(); 
-    bind_year_select_change();
     g_developer_change_mode = false;
 });

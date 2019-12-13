@@ -1,7 +1,9 @@
 <?php
 require_once 'developer_bugs_by_product_summary_table.php';
 require_once 'quarter_developers.php';
+require_once '../func/bugs_operations.php';
 require_once '../tools/date_time_util.php';
+require_once '../tools/date_time_select.php';
 
 function bugs_get_developer_year_bugs(&$dbh, &$users, &$products, $developer_id, $year)
 {
@@ -37,6 +39,20 @@ function developer_bugs_by_period_summary_table($bugs_by_month, $period_name)
     }
     $all_days = hours_to_days($all_time);
      
+	$bugs_my_month_by_mile = array();
+	foreach ($bugs_by_month as $month => $bugs) {
+        $bugs_my_month_by_mile[$month] = bugs_split_by_milestone($bugs);
+    }
+	/*
+	$mile_keys = array();
+	foreach ($bugs_my_month_by_mile as $month => $by_mile) {
+		foreach ($by_mile as $mile => $mile_bugs) {
+			if ( !isset($mile_keys[$mile]) ) {
+				$mile_keys[] = $mile;
+			}
+		}
+	}
+	*/
     echo "<table class = 'summary'>\n";
         echo "<thead>\n";
 		echo "<tr class='header'>\n";
@@ -44,10 +60,10 @@ function developer_bugs_by_period_summary_table($bugs_by_month, $period_name)
 		/*2*/echo "\t<th width= 50> Bugs              </th>\n";
 		/*3*/echo "\t<th width= 45> Worked&nbsp;(h)   </th>\n";
 		/*4*/echo "\t<th width= 45> Worked&nbsp;(days)</th>\n";
-		/*5*/echo "\t<th width= 45> &nbsp;%           </th>\n";
+		/*5*/echo "\t<th width= 45> &nbsp; %          </th>\n";
 		echo "</tr>";
 		echo "</thead>\n";
-        
+        //m_target_milestone
         echo "<tbody>\n";
 		foreach ($bugs_by_month as $month => $bugs)    
         {
@@ -58,6 +74,7 @@ function developer_bugs_by_period_summary_table($bugs_by_month, $period_name)
            
             $back_color = $colors[$color_index];
 			$work_time  = round($work_time, 3);
+			
             echo "<tr class = 'summary'>";
 				echo "<td style='color:rgb(255,255,255); background-color:$back_color'>$month</td>";
 				echo "<td>$bug_cnt       </td>";
@@ -132,14 +149,14 @@ function developer_bugs_by_assignee_summary_table(&$bugs, &$users)
 function developer_bugs_year_by_product($dbh, $users, $products, $developer_id, $year)
 {
     $bugs = bugs_get_developer_year_bugs($dbh, $users, $products, $developer_id, $year);
-    
     if ( !$bugs ) {
-		echo "<h3>There is no bugs fixed.</h3>";
+		echo "<h3>There are no bugs fixed.</h3>";
 		return;
 	}
-    
-	echo "<h3>$year</h3>";
-    
+    echo "<br>";
+	
+	create_years_select_impl($year);
+	
     bugs_explode_by_product($product_bugs, $bugs);
 	ksort($product_bugs);
     

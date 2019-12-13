@@ -10,24 +10,17 @@ ob_start('ob_gzhandler');
 require_once '../_Bugzilla/bugs_fnc.php';
 require_once '../_Bugzilla/bugs_start_end_dates.php';
 require_once '../bugzilla_base/connect_to_bugzilla_db.php';
-require_once 'quarter_developers.php';
+require_once '../func/bugs_operations.php';
+require_once 'developer_milestone_table.php';
 require_once 'developer_filters_class.php';
 require_once 'developer_bugs_year.php';
+require_once 'developer_bugs_by_month_mile.php';
 
 $product_filter;
 function filter_by_product($bug)
 {
 	global $product_filter;
 	return $bug->m_product->m_id == $product_filter;
-}
-
-function bugs_get_developer_month_bugs(&$dbh, &$users, &$products, $developer_id, $month)
-{
-    $year = current_year();
-    $month_beg; $month_end;
-    get_month_begin_end($year, $month, $month_beg, $month_end);
-    $bugs = get_worked_developer_bugs_by_dates($dbh, $developer_id, $month_beg, $month_end, $users, $products);
-    return $bugs;
 }
 
 function bugs_by_developer_echo_table(&$dbh, $developer_id, $filter)
@@ -40,27 +33,35 @@ function bugs_by_developer_echo_table(&$dbh, $developer_id, $filter)
 		$bugs = bugs_get_assigned_by_developer($dbh, $users, $products, $developer_id);
 	}
     else if ( $filter == DeveloperFilters::ThisYear ) {
-        $year = current_year();
+        $year = isset($_GET['year']) ? $_GET['year'] : current_year();
         developer_bugs_year_by_product($dbh, $users, $products, $developer_id, $year);
         return;
     }
     else if ( $filter == DeveloperFilters::PrevYear ) {
-        $year = current_year() - 1;
+        $year = isset($_GET['year']) ? $_GET['year'] : current_year() - 1;
         developer_bugs_year_by_product($dbh, $users, $products, $developer_id, $year);
         return;
     }
     else if ( $filter == DeveloperFilters::ThisMonth ) {
+		$year  = isset($_GET['year'])  ? $_GET['year']  : current_year();
         $month = current_month();
-        $bugs = bugs_get_developer_month_bugs($dbh, $users, $products, $developer_id, $month);
+        $bugs = bugs_get_developer_month_bugs($dbh, $users, $products, $developer_id, $year, $month);
         developer_bugs_to_table_by_product($bugs);
         return;
     }
     else if ( $filter == DeveloperFilters::PrevMonth ) {
+		$year  = isset($_GET['year'])  ? $_GET['year']  : current_year();
         $month = current_month() - 1;
-        $bugs = bugs_get_developer_month_bugs($dbh, $users, $products, $developer_id, $month);
+        $bugs = bugs_get_developer_month_bugs($dbh, $users, $products, $developer_id, $year, $month);
         developer_bugs_to_table_by_product($bugs);
         return;
     }
+	else if ( $filter == DeveloperFilters::MonthMile ) {
+		$year  = isset($_GET['year'])  ? $_GET['year']  : current_year();
+		$month = isset($_GET['month']) ? $_GET['month'] : current_month();
+		developer_bugs_by_moth_by_mile($dbh, $users, $products, $developer_id, $year, $month);
+		return;
+	}
 	else if ( $filter == DeveloperFilters::PrevQuaterProd ) {
 		echo "<br>";
 		$bugs = prev_bugs_get_developer_quarter_bugs($dbh, $users, $products, $developer_id);
@@ -70,7 +71,7 @@ function bugs_by_developer_echo_table(&$dbh, $developer_id, $filter)
 	else if ( $filter == DeveloperFilters::PrevQuaterMile ) {
 		echo "<br>";
 		$bugs = prev_bugs_get_developer_quarter_bugs($dbh, $users, $products, $developer_id);
-		quarter_developer_milestone_bugs_to_table($bugs);
+		developer_milestone_bugs_to_table($bugs);
 		return;
 	}
     else if ( $filter == DeveloperFilters::ThisQuaterProd ) {
@@ -82,7 +83,7 @@ function bugs_by_developer_echo_table(&$dbh, $developer_id, $filter)
 	else if ( $filter == DeveloperFilters::ThisQuaterMile ) {
 		echo "<br>";
 		$bugs = this_bugs_get_developer_quarter_bugs($dbh, $users, $products, $developer_id);
-		quarter_developer_milestone_bugs_to_table($bugs);
+		developer_milestone_bugs_to_table($bugs);
 		return;
 	}
 	else if ( $filter == DeveloperFilters::Open ) {

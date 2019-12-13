@@ -47,7 +47,7 @@ function developer_bugs_by_products_tables(&$product_bugs)
 function developer_bugs_to_table_by_product(&$bugs_array)
 {
 	if ( !$bugs_array ) {
-		echo "<h3>There is no bugs fixed.</h3>";
+		echo "<h3>There are no bugs fixed.</h3>";
 		return;
 	}
 	
@@ -59,11 +59,10 @@ function developer_bugs_to_table_by_product(&$bugs_array)
 	developer_bugs_by_products_tables($product_bugs);
 }
 
-function quarter_developer_milestone_bugs_to_table(&$bugs_array)
+function developer_milestone_bugs_to_table(&$bugs_array)
 {
-	if ( !$bugs_array )
-	{
-		echo "<h3>There is no bugs fixed.</h3>";
+	if ( !$bugs_array ) {
+		echo "<h3>There are no bugs fixed.</h3>";
 		return;
 	}
 	

@@ -350,8 +350,7 @@ jQuery(document).ready(function()
 
 jQuery(window).bind('hashchange', function() 
 {
-	if ( g_product_change_mode )
-	{
+	if ( g_product_change_mode ) {
 		return;
 	}
 	

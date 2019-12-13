@@ -8,13 +8,10 @@
 function bugs_get_quater_split_by_mile(&$mile_bugs, &$bugs)
 {
 	$mile_bugs = array();
-	foreach ($bugs as $bug)
-	{
-		if ( !isset($mile_bugs[$bug->m_target_milestone]) )
-		{
+	foreach ($bugs as $bug) {
+		if ( !isset($mile_bugs[$bug->m_target_milestone]) ) {
 			$mile_bugs[$bug->m_target_milestone] = array();
 		}
-		
 		$mile_bugs[$bug->m_target_milestone][] = $bug;
 	}
 }

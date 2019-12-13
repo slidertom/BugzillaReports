@@ -4,35 +4,6 @@
     To use this component please contact slidertom@gmail.com to obtain a license.
 */
 
-function Select_Value_Set(SelectName, Value) 
-{
-    var obj = document.getElementById(SelectName);
-    
-    for(index = 0;  index < obj.length; index++) 
-    {
-        if( obj[index].value == Value)
-        {
-            obj.selectedIndex = index;
-            return true;
-        }
-    }
-    return false;
-}
-
-function SelectDeveloper(developer_id) 
-{
-    //alert(developer_id);
-    if ( developer_id != -1 )
-    {   
-        Select_Value_Set("Developer", developer_id);
-    }
-}
-
-function set_developer_hash(developer, filter)
-{
-    window.location.hash = developer+"?"+filter;
-}
-
 function json_key_string_to_array(values)
 {
     var objs = jQuery.parseJSON(values);
@@ -157,125 +128,6 @@ function LoadDeveloperBugs(developer, filter, add_param=null)
     });
 }
 
-function LoadFiltersCombo(developer, filter)
-{
-    var values = "Developer="+developer+"&Filter="+filter;
-    ajaxPostSync("ajax_developer_filters.php?"+values, "", function(data) 
-    {
-        var open_hint = document.getElementById("openedDevFilters");
-        open_hint.innerHTML=data;   
-    });
-}
-
-function HashGetDeveloperFilter()
-{
-	const urlParams = new URLSearchParams(window.location.search);
-	let filter = urlParams.get('filter');
-	if ( filter.length > 0 ) {
-		return filter;
-	}
-	
-    let hash = window.location.hash.substring(1);
-    let pos = hash.indexOf("?");
-    if ( pos == -1 ) {
-        return "";
-    }
-    filter = hash.substring(pos);
-    filter     = filter.substring(1); // drop ?
-    return filter;
-}
-
-function HashGetDeveloper()
-{
-	const urlParams = new URLSearchParams(window.location.search);
-	let developer = urlParams.get('developer');
-	if ( developer.length > 0 ) {
-		return developer;
-	}
-
-    let hash = window.location.hash.substring(1);
-    let pos  = hash.indexOf("?");
-    if ( pos == -1 ) {
-        return hash;
-    }
-    developer = hash.substring(0, pos);
-    return developer;
-}
-
-function Developer_Change(developer) 
-{ 
-    let open_hint = document.getElementById("OpenedHint");
-    if (developer=="")
-    {
-        window.location.hash = "";
-        open_hint.innerHTML="";
-        return;
-    } 
-    
-    // every developer can have different filters
-    // but there are some same filters, so we try the filter in any case
-    var filter = HashGetDeveloperFilter();
-    LoadFiltersCombo(developer, filter);
-    filter = $("#Developer_Filters_Combo").val(); // if filter load failed, take the default
-    set_developer_hash(developer, filter);
-    LoadDeveloperBugs(developer, filter);
-} 
-
-function InitDeveloper()
-{
-    try
-    {
-        let developer = HashGetDeveloper();
-        if ( developer == "" )
-        {
-            var obj    = document.getElementById("Developer");
-            var value  = obj.value;
-            if ( value != "" )
-            {
-                Developer_Change(value);
-            }
-            
-            return;
-        }
-        
-        SelectDeveloper(developer);
-        var filter = HashGetDeveloperFilter();
-        LoadFiltersCombo(developer, filter);
-    }
-    catch (e)
-    {
-        alert(e.message);
-    }
-}
-
-function InitBugs()
-{
-    var developer = HashGetDeveloper();
-    if ( developer == "" ) {
-        return;
-    }
-    
-    let filter = HashGetDeveloperFilter();
-    LoadDeveloperBugs(developer, filter);
-}
-
-var g_developer_change_mode = false;
-
-$('#Developer').change(function() 
-{
-    if ( g_developer_change_mode )
-    {
-        return;
-    }
-    
-    var developer = $('#Developer').val();
-    //alert(developer);
-    g_developer_change_mode = true;
-    Developer_Change(developer);
-    g_developer_change_mode = false;
-});
-
-/*
 function history_update()
 {
 	let urlParams = new URLSearchParams(window.location.search);
@@ -288,6 +140,13 @@ function history_update()
 		let year = year_select.value
 		urlParams.set('year', year);
 	}
+	
+	let month_select = document.getElementById("month_select");
+	if ( month_select ) {
+		let month = month_select.value
+		urlParams.set('month', month);
+	}
+	
 	urlParams.set('developer', developer);
 	urlParams.set('filter',    filter);
 	
@@ -296,6 +155,7 @@ function history_update()
 	history.pushState({id: 'dev_page'}, '', page + '?' + new_url_params);
 }
 
+/*
 function history_change()
 {
 	window.addEventListener('popstate', function (event) {
@@ -318,7 +178,16 @@ function format_additional_ajax_params()
         add_param += year;
 		added = true;
 	}
-
+	else { // if no control try to get from url
+		const urlParams = new URLSearchParams(window.location.search);
+		let year = urlParams.get('year');
+		if ( year )  {
+			add_param  = "year=";
+			add_param += year;
+			added = true;
+		}
+	}
+	
 	let month_select = document.getElementById("month_select");
 	if ( month_select ) {
 		if ( added ) {
@@ -328,80 +197,76 @@ function format_additional_ajax_params()
 		add_param += "month=";
         add_param += month;
 	}
+	else { // if no control try to get from url
+		const urlParams = new URLSearchParams(window.location.search);
+		let month = urlParams.get('month');
+		if ( month )  {
+			if ( added ) {
+				add_param += "&";
+			}
+			add_param += "month=";
+			add_param += month;
+		}
+	}
+	
 	return add_param;
 }
 	
 function refresh_developer_bugs()
 {
 	let add_param  = format_additional_ajax_params();            
-    let developer = $('#Developer').val();
-    let filter = $("#Developer_Filters_Combo").val();
+    let developer  = $('#Developer').val();
+    let filter     = $("#Developer_Filters_Combo").val();
 	LoadDeveloperBugs(developer, filter, add_param);
-	
-	//history_update();
+	history_update();
 }
 
-function bind_year_select_change()
+function bind_select_change(select_id)
 {
-    let year_select = document.getElementById("year_select");
-    if ( !year_select ) {
+	let developer_select = document.getElementById(select_id);
+    if ( !developer_select ) {
         return;
     }
-    
-    year_select.addEventListener('change', (event) => {
-        //alert(event.target.value);
-		refresh_developer_bugs();
-    });
-}
-
-function bind_month_select_change()
-{
-    let month_select = document.getElementById("month_select");
-    if ( !month_select ) {
-        return;
-    }
-    
-    month_select.addEventListener('change', (event) => {
+    developer_select.addEventListener('change', (event) => {
         refresh_developer_bugs();
     });
 }
 
-function bind_filter_change()
-{
-	if ( g_developer_change_mode ) {
-        return;
-    }
-	
-	let filter_select = document.getElementById("Developer_Filters_Combo");
-    if ( !filter_select ) {
-        return;
-    }
-	
-	g_developer_change_mode = true;
-    let developer = $('#Developer').val();
-    let filter   = $("#Developer_Filters_Combo").val();
-    set_developer_hash(developer, filter);
-    LoadDeveloperBugs(developer, filter);
-    g_developer_change_mode = false;
+function bind_year_select_change() {
+	bind_select_change("year_select");
+}
+
+function bind_month_select_change() {
+	bind_select_change("month_select");
 }
 
 $(document).ready(function() 
 {
-    g_developer_change_mode = true;
-    InitDeveloper();
-    InitBugs(); 
-	bind_filter_change();
-    g_developer_change_mode = false;
-});
+	let select_set_value = function(SelectName, Value)  {
+		let obj = document.getElementById(SelectName);
+		for (index = 0;  index < obj.length; ++index)  {
+			if( obj[index].value == Value) {
+				obj.selectedIndex = index;
+				return true;
+			}
+		}
+		return false;
+	}
 
-$(window).bind('hashchange', function() 
-{
-    if ( g_developer_change_mode ) {
-        return;
-    }
-    
-    g_developer_change_mode = true;
-    InitDeveloper();
-    InitBugs(); 
-    g_developer_change_mode = false;
+	const urlParams = new URLSearchParams(window.location.search);
+	
+	const developer = urlParams.get('developer');
+	if ( developer ) {
+		select_set_value("Developer", developer);
+	}
+	
+	const filter = urlParams.get('filter');
+	if ( filter ) {
+		select_set_value("Developer_Filters_Combo", filter);
+	}
+	
+    refresh_developer_bugs();
+	
+	bind_select_change('Developer_Filters_Combo');
+	bind_select_change('developer');
 });

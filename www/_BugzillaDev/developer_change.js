@@ -209,14 +209,20 @@ function refresh_developer_bugs()
 	history_update();
 }
 
+var g_internal_change = false;
 function bind_select_change(select_id)
 {
-	let developer_select = document.getElementById(select_id);
-    if ( !developer_select ) {
+	let select_ctrl = document.getElementById(select_id);
+    if ( !select_ctrl ) {
         return;
     }
-    developer_select.addEventListener('change', (event) => {
+    select_ctrl.addEventListener('change', (event) => {
+		if ( g_internal_change ) {
+			return;
+		}
+		g_internal_change = true;
         refresh_developer_bugs();
+		g_internal_change = false;
     });
 }
 
@@ -256,7 +262,7 @@ $(document).ready(function()
     refresh_developer_bugs();
 	
 	bind_select_change('Developer_Filters_Combo');
-	bind_select_change('developer');
+	bind_select_change('Developer');
 	
 	let bind_history_change = function()
 	{

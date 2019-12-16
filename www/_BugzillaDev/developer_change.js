@@ -132,20 +132,10 @@ function history_update()
 {
 	let urlParams = new URLSearchParams(window.location.search);
 	
-	let developer = $('#Developer').val();
-	let filter    = $("#Developer_Filters_Combo").val();
+	let developer = select_get_value('Developer');
+	let filter    = select_get_value("Developer_Filters_Combo");
 	
-	let year_select = document.getElementById("year_select");
-	if ( year_select ) {
-		let year = year_select.value
-		urlParams.set('year', year);
-	}
-	
-	let month_select = document.getElementById("month_select");
-	if ( month_select ) {
-		let month = month_select.value
-		urlParams.set('month', month);
-	}
+	update_history_with_date_time(urlParams);
 	
 	urlParams.set('developer', developer);
 	urlParams.set('filter',    filter);
@@ -164,8 +154,8 @@ function refresh_developer_bugs()
 	
 	g_internal_change = true;
 	let add_param  = format_additional_date_time_ajax_params();            
-    let developer  = $('#Developer').val();
-    let filter     = $("#Developer_Filters_Combo").val();
+    let developer  = select_get_value('Developer');
+    let filter     = select_get_value("Developer_Filters_Combo");
 	LoadDeveloperBugs(developer, filter, add_param);
 	history_update();
 	g_internal_change = false;

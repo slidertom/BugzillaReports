@@ -42,3 +42,18 @@ function format_additional_date_time_ajax_params()
 	
 	return add_param;
 }
+
+function update_history_with_date_time(urlParams)
+{
+	let year_select = document.getElementById("year_select");
+	if ( year_select ) {
+		let year = year_select.value
+		urlParams.set('year', year);
+	}
+	
+	let month_select = document.getElementById("month_select");
+	if ( month_select ) {
+		let month = month_select.value
+		urlParams.set('month', month);
+	}	
+}

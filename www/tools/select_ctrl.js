@@ -20,3 +20,12 @@ function select_set_value(SelectName, Value)
 	}
 	return false;
 }
+
+function select_get_value(select_id)
+{
+	let select_ctrl = document.getElementById("select_id");
+	if (!select_ctrl) {
+		return null;
+	}
+	return select_ctrl;
+}

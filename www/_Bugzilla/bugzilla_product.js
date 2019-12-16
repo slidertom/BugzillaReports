@@ -88,13 +88,7 @@ function Milestone_ChangeWithProduct(str, product)
         });
     }
 } 
- 
-function Milestone_Change(str) 
-{ 
-    var product = document.getElementById("Product").value;
-    Milestone_ChangeWithProduct(str, product);
-} 
- 
+  
 function HashGetProduct()
 {
     var hash = window.location.hash.substring(1);
@@ -299,8 +293,9 @@ function refresh_product_bugs()
         return;
     }
     g_product_change_mode = true;
-    let milestone = select_get_value("milestone");
-    Milestone_Change(milestone);
+	let product   = select_get_value("Product");
+    let milestone = select_get_value("Milestone");
+	Milestone_ChangeWithProduct(milestone, product);
     history_update();
     g_product_change_mode = false;
     

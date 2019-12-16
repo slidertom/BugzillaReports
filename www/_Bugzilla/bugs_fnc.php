@@ -11,6 +11,7 @@ require_once 'bug_data.php';
 require_once 'quarter_products.php';
 require_once '../bugzilla_base/bugs_sql.php';
 require_once '../tools/date_time_util.php';
+require_once '../tools/date_time_select.php';
 
 function bugs_update_worked_time(&$dbh, &$bugs_array)
 {
@@ -170,25 +171,32 @@ function bugs_create_table(&$dbh, $product_id, $milestone)
 	$users    = get_user_profiles($dbh); // <userid><login_name>
 	$products = products_get($dbh);
 	
-	if ( $milestone == "open_bugs" )
-	{
+	if ( $milestone == "open_bugs" ) {
 		$bugs_array = bugs_get_open_by_product($dbh, $users, $products, $product_id);
 		bugs_update_worked_time($dbh, $bugs_array);
 		open_bugs_to_table($bugs_array);
 		return;
 	}
 
-	if ( $milestone == "assigned_bugs" )
-	{
+	if ( $milestone == "assigned_bugs" ) {
 		$bugs_array = bugs_get_assigned_by_product($dbh, $users, $products, $product_id);
 		bugs_update_worked_time($dbh, $bugs_array);
 		open_bugs_to_table($bugs_array);
 		return;
 	}
 	
-	if ($milestone == "quarter" )
-	{
+	if ($milestone == "quarter" ) {
 		$bugs_array = bugs_get_quarter_bugs($dbh, $users, $products, $product_id);
+		quarter_bugs_to_table($bugs_array);
+		return;
+	}
+	
+	if ($milestone == "month" ) {
+		$year  = isset($_GET['year'])  ? $_GET['year']  : current_year();
+		$month = isset($_GET['month']) ? $_GET['month'] : current_month();
+		echo "<br>";
+		create_year_month_select_table($year, $month);
+		$bugs_array = bugs_get_product_month_bugs($dbh, $users, $products, $product_id, $year, $month);
 		quarter_bugs_to_table($bugs_array);
 		return;
 	}

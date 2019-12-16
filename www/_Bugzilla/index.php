@@ -5,20 +5,18 @@
 	To use this component please contact slidertom@gmail.com to obtain a license.
 */
 
-require_once(dirname(__FILE__)."/../common/header.php");
+require_once((__DIR__)."/../common/header.php");
 
-require_once(dirname(__FILE__)."/../bugzilla_base/connect_to_bugzilla_db.php");
-require_once(dirname(__FILE__)."/products.php");
-require_once(dirname(__FILE__)."/milestones.php");
+require_once((__DIR__)."/../bugzilla_base/connect_to_bugzilla_db.php");
+require_once((__DIR__)."/products.php");
+require_once((__DIR__)."/milestones.php");
 
 class CGenerateBugzillaPage extends CGeneratePage
 {
 	protected function GenerateModule() 
 	{
 		$dbh = connect_to_bugzilla_db();
-		
-		if ( $dbh == NULL ) 
-		{
+		if ( $dbh == NULL )  {
 			return;
 		}
 		
@@ -73,6 +71,9 @@ class CGenerateBugzillaPage extends CGeneratePage
 		echo "<script type='text/javascript' src='../jquery/opentip/opentip.js'></script>"; 
 		echo "<script type='text/javascript' src='../jquery/opentip/excanvas.js'></script>";
 		// end opentip
+		echo "<script type='text/javascript' src='../tools/select_ctrl.js'></script>"; 		
+		echo "<script type='text/javascript' src='../tools/date_time_util.js'></script>";
+		
 		echo "<script type='text/javascript' src='bugzilla_product.js'></script>\n"; 
 	}
 }

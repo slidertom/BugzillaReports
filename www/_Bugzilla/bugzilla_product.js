@@ -6,34 +6,17 @@
 
 jQuery.noConflict();
 
-function Select_Value_Set(SelectName, Value) 
-{
-	var obj = document.getElementById(SelectName);
-	
-	for(index = 0;  index < obj.length; index++) 
-	{
-		if( obj[index].value == Value)
-		{
-			obj.selectedIndex = index;
-			return true;
-		}
-	}
-	return false;
-}
-
 function SelectProduct(product_id) 
 {
-	if ( product_id != -1 )
-	{   
-		Select_Value_Set("Product", product_id);
+	if ( product_id != -1 )  {   
+		select_set_value("Product", product_id);
 	}
 }
 
 function SelectMilestone(milestone_str) 
 {
-	if ( milestone_str != -1 )
-	{
-		Select_Value_Set("Milestone", milestone_str);
+	if ( milestone_str != -1 ) {
+		select_set_value("Milestone", milestone_str);
 	}
 }
 
@@ -64,14 +47,18 @@ function Milestone_ChangeWithProduct(str, product)
 { 
 	create_gantt_chart(product, str);
 	
-	if (str=="")
-	{
+	if (str=="") {
 		document.getElementById("OpenedHint").innerHTML="";
 		return;
 	} 
-	set_hash(product+"?"+str);
-	var values  = "Product="+product+"&Milestone="+str;
 	
+	set_hash(product+"?"+str);
+	let values    = "Product="+product+"&Milestone="+str;
+	let add_param = format_additional_date_time_ajax_params();            
+	if ( add_param ) {
+        values += "&";
+        values += add_param;
+    }
 	ajaxPostSync("ajax_product_bugs.php?"+values, "", function(data) 
 	{
 		document.getElementById("OpenedHint").innerHTML=data;
@@ -174,45 +161,18 @@ function InitBugs()
 		milestone = document.getElementById("Milestone").value;
 	}
 	
-	if ( product == "" || milestone == "" )
-	{
+	if ( product == "" || milestone == "" ) {
 		return;
 	}
+	
 	Milestone_ChangeWithProduct(milestone, product);
 }
 
 var g_product_change_mode = false;
-jQuery("#Milestone").live("change", function() 
-{
-	if ( g_product_change_mode )
-	{
-		return;
-	}
-	g_product_change_mode = true;
-	var milestone = jQuery("#Milestone").val();
-	Milestone_Change(milestone);
-	g_product_change_mode = false;
-});
-
-jQuery("#Product").live("change", function() 
-{
-	if ( g_product_change_mode )
-	{
-		return;
-	}
-	g_product_change_mode = true;
-	var product = jQuery("#Product").val();
-	var hash = Product_ChangeWithMilestone(product, "");
-	set_hash(hash);
-	var milestone = jQuery("#Milestone").val();
-	Milestone_Change(milestone);
-	g_product_change_mode = false;
-});
 
 function get_bug_title(obj)
 {	
-	if ( obj )
-	{
+	if ( obj ) {
 		return obj.html();
 	}
 	return "bug_title";
@@ -260,14 +220,6 @@ function create_gantt_chart(product, milestone)
 					//alert("Empty space clicked - add an item!");
 				}
 			});		
-			//delay(3000);
-			//alert("2");
-			//$("#Product").addTip('Slick', 'Title', { showOn: 'click', style: 'slick', tipJoint: [ 'left', 'middle' ], target: true });
-	
-			//$(".GanttBug").each(function() {	
-				
-				//}
-			//alert("xx");
 		});
 	}
 	catch (e)
@@ -312,8 +264,7 @@ jQuery('.GanttBug').live('mouseover', function()
 		
 		//var str_id = parseInt(jQuery(this).attr("id"));
 		var str_id = jQuery(this).attr("id");
-		if ( typeof str_id !== "undefined" )
-		{
+		if ( typeof str_id !== "undefined" ) {
 			return;
 		}
 		
@@ -340,12 +291,62 @@ jQuery('.GanttBug').live('mouseover', function()
 	}
 });
 
+function refresh_product_bugs()
+{
+	if ( g_product_change_mode ) {
+		return;
+	}
+	g_product_change_mode = true;
+	let milestone = jQuery("#Milestone").val();
+	Milestone_Change(milestone);
+	g_product_change_mode = false;
+	
+	bind_year_select_change();
+	bind_month_select_change();
+}
+
+function bind_milestone_change() {
+	bind_select_change('Milestone', refresh_product_bugs);
+}
+
+function bind_year_select_change() {
+	bind_select_change("year_select", refresh_product_bugs);
+}
+
+function bind_month_select_change() {
+	bind_select_change("month_select", refresh_product_bugs);
+}
+
+function refresh_milestones_and_product_bugs()
+{
+	if ( g_product_change_mode ) {
+		return;
+	}
+	
+	g_product_change_mode = true;
+	var product = jQuery("#Product").val();
+	var hash = Product_ChangeWithMilestone(product, "");
+	set_hash(hash);
+	g_product_change_mode = false;
+	
+	refresh_product_bugs();
+	
+	bind_milestone_change();
+	bind_year_select_change();
+	bind_month_select_change();
+}
+
 jQuery(document).ready(function() 
 {
 	g_product_change_mode = true;
 	InitMile();
 	InitBugs();
 	g_product_change_mode = false;
+	
+	bind_select_change('Product',   refresh_milestones_and_product_bugs);
+	bind_milestone_change();
+	bind_year_select_change();
+	bind_month_select_change();
 });
 
 jQuery(window).bind('hashchange', function() 

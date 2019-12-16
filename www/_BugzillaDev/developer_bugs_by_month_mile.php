@@ -12,14 +12,7 @@ function developer_bugs_by_moth_by_mile($dbh, $users, $products, $developer_id, 
 	}
 	
 	echo "<br>";
-	
-	echo "<table><tr>";
-		echo "<td><b>Year: </b></td>";
-		echo "<td>";create_years_select_impl($year);echo "</td>";
-		echo "<td><b>Month: </b></td>";
-		echo "<td>";create_month_select_impl($month);echo "</td>";
-	echo "</tr></table>";
-	
+	create_year_month_select_table($year, $month);
 	developer_milestone_bugs_to_table($bugs);
 }
 

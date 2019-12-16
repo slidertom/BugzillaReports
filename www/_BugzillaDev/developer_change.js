@@ -155,98 +155,32 @@ function history_update()
 	history.pushState({id: 'dev_page'}, '', page + '?' + new_url_params);
 }
 
-function format_additional_ajax_params()
-{
-	let add_param = "";
-	let added = false;
-	let year_select = document.getElementById("year_select");
-	if ( year_select ) {
-		let year = year_select.value
-		add_param  = "year=";
-        add_param += year;
-		added = true;
-	}
-	else { // if no control try to get from url
-		const urlParams = new URLSearchParams(window.location.search);
-		let year = urlParams.get('year');
-		if ( year )  {
-			add_param  = "year=";
-			add_param += year;
-			added = true;
-		}
-	}
-	
-	let month_select = document.getElementById("month_select");
-	if ( month_select ) {
-		if ( added ) {
-			add_param += "&";
-		}
-		let month = month_select.value
-		add_param += "month=";
-        add_param += month;
-	}
-	else { // if no control try to get from url
-		const urlParams = new URLSearchParams(window.location.search);
-		let month = urlParams.get('month');
-		if ( month )  {
-			if ( added ) {
-				add_param += "&";
-			}
-			add_param += "month=";
-			add_param += month;
-		}
-	}
-	
-	return add_param;
-}
-	
+var g_internal_change = false;	
 function refresh_developer_bugs()
 {
-	let add_param  = format_additional_ajax_params();            
+	if ( g_internal_change ) {
+		return;
+	}
+	
+	g_internal_change = true;
+	let add_param  = format_additional_date_time_ajax_params();            
     let developer  = $('#Developer').val();
     let filter     = $("#Developer_Filters_Combo").val();
 	LoadDeveloperBugs(developer, filter, add_param);
 	history_update();
-}
-
-var g_internal_change = false;
-function bind_select_change(select_id)
-{
-	let select_ctrl = document.getElementById(select_id);
-    if ( !select_ctrl ) {
-        return;
-    }
-    select_ctrl.addEventListener('change', (event) => {
-		if ( g_internal_change ) {
-			return;
-		}
-		g_internal_change = true;
-        refresh_developer_bugs();
-		g_internal_change = false;
-    });
+	g_internal_change = false;
 }
 
 function bind_year_select_change() {
-	bind_select_change("year_select");
+	bind_select_change("year_select", refresh_developer_bugs);
 }
 
 function bind_month_select_change() {
-	bind_select_change("month_select");
+	bind_select_change("month_select", refresh_developer_bugs);
 }
 
 $(document).ready(function() 
 {
-	let select_set_value = function(SelectName, Value)  {
-		let obj = document.getElementById(SelectName);
-		for (index = 0;  index < obj.length; ++index)  {
-			if( obj[index].value == Value) {
-				obj.selectedIndex = index;
-				return true;
-			}
-		}
-		return false;
-	};
-
 	const urlParams = new URLSearchParams(window.location.search);
 	
 	const developer = urlParams.get('developer');
@@ -261,8 +195,8 @@ $(document).ready(function()
 	
     refresh_developer_bugs();
 	
-	bind_select_change('Developer_Filters_Combo');
-	bind_select_change('Developer');
+	bind_select_change('Developer_Filters_Combo', refresh_developer_bugs);
+	bind_select_change('Developer', refresh_developer_bugs);
 	
 	let bind_history_change = function()
 	{
@@ -271,8 +205,8 @@ $(document).ready(function()
 				const urlParams = new URLSearchParams(window.location.search);
 				const developer = urlParams.get('developer');
 				const filter    = urlParams.get('filter');
-				const year     = urlParams.get('year');
-				const month    = urlParams.get('month');
+				const year      = urlParams.get('year');
+				const month     = urlParams.get('month');
 				let add_param = "";
 				if ( year ) {
 					add_param += "year="+year; 

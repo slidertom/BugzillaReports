@@ -45,4 +45,14 @@ function create_month_select_impl($month_to_select)
 	echo "</select>";
 }
 
+function create_year_month_select_table($year, $month)
+{
+	echo "<table><tr>";
+		echo "<td><b>Year: </b></td>";
+		echo "<td>";create_years_select_impl($year);echo "</td>";
+		echo "<td><b>Month: </b></td>";
+		echo "<td>";create_month_select_impl($month);echo "</td>";
+	echo "</tr></table>";
+}
+
 ?>

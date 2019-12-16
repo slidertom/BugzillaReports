@@ -5,15 +5,17 @@
 	To use this component please contact slidertom@gmail.com to obtain a license.
 */
 
-require_once("bug_data.php");
-require_once("quarter_operations.php");
+require_once "bug_data.php";
+require_once "quarter_operations.php";
+require_once "../tools/date_time_util.php";
 
 function bugs_get_quarter_bugs(&$dbh, &$users, &$products, $product_id)
 {
-	$quat = CurrentQuarter() - 1;
+	$year = current_year();
+	$quat = current_quater() - 1;
 	$quat_beg;
 	$quat_end;
-	bugs_get_quarter_begin_end($quat, $quat_beg, $quat_end);
+	get_quarter_begin_end($year, $quat, $quat_beg, $quat_end);
 	
 	$sql   = "SELECT bugs.*,longdescs.work_time FROM longdescs,bugs where longdescs.bug_when between'".$quat_beg."'and'".$quat_end."' and longdescs.work_time>0 and bugs.product_id='".$product_id."'and bugs.bug_id = longdescs.bug_id";
 	$times = $dbh->query($sql);

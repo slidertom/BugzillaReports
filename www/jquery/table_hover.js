@@ -1,14 +1,11 @@
 $(function() {
 	   
-jQuery("table.tablesorter tbody tr").live("mouseover mouseout", function (event) 
-{
-	if (event.type == "mouseover") 
-	{ 
+jQuery(document).on("mouseover mouseout", "table.tablesorter tbody tr", function(event)  {
+	if (event.type == "mouseover")  { 
 		jQuery(this).children().addClass("hover");
 	    
 	}
-    else 
-	{ 
+    else  { 
 		jQuery(this).children().removeClass("hover"); 
 	};
 });

@@ -8,16 +8,13 @@ jQuery.noConflict();
 
 function Product_ChangeWithMilestone(str, milestone) 
 { 
-    if (str=="")
-    {
+    if (str=="") {
         document.getElementById("milestoneHint").innerHTML="";
         return "";
     } 
     
     var values  = "Product="+str+"&Milestone="+milestone;
-    
-    ajaxPostSync("milestones.php?"+values, "", function(data) 
-    {
+    ajaxPostSync("milestones.php?"+values, "", function(data) {
         document.getElementById("milestoneHint").innerHTML=data;
     });
     
@@ -165,11 +162,14 @@ function open_in_new_tab(url)
 
 function create_gantt_chart(product, milestone)
 {
+	let gantt_ctrl = document.getElementById('product_gantt');
+	if ( !gantt_ctrl ) {
+		return;
+	}
+	
     try
     {
-        var values  = "Product="+product+"&Milestone="+milestone;
-        
-        //ajaxPost("ajax_json_get_product_bugs.php?"+values, "", function(gantt_data) 
+        let values  = "Product="+product+"&Milestone="+milestone;
         jsonPost("ajax_json_get_product_bugs.php?"+values, "", function(gantt_data) 
         {
             if ( !gantt_data || gantt_data.length <= 0)
@@ -177,20 +177,18 @@ function create_gantt_chart(product, milestone)
                 jQuery("#product_gantt").html("");
                 return;
             }
-            
+			
             jQuery("#product_gantt").gantt(
             {
-                source:gantt_data,
-                scale: "days",
+                source:   gantt_data,
+                scale:    "days",
                 minScale: "days",
                 maxScale: "months",
                 onItemClick: function(data) {
-                    if ( jQuery("#bug_tab").val() == "true" )
-                    {
+                    if ( jQuery("#bug_tab").val() == "true" ) {
                         open_in_new_tab(data);
                     }
-                    else
-                    {
+                    else {
                         window.location.href = data;
                     }
                     //alert("Item clicked - show some details");
@@ -201,9 +199,8 @@ function create_gantt_chart(product, milestone)
             });     
         });
     }
-    catch (e)
-    {
-        alert(e.message);
+    catch (e) {
+        //alert(e.message);
     }
 }
 
@@ -231,7 +228,7 @@ function create_bug_tooltip(item_id, bug_id_text, bug_data)
     }
 }
 
-jQuery('.GanttBug').live('mouseover', function() 
+jQuery('.GanttBug').on('mouseover', function() 
 { 
     try
     {
@@ -264,8 +261,7 @@ jQuery('.GanttBug').live('mouseover', function()
         //alert(child.text());
         create_bug_tooltip(item_id, bug_id_text, external_bug_data);
     }
-    catch (e)
-    {
+    catch (e) {
         alert(e.message);
     }
 });

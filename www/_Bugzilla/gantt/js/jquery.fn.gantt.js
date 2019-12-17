@@ -245,7 +245,7 @@
 
                 $(element).html(element.gantt);
 
-                element.scrollNavigation.panelMargin = parseInt($dataPanel.css("margin-left").replace("px", ""), 10);
+                element.scrollNavigation.panelMargin = parseInt($dataPanel.css("margin-left") ? $dataPanel.css("margin-left").replace("px", "") : 0, 10);
                 element.scrollNavigation.panelMaxPos = ($dataPanel.width() - $rightPanel.width());
 
                 element.scrollNavigation.canScroll = ($dataPanel.width() > $rightPanel.width());

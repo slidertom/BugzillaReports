@@ -169,19 +169,26 @@ function bind_month_select_change() {
 	bind_select_change("month_select", refresh_developer_bugs);
 }
 
+function refresh_developer_bugs_and_filters()
+{
+	let developer = select_get_value('Developer');
+	let filter    = select_get_value("Developer_Filters_Combo");
+	let values = "Developer="+developer+"&Filter="+filter;
+	ajaxPost("ajax_developer_filters.php?"+values, "", function(data) 
+	{
+		let filter_ctrl = document.getElementById("openedDevFilters");
+        filter_ctrl.innerHTML=data;   
+		refresh_developer_bugs();
+		bind_select_change('Developer_Filters_Combo', refresh_developer_bugs);
+	});
+}
+
 $(document).ready(function() 
 {
-	const urlParams = new URLSearchParams(window.location.search);
-	
-	const filter = urlParams.get('filter');
-	if ( filter ) {
-		select_set_value("Developer_Filters_Combo", filter);
-	}
-	
-    refresh_developer_bugs();
+	refresh_developer_bugs();
 	
 	bind_select_change('Developer_Filters_Combo', refresh_developer_bugs);
-	bind_select_change('Developer', refresh_developer_bugs);
+	bind_select_change('Developer', refresh_developer_bugs_and_filters);
 	
 	let bind_history_change = function()
 	{

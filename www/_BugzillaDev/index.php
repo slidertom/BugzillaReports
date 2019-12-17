@@ -54,7 +54,8 @@ class CGenerateDeveloperPage extends CGeneratePage
 				echo "<td><b>Filters: </b></td>";
 				echo "<td>";
 					echo "<span id=openedDevFilters>";
-						create_developer_filters_combo($dbh, $sel_dev_id, "");
+						$filter = isset($_GET['filter']) ? $_GET['filter'] : "";
+						create_developer_filters_combo($dbh, $sel_dev_id, $filter);
 					echo "</span>";
 				echo "</td>";
 			echo "</tr>\n";

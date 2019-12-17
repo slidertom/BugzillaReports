@@ -439,7 +439,7 @@
 
                         range = tools.parseTimeRange(element.dateStart, element.dateEnd, element.scaleStep);
 
-                        var year = range[0].getFullYear();
+                        var year  = range[0].getFullYear();
                         var month = range[0].getMonth();
                         var day = range[0];
 
@@ -671,7 +671,9 @@
                     // **Days (default)**
                     default:
                         range = tools.parseDateRange(element.dateStart, element.dateEnd);
-
+						if ( !range[0] ) {
+							break;
+						}							
                         var year = range[0].getFullYear();
                         var month = range[0].getMonth();
                         var day = range[0];
@@ -1465,8 +1467,10 @@
                         maxDate = new Date(bd.getFullYear(), bd.getMonth(), 1);
                         break;
                     default:
-                        maxDate.setHours(0);
-                        maxDate.setDate(maxDate.getDate() + 3);
+						if ( maxDate ) {
+							maxDate.setHours(0);
+							maxDate.setDate(maxDate.getDate() + 3);
+						}
                         break;
                 }
                 return maxDate;
@@ -1497,8 +1501,10 @@
                         minDate = new Date(bd.getFullYear(), bd.getMonth(), 1);
                         break;
                     default:
-                        minDate.setHours(0);
-                        minDate.setDate(minDate.getDate() - 3);
+						if ( minDate ) {
+							minDate.setHours(0);
+							minDate.setDate(minDate.getDate() - 3);
+						}
                         break;
                 }
                 return minDate;
@@ -1506,6 +1512,10 @@
 
             // Return an array of Date objects between `from` and `to`
             parseDateRange: function (from, to) {
+				if ( !from ) {
+					var ret = [];
+					return ret;
+				}
                 var current = new Date(from.getTime());
                 var end = new Date(to.getTime());
                 var ret = [];

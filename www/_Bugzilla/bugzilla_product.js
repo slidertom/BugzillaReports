@@ -6,14 +6,17 @@
 
 jQuery.noConflict();
 
-function update_milestone_dropdown(milestone) 
+function update_milestone_dropdown() 
 { 
 	let product = select_get_value("Product");
 	if ( !product ) {
 		return;
 	}
 	
-    let values = "Product="+product+"&Milestone="+milestone;
+	const urlParams = new URLSearchParams(window.location.search);
+	let filter = urlParams.get('filter');
+        filter = filter ? filter : "";
+    let values = "Product="+product+"&Milestone="+filter;
     ajaxPostSync("milestones.php?"+values, "", function(data) {
         document.getElementById("milestoneHint").innerHTML=data;
 		bind_milestone_change();
@@ -252,7 +255,7 @@ function refresh_milestones_and_product_bugs()
     }
     
     g_product_change_mode = true;
-    update_milestone_dropdown("");
+    update_milestone_dropdown();
     
     g_product_change_mode = false;
     
@@ -263,13 +266,12 @@ function init_product_bugs_by_url()
 {
 	const urlParams = new URLSearchParams(window.location.search);
 	let product = urlParams.get('product');
-	let filter  = urlParams.get('filter');
 	
     g_product_change_mode = true;
     if ( product ) {
 		select_set_value("Product", product);	
 	}
-	update_milestone_dropdown(filter ? filter : "");
+	update_milestone_dropdown();
     Milestone_ChangeWithProduct();
 	
     g_product_change_mode = false;

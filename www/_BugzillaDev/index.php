@@ -48,7 +48,8 @@ class CGenerateDeveloperPage extends CGeneratePage
 			echo "<tr>\n";
 				echo "<td><b>Developer: </b></td>";
 				echo "<td>"; 
-					$sel_dev_id = developers_create_combo($dbh); 
+					$dev = isset($_GET['developer']) ? $_GET['developer'] : "";
+					$sel_dev_id = developers_create_combo($dbh, $dev); 
 				echo "</td>\n";
 				echo "<td><b>Filters: </b></td>";
 				echo "<td>";

@@ -10,22 +10,25 @@ require_once(dirname(__FILE__)."/../_Bugzilla/profiles.php");
 function cmp_by($d1, $d2, $field)   { return ($d1->$field == $d2->$field) ? 0 : ($d1->$field < $d2->$field) ? -1 : 1; }
 function cmp_by_real_name($d1, $d2) { return cmp_by($d1, $d2, 'm_real_name'); }
 
-function developers_to_combo($developers)
+function developers_to_combo($developers, $dev)
 {	
-	$first_id = -1;
+	$first_id = strlen($dev) > 0 ? $dev : -1;
 	foreach ($developers as $id => $dev )
 	{
 		if ( $dev->m_real_name != "" && $dev->m_disabled_text == "" )
 		{
-			if ( $first_id == -1 )
-			{
+			if ( $first_id == -1 ) {
 				$first_id = $id;
 			}
 			
 			$bug_count = $dev->m_bug_count;
-			if ( $dev->m_bug_count > 0 )
-			{
-				echo "<option value=$id>".$dev->m_real_name."&nbsp;&nbsp;(bugs count: ".$bug_count.")"."</option>";	
+			if ( $dev->m_bug_count > 0 ) {
+				if ( $dev == $id ) {
+					echo "<option value=$id selected>".$dev->m_real_name."&nbsp;&nbsp;(bugs count: ".$bug_count.")"."</option>";	
+				}
+				else {
+					echo "<option value=$id>".$dev->m_real_name."&nbsp;&nbsp;(bugs count: ".$bug_count.")"."</option>";	
+				}
 			}
 		}
 	}
@@ -33,7 +36,7 @@ function developers_to_combo($developers)
 	return $first_id;
 }
 
-function developers_create_combo($dbh)
+function developers_create_combo($dbh, $dev)
 {
 	$developers = get_user_profiles($dbh); // <userid><login_name>
 	
@@ -43,7 +46,7 @@ function developers_create_combo($dbh)
 	uasort($developers, 'cmp_by_real_name');
 	
 	echo "<select name='Developer' id='Developer'>";
-	$sel_id = developers_to_combo($developers);
+	$sel_id = developers_to_combo($developers, $dev);
 	echo"</select>";
 	
 	return $sel_id;

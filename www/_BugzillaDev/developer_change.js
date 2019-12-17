@@ -173,11 +173,6 @@ $(document).ready(function()
 {
 	const urlParams = new URLSearchParams(window.location.search);
 	
-	const developer = urlParams.get('developer');
-	if ( developer ) {
-		select_set_value("Developer", developer);
-	}
-	
 	const filter = urlParams.get('filter');
 	if ( filter ) {
 		select_set_value("Developer_Filters_Combo", filter);

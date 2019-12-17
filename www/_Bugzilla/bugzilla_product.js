@@ -6,38 +6,34 @@
 
 jQuery.noConflict();
 
-function Product_ChangeWithMilestone(str, milestone) 
+function update_milestone_dropdown(milestone) 
 { 
-    if (str=="") {
-        document.getElementById("milestoneHint").innerHTML="";
-        return "";
-    } 
-    
-    var values  = "Product="+str+"&Milestone="+milestone;
+	let product = select_get_value("Product");
+	if ( !product ) {
+		return;
+	}
+	
+    let values = "Product="+product+"&Milestone="+milestone;
     ajaxPostSync("milestones.php?"+values, "", function(data) {
         document.getElementById("milestoneHint").innerHTML=data;
-    });
-    
-    return str+"?"+milestone;
+		bind_milestone_change();
+    });	
 } 
- 
-function set_hash(str)
-{
-    window.location.hash = str;
-}
 
-function Milestone_ChangeWithProduct(str, product) 
+function Milestone_ChangeWithProduct() 
 { 
-    create_gantt_chart(product, str);
+	let product   = select_get_value("Product");
+    let milestone = select_get_value("Milestone");
+	
+    create_gantt_chart(product, milestone);
     
-    if (str=="") {
+    if (!milestone || !product) {
         document.getElementById("OpenedHint").innerHTML="";
         return;
     } 
     
-    set_hash(product+"?"+str);
-    let values    = "Product="+product+"&Milestone="+str;
-    let add_param = format_additional_date_time_ajax_params();            
+    let values    = "Product="+product+"&Milestone="+milestone;
+    let add_param = format_additional_date_time_ajax_params(); // year, month      
     if ( add_param ) {
         values += "&";
         values += add_param;
@@ -71,79 +67,22 @@ function Milestone_ChangeWithProduct(str, product)
             //alert(data);
             data = jQuery.trim(data);
             
-            if ( data.length > 0 )
-            {
+            if ( data.length > 0 ) {
                 var release = "<b>Release date: ";
                 release += data;
                 release += "</b>";
                 release_hint.innerHTML=release;
             }
-            else
-            {
+            else {
                 release_hint.innerHTML="";
             }
         });
     }
+	
+	bind_year_select_change();
+    bind_month_select_change();
 } 
   
-function HashGetProduct()
-{
-    var hash = window.location.hash.substring(1);
-    var pos  = hash.indexOf("?");
-    
-    if ( pos == -1 )
-    {
-        return "";
-    }
-    var product   = hash.substring(0, pos);
-    return product;
-}
-
-function HashGetMilestone()
-{
-    var hash = window.location.hash.substring(1);
-    var pos = hash.indexOf("?");
-    
-    if ( pos == -1 )
-    {
-        return "";
-    }
-    
-    var milestone = hash.substring(pos);
-    milestone     = milestone.substring(1); // drop ?
-    return milestone;
-}
-
-function InitMile()
-{
-    var product   = HashGetProduct();
-    var milestone = HashGetMilestone();
-    if ( product == "" || milestone == "" ) {
-        return;
-    }
-    
-    select_set_value("Product", product);
-    let hash = Product_ChangeWithMilestone(product, milestone);
-    set_hash(hash);
-}
-
-function InitBugs()
-{
-    var product   = HashGetProduct();
-    var milestone = HashGetMilestone();
-    if ( product == "" && milestone == "" )
-    {
-        product   = document.getElementById("Product").value;
-        milestone = document.getElementById("Milestone").value;
-    }
-    
-    if ( product == "" || milestone == "" ) {
-        return;
-    }
-    
-    Milestone_ChangeWithProduct(milestone, product);
-}
-
 var g_product_change_mode = false;
 
 function get_bug_title(obj)
@@ -289,14 +228,9 @@ function refresh_product_bugs()
         return;
     }
     g_product_change_mode = true;
-	let product   = select_get_value("Product");
-    let milestone = select_get_value("Milestone");
-	Milestone_ChangeWithProduct(milestone, product);
+	Milestone_ChangeWithProduct();
     history_update();
     g_product_change_mode = false;
-    
-    bind_year_select_change();
-    bind_month_select_change();
 }
 
 function bind_milestone_change() {
@@ -318,37 +252,44 @@ function refresh_milestones_and_product_bugs()
     }
     
     g_product_change_mode = true;
-    var product = jQuery("#Product").val();
-    var hash = Product_ChangeWithMilestone(product, "");
-    set_hash(hash);
+    update_milestone_dropdown("");
+    
     g_product_change_mode = false;
     
     refresh_product_bugs();
-    
-    bind_milestone_change();
+}
+
+function init_product_bugs_by_url()
+{
+	const urlParams = new URLSearchParams(window.location.search);
+	let product = urlParams.get('product');
+	let filter  = urlParams.get('filter');
+	
+    g_product_change_mode = true;
+    if ( product ) {
+		select_set_value("Product", product);	
+	}
+	update_milestone_dropdown(filter ? filter : "");
+    Milestone_ChangeWithProduct();
+	
+    g_product_change_mode = false;
 }
 
 jQuery(document).ready(function() 
 {
-    g_product_change_mode = true;
-    InitMile();
-    InitBugs();
-    g_product_change_mode = false;
-    
+    init_product_bugs_by_url();
+	
     bind_select_change('Product', refresh_milestones_and_product_bugs);
-    bind_milestone_change();
-    bind_year_select_change();
-    bind_month_select_change();
+  
+	
+	let bind_history_change = function()
+	{
+		window.addEventListener('popstate', function (event) {
+			if (history.state && history.state.id === 'product_page') {		
+				init_product_bugs_by_url();
+			}
+		}, false);
+	};
+	bind_history_change();
 });
 
-jQuery(window).bind('hashchange', function() 
-{
-    if ( g_product_change_mode ) {
-        return;
-    }
-    
-    g_developer_change_mode = true;
-    InitMile();
-    InitBugs();
-    g_developer_change_mode = false;
-});

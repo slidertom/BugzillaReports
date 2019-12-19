@@ -57,7 +57,6 @@ function create_developer_filters_combo($dbh, $sel_dev_id, $filter)
         create_filter_option(DeveloperFilters::PrevMonth,      $filter);
 		create_filter_option(DeveloperFilters::MonthMile,      $filter);
         create_filter_option(DeveloperFilters::ThisYear,       $filter);
-        create_filter_option(DeveloperFilters::PrevYear,       $filter);
 		
 		foreach ($dev_products as $product_id => $product_name ) {
 			if ( $filter == $product_id ) {

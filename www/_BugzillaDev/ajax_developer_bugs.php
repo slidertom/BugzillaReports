@@ -37,11 +37,6 @@ function bugs_by_developer_echo_table(&$dbh, $developer_id, $filter)
         developer_bugs_year_by_product($dbh, $users, $products, $developer_id, $year);
         return;
     }
-    else if ( $filter == DeveloperFilters::PrevYear ) {
-        $year = isset($_GET['year']) ? $_GET['year'] : current_year() - 1;
-        developer_bugs_year_by_product($dbh, $users, $products, $developer_id, $year);
-        return;
-    }
     else if ( $filter == DeveloperFilters::ThisMonth ) {
 		$year  = isset($_GET['year'])  ? $_GET['year']  : current_year();
         $month = current_month();

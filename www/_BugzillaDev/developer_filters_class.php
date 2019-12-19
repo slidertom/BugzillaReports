@@ -15,7 +15,6 @@ abstract class DeveloperFilters
     const PrevMonth      = "prev_month_bugs";
     const ThisMonth      = "this_month_bugs";
 	const MonthMile      = "month_mile_bugs";
-    const PrevYear       = "prev_year";
     const ThisYear       = "this_year";
 }
 
@@ -50,11 +49,8 @@ function get_developer_filter_name($filter)
 	case DeveloperFilters::MonthMile:
 		return "&nbsp;- Month Bugs by Milestone   -";
         break;  
-    case DeveloperFilters::PrevYear:
-        return "&nbsp;- Prev. Year Bugs by Product   -";
-        break;  
     case DeveloperFilters::ThisYear:
-        return "&nbsp;- This Years Bugs by Product   -";
+        return "&nbsp;- Year Bugs by Product   -";
         break;  
     }
     

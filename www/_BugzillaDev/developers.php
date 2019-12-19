@@ -10,7 +10,7 @@ require_once(dirname(__FILE__)."/../_Bugzilla/profiles.php");
 function cmp_by($d1, $d2, $field)   { return ($d1->$field == $d2->$field) ? 0 : ($d1->$field < $d2->$field) ? -1 : 1; }
 function cmp_by_real_name($d1, $d2) { return cmp_by($d1, $d2, 'm_real_name'); }
 
-function developers_to_combo($developers, $dev)
+function developers_to_combo($developers, $dev_to_select)
 {	
 	$first_id = strlen($dev) > 0 ? $dev : -1;
 	foreach ($developers as $id => $dev )
@@ -23,7 +23,7 @@ function developers_to_combo($developers, $dev)
 			
 			$bug_count = $dev->m_bug_count;
 			if ( $dev->m_bug_count > 0 ) {
-				if ( $dev == $id ) {
+				if ( $dev_to_select == $id ) {
 					echo "<option value=$id selected>".$dev->m_real_name."&nbsp;&nbsp;(bugs count: ".$bug_count.")"."</option>";	
 				}
 				else {

@@ -40,9 +40,6 @@ function developers_create_combo($dbh, $dev)
 {
 	$developers = get_user_profiles($dbh); // <userid><login_name>
 	
-	// move MxKTriage to list start
-	$developers[57]->m_real_name = '- ' . $developers[57]->m_real_name . ' -';
-
 	uasort($developers, 'cmp_by_real_name');
 	
 	echo "<select name='Developer' id='Developer'>";

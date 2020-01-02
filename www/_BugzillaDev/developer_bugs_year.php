@@ -148,15 +148,16 @@ function developer_bugs_by_assignee_summary_table(&$bugs, &$users)
 
 function developer_bugs_year_by_product($dbh, $users, $products, $developer_id, $year)
 {
+	echo "<br>";
+	
+	echo "<b>Year: </b>";
+	create_years_select_impl($year);
+	
     $bugs = bugs_get_developer_year_bugs($dbh, $users, $products, $developer_id, $year);
     if ( !$bugs ) {
 		echo "<h3>There are no bugs fixed.</h3>";
 		return;
 	}
-    echo "<br>";
-	
-	echo "<b>Year: </b>";
-	create_years_select_impl($year);
 	
     bugs_explode_by_product($product_bugs, $bugs);
 	ksort($product_bugs);

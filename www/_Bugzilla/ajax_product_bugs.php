@@ -26,12 +26,10 @@ if ( $dbh == NULL ) {
 }	
 
 global $g_open_bugs_in_the_new_tab;
-if ( $g_open_bugs_in_the_new_tab )
-{
+if ( $g_open_bugs_in_the_new_tab ) {
 	echo "<input type='hidden' id='bug_tab' value='true' />\n";
 }
-else
-{
+else {
 	echo "<input type='hidden' id='bug_tab' value='false' />\n";
 }
 

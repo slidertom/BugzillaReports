@@ -283,7 +283,6 @@ jQuery(document).ready(function()
 	
     bind_select_change('Product', refresh_milestones_and_product_bugs);
   
-	
 	let bind_history_change = function()
 	{
 		window.addEventListener('popstate', function (event) {

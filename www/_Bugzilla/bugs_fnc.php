@@ -191,7 +191,7 @@ function bugs_create_table(&$dbh, $product_id, $milestone)
 		return;
 	}
 	
-	if ($milestone == "month" ) {
+	if ($milestone == "month") {
 		$year  = isset($_GET['year'])  ? $_GET['year']  : current_year();
 		$month = isset($_GET['month']) ? $_GET['month'] : current_month();
 		echo "<br>";

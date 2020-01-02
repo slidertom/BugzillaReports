@@ -31,7 +31,7 @@ function bugs_get_developer_month_bugs(&$dbh, &$users, &$products, $developer_id
 
 function bugs_get_product_bugs_by_dates(&$dbh, &$users, &$products, $product_id, $beg_date, $end_date)
 {
-	$sql   = "SELECT bugs.*,longdescs.work_time FROM longdescs,bugs where longdescs.bug_when between'".$beg_date."'and'".$end_date."' and longdescs.work_time>0 and bugs.product_id='".$product_id."'and bugs.bug_id = longdescs.bug_id";
+	$sql   = "SELECT bugs.*,longdescs.work_time FROM longdescs,bugs where longdescs.bug_when between'".$beg_date." 00:00:00' and '".$end_date." 23:59:59' and longdescs.work_time>0 and bugs.product_id='".$product_id."'and bugs.bug_id = longdescs.bug_id";
     $times = $dbh->query($sql);
     $bugs  = array();
 

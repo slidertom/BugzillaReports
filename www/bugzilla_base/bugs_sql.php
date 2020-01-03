@@ -165,12 +165,11 @@ function is_non_web_kozinjn_bug($bug)
 function get_worked_developer_bugs_by_dates($dbh, $developer_id, $quat_beg, $quat_end, &$users, &$products)
 {
     // https://stackoverflow.com/questions/7691742/add-time-235959-999-to-end-date-for-between
-	$sql   = "SELECT bugs.*,longdescs.work_time FROM longdescs,bugs where longdescs.bug_when between '".$quat_beg." 00:00:00' and '".$quat_end." 23:59:59' and longdescs.work_time>0 and longdescs.who='".$developer_id."'and bugs.bug_id = longdescs.bug_id";
+	$sql   = "SELECT bugs.*,longdescs.work_time FROM longdescs,bugs where longdescs.bug_when between '".$quat_beg." 00:00:00' and '".$quat_end." 23:59:59' and longdescs.work_time!=0 and longdescs.who='".$developer_id."'and bugs.bug_id = longdescs.bug_id";
     //var_dump($sql);
     //echo "<br>";
 	$times = $dbh->query($sql);
 	$bugs  = array();
-	
 	foreach ($times as $row)
 	{
 		$time   = $row['work_time'];

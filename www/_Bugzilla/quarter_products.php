@@ -5,10 +5,10 @@
     To use this component please contact slidertom@gmail.com to obtain a license.
 */
 
-require_once "bug_data.php";
-require_once "quarter_operations.php";
-require_once "../tools/date_time_util.php";
-require_once "../func/bugs_operations.php";
+require_once (__DIR__)."/bug_data.php";
+require_once (__DIR__)."/quarter_operations.php";
+require_once (__DIR__)."/../tools/date_time_util.php";
+require_once (__DIR__)."/../func/bugs_operations.php";
 
 function bugs_get_quarter_bugs(&$dbh, &$users, &$products, $product_id)
 {

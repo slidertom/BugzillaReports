@@ -5,11 +5,11 @@
 	To use this component please contact slidertom@gmail.com to obtain a license.
 */
 
-require_once((__DIR__)."/../common/header.php");
+require_once (__DIR__)."/../common/header.php";
 
-require_once((__DIR__)."/../bugzilla_base/connect_to_bugzilla_db.php");
-require_once((__DIR__)."/products.php");
-require_once((__DIR__)."/milestones.php");
+require_once (__DIR__)."/../bugzilla_base/connect_to_bugzilla_db.php";
+require_once (__DIR__)."/products.php";
+require_once (__DIR__)."/milestones.php";
 
 class CGenerateBugzillaPage extends CGeneratePage
 {

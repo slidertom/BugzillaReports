@@ -5,8 +5,8 @@
 	To use this component please contact slidertom@gmail.com to obtain a license.
 */
 
-require_once 'bug_data.php';
-require_once 'add_work_hours.php';
+require_once (__DIR__).'/bug_data.php';
+require_once (__DIR__).'/add_work_hours.php';
 
 function compare_priority($a, $b)
 {

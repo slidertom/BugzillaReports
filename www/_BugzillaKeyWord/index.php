@@ -57,6 +57,7 @@ class CGenerateBugzillaPage extends CGeneratePage
         echo "<script type='text/javascript' src='../jquery/opentip/opentip.js'></script>"; 
         echo "<script type='text/javascript' src='../jquery/opentip/excanvas.js'></script>";
         // end opentip
+
         echo "<script type='text/javascript' src='../tools/select_ctrl.js'></script>"; 		
         echo "<script type='text/javascript' src='../tools/date_time_util.js'></script>";
         

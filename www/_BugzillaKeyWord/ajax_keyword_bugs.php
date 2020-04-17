@@ -44,7 +44,7 @@ function bugs_create_keyword_table(&$dbh, $keyword_id)
 	$bugs_closed_array  = bugs_get_closed_by_keyword($dbh, $users, $products, $keyword_id);
 						  bugs_update_worked_time($dbh, $bugs_closed_array);
 					  
-	bugs_to_table($bugs_array, $bugs_closed_array);
+	bugs_to_table($bugs_array, $bugs_closed_array, "keyword_bugs_filter");
 }
 
 ?>

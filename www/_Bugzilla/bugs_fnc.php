@@ -112,7 +112,119 @@ function open_bugs_to_table(&$bugs_opened_array)
 	}
 }
 
-function bugs_to_table(&$bugs_opened_array, &$bugs_closed_array)
+function create_input($options)
+{
+	$options += [
+		'ID'				=> '',
+		'Value'				=> '',
+        //'Title'             => '',
+        'Type'				=> 'text',
+		'Step'				=> 'any',	//only when type === number
+		'Class'				=> '',
+		'Hidden'			=> false, /* display: none */
+		'Invisible'			=> false, /* visibility:hidden */
+		'Label'				=> '',
+		'LabelPos'			=> 'left',
+		'LabelClass'		=> '',
+		'MaxLen'			=> '',
+		'Min'				=> '',
+		'Max'				=> '',
+		'Size'				=> '',  // The size attribute specifies the visible width, in characters, of an <input> element.
+		'Name'				=> '',
+		'Autocomplete'		=> '',
+		'Role'				=> '',
+		'AdditionalData'	=> [],
+		'Special'			=> '',
+		'Placeholder'		=> '',
+		'Html'				=> false,
+		'Readonly'			=> false,
+		'Disabled'			=> false,
+        'TextStyle'			=> 'text ui-widget-content ui-corner-all',
+        
+		'ValidatorInteger'	        => false,
+		'ValidatorFloat'	        => false,
+		'ValidatorDecimalPlaces'    => false,
+		'ValidatorMax'              => false,
+	];
+	
+	$id				= $options['ID']			!== ''	? " id='{$options["ID"]}'" 						: '';
+	$value			= $options['Value']			!== ''	? " value='{$options["Value"]}'"				: '';
+	$class			= $options['Class']			!== ''	? " " . $options["Class"]						: '';
+	$role			= $options['Role']			!== ''	? " role='{$options["Role"]}'"					: '';
+	$maxlen			= $options['MaxLen']		!== ''	? " maxlength='{$options["MaxLen"]}'"			: '';
+	$min			= $options['Min']			!== ''	? " min='{$options["Min"]}'"					: '';
+	$size			= $options['Size']			!== ''	? " size='{$options["Size"]}'"					: '';
+	$max			= $options['Max']			!== ''	? " max='{$options["Max"]}'"					: '';
+	$name			= $options['Name']			!== ''	? " name='{$options["Name"]}'"					: '';
+	$name			= $options['Autocomplete']	!== ''	? " autocomplete='{$options["Autocomplete"]}'"	: '';
+	$special		= $options['Special']		!== ''	? " " . $options["Special"]						: '';
+	$step			= $options['Type'] === 'number' ? " step='{$options["Step"]}'"						: '';
+	$readonly		= $options['Readonly']				? " readonly"									: '';
+	$disabled		= $options['Disabled']				? " disabled"									: '';
+	$invisible		= $options['Invisible']				? " style='visibility:hidden'"					: '';
+	$placeholder	= $options['Placeholder']	!== ''	? " placeholder='{$options["Placeholder"]}'"	: '';
+	$hidden         = $options["Hidden"]                ? " style='display:none'" : '';
+	$text_style     = $options['TextStyle'];
+	
+	$label = '';
+	if ($options["Label"] !== '')
+	{
+		$label_class	= $options["LabelClass"]		!== ''	? " class='{$options["LabelClass"]}'"		: "";
+		$for			= $options["ID"]				!== ''	? " for='{$options["ID"]}'"					: "";
+		$label = "<label$label_class$for>{$options["Label"]}</label>";
+	}
+	
+	$additional_data = '';
+	if( !empty($options['AdditionalData']) )
+	{
+		foreach($options['AdditionalData'] as $arg => $data) {
+			$additional_data .= " data-$arg='$data'";
+		}
+    }
+    
+    /* VALIDATORS */
+    if ($options['ValidatorInteger'] || $options['ValidatorFloat'] || $options['ValidatorDecimalPlaces'] || $options['Max']) {
+        $class .= ' ui-validator';
+        $additional_data .= " data-valid-value='{$options["Value"]}'";
+    }
+
+    if ($options['ValidatorInteger']) {
+        $class			.= ' validator-integer';
+    }
+
+    if ($options['ValidatorFloat'] || $options['ValidatorDecimalPlaces']) {
+        $class			.= ' validator-float';
+
+        if ($options['ValidatorDecimalPlaces']) {
+            $additional_data .= " data-valid-dec-places='{$options["ValidatorDecimalPlaces"]}'";
+        }
+    }    
+
+    if ($options['Max']) {
+        $class			.= ' validator-max';
+        $additional_data .= " data-valid-max='{$options["Max"]}'";
+    }    
+	
+	$html = '';
+	
+	if ($options["LabelPos"] === 'left') $html .= $label;
+	$html .= "<input type='". $options['Type']."'$step class='$text_style$class'$id$maxlen$size$role$value$special$min$max$additional_data$hidden$name$readonly$disabled$invisible$placeholder>";
+	if ($options["LabelPos"] === 'right') $html .= $label;
+	
+	if ($options['Html']) return $html;
+	else echo $html;
+}
+
+function tablesorter_create_filter($id) {
+    echo "<span class='font-10 bold padded_label'>".'Filter: '.'</span>';
+    create_input([
+        'ID'			=> $id,
+        'MaxLen'		=> 30,
+        'Size'			=> 30,
+    ]);
+}
+
+function bugs_to_table(&$bugs_opened_array, &$bugs_closed_array, $filter_id = -1)
 {
 	$all_opened_remaining_time = bugs_get_remaining_time($bugs_opened_array);
 	$all_opened_work_time      = bugs_get_work_time($bugs_opened_array);
@@ -137,8 +249,7 @@ function bugs_to_table(&$bugs_opened_array, &$bugs_closed_array)
 	echo_table_summary_header();
 	echo "<tbody>";
 	echo_table_summary($bug_opened_cnt, $all_opened_work_time, $all_opened_remaining_time, $all_opened_complete, $opened_bugs);
-	if ( $bug_closed_cnt > 0 )
-	{
+	if ( $bug_closed_cnt > 0 ) {
 		echo_table_summary($bug_closed_cnt, $all_closed_work_time, "0", "100%", $closed_bugs);
 	}
 	echo "</tbody>";
@@ -149,14 +260,15 @@ function bugs_to_table(&$bugs_opened_array, &$bugs_closed_array)
 		echo "</tfoot>";
 	}
 	echo "</table>\n";
-	
+	if ( $filter_id != -1) {
+        tablesorter_create_filter($filter_id);
+    }
 	echo "<br>";
 	echo "<p><em>TIP!</em> Sort multiple columns simultaneously by holding down the shift key and clicking a second, third or even fourth column header.</p>\n";
 	
-	if ( count($bugs_opened_array) > 0 )
-	{
+	if ( count($bugs_opened_array) > 0 ) {
 		echo "<h3> ${opened_bugs}: </h3>";
-		bugs_echo_table($bugs_opened_array, "", "openTable tablesorter");
+		bugs_echo_table($bugs_opened_array, "open_bugs_table", "openTable tablesorter");
 	}
 	
 	if ( is_array($bugs_closed_array) && count($bugs_closed_array) > 0 )

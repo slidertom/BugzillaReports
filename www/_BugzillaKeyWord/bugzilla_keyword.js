@@ -6,6 +6,27 @@
 
 jQuery.noConflict();
 
+function filter_table(table_id, filter_value) {
+  var filter = filter_value.toUpperCase();
+  var table = document.getElementById(table_id);
+  var tr = table.getElementsByTagName("tr");
+  for (var i = 0; i < tr.length; ++i) {
+    var td = tr[i].getElementsByTagName("td");
+    for (var j = 0; j < td.length; ++j) {
+        var cell = tr[i].getElementsByTagName("td")[j];
+        if (cell) {
+          var txtValue = cell.textContent || cell.innerText;
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            tr[i].style.display = "";
+            break;
+          } else {
+            tr[i].style.display = "none";
+          }
+        }       
+    }
+  }
+}
+
 function keyword_change() 
 { 
 	let keyword = select_get_value("Keyword");
@@ -25,21 +46,29 @@ function keyword_change()
     ajaxPostSync("ajax_keyword_bugs.php?"+values, "", function(data) 
     {
         document.getElementById("OpenedHint").innerHTML=data;
-        jQuery(".openTable").tablesorter( { sortList: [[2,0], [1, 0]], widgets: ['zebra']}); 
-        jQuery(".closeTable").tablesorter({ sortList: [[2,0], [1, 0]], widgets: ['zebra']}); 
+        let open_table  = jQuery(".openTable");
+        let close_table = jQuery(".closeTable");
+        open_table.tablesorter( { sortList: [[2,0], [1, 0]], widgets: ['zebra']}); 
+        close_table.tablesorter({ sortList: [[2,0], [1, 0]], widgets: ['zebra']}); 
         
-        if ( !jQuery(".openTable").hasClass("show_milestone") ) {
-            jQuery(".openTable").find('td:nth-child(9),th:nth-child(9)').hide();  // TargetM
+        if ( !open_table.hasClass("show_milestone") ) {
+            open_table.find('td:nth-child(9),th:nth-child(9)').hide();  // TargetM
         }
-        jQuery(".openTable").find('td:nth-child(8),th:nth-child(8)').hide();  // Product  
-        jQuery(".openTable").find('td:nth-child(10),th:nth-child(10)').hide(); // start date    
-        jQuery(".openTable").find('td:nth-child(11),th:nth-child(11)').hide(); // end date  
+        open_table.find('td:nth-child(8),th:nth-child(8)').hide();  // Product  
+        open_table.find('td:nth-child(10),th:nth-child(10)').hide(); // start date    
+        open_table.find('td:nth-child(11),th:nth-child(11)').hide(); // end date  
         
-        jQuery(".closeTable").find('td:nth-child(9),th:nth-child(9)').hide(); // TargetM
-        jQuery(".closeTable").find('td:nth-child(8),th:nth-child(8)').hide(); // Product
-        jQuery(".closeTable").find('td:nth-child(6),th:nth-child(6)').hide(); // Left   
-        jQuery(".closeTable").find('td:nth-child(10),th:nth-child(10)').hide(); // start date   
-        jQuery(".closeTable").find('td:nth-child(11),th:nth-child(11)').hide(); // end date 
+        close_table.find('td:nth-child(9),th:nth-child(9)').hide(); // TargetM
+        close_table.find('td:nth-child(8),th:nth-child(8)').hide(); // Product
+        close_table.find('td:nth-child(6),th:nth-child(6)').hide(); // Left   
+        close_table.find('td:nth-child(10),th:nth-child(10)').hide(); // start date   
+        close_table.find('td:nth-child(11),th:nth-child(11)').hide(); // end date 
+     
+        // reset filter value
+        document.getElementById('keyword_bugs_filter').value = '';     
+        bind_key_up_event('#keyword_bugs_filter', function() {
+            filter_table('open_bugs_table', this.value);
+        });
     });
     
     var release_hint = document.getElementById("ReleaseHint");
@@ -134,12 +163,11 @@ function create_bug_tooltip(item_id, bug_id_text, bug_data)
         
         var content = priority_div + severity_div + reporter_div + remain_time_div+worked_div+complete_div;
         // now just create a tooltip
-        $(item_id).addTip(content, title, { target: true, stem: true, tipJoint: [ "left", "middle" ], showOn: "creation", showEffect: 'appear' });
+        jQuery(item_id).addTip(content, title, { target: true, stem: true, tipJoint: [ "left", "middle" ], showOn: "creation", showEffect: 'appear' });
         // next time please show tooltip on mouseover
-        $(item_id).addTip(content, title, { target: true, stem: true, tipJoint: [ "left", "middle" ], showEffect: 'appear' });
+        jQuery(item_id).addTip(content, title, { target: true, stem: true, tipJoint: [ "left", "middle" ], showEffect: 'appear' });
     }
-    catch (e)
-    {
+    catch (e) {
         alert(e.message);
     }
 }
@@ -163,15 +191,13 @@ jQuery('.GanttBug').on('mouseover', function()
         var values = "bug_id="+bug_id_text;
         
         var external_bug_data;
-        jsonPostSync("ajax_json_get_bug_info.php?"+values, "", function(bug_data) 
-        {   
+        jsonPostSync("ajax_json_get_bug_info.php?"+values, "", function(bug_data) {   
             external_bug_data = bug_data;
         });
         
         var item_id = "bug_" + bug_id_text;
         //alert(item_id);
         jQuery(this).attr("id", item_id);
-    
         //alert(child.text());
         create_bug_tooltip(item_id, bug_id_text, external_bug_data);
     }
@@ -219,6 +245,12 @@ function init_keyword_bugs_by_url()
     keyword_change();
 	
     g_keyword_change_mode = false;
+}
+
+function bind_key_up_event(elem_str, callback_func)
+{
+    jQuery(document).off('keyup', elem_str);
+    jQuery(document).on('keyup',  elem_str, callback_func);
 }
 
 jQuery(document).ready(function() 

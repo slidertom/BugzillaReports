@@ -47,8 +47,7 @@ function Milestone_ChangeWithProduct()
         jQuery(".openTable").tablesorter( { sortList: [[2,0], [1, 0]], widgets: ['zebra']}); 
         jQuery(".closeTable").tablesorter({ sortList: [[2,0], [1, 0]], widgets: ['zebra']}); 
         
-        if ( !jQuery(".openTable").hasClass("show_milestone") )
-        {
+        if ( !jQuery(".openTable").hasClass("show_milestone") ) {
             jQuery(".openTable").find('td:nth-child(9),th:nth-child(9)').hide();  // TargetM
         }
         jQuery(".openTable").find('td:nth-child(8),th:nth-child(8)').hide();  // Product  
@@ -60,6 +59,14 @@ function Milestone_ChangeWithProduct()
         jQuery(".closeTable").find('td:nth-child(6),th:nth-child(6)').hide(); // Left   
         jQuery(".closeTable").find('td:nth-child(10),th:nth-child(10)').hide(); // start date   
         jQuery(".closeTable").find('td:nth-child(11),th:nth-child(11)').hide(); // end date 
+        
+        let filter_input = document.getElementById('product_filter');
+        if ( filter_input ) {    
+            filter_input.value = ''; // reset filter value   
+            bind_key_up_event('#product_filter', function() {
+                filter_table('open_bugs_table', this.value);
+            });
+        }
     });
     
     var release_hint = document.getElementById("ReleaseHint");

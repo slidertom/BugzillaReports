@@ -12,7 +12,7 @@ function cmp_by_real_name($d1, $d2) { return cmp_by($d1, $d2, 'm_real_name'); }
 
 function developers_to_combo($developers, $dev_to_select)
 {	
-	$first_id = strlen($dev) > 0 ? $dev : -1;
+	$first_id = strlen($dev_to_select) > 0 ? $dev_to_select : -1;
 	foreach ($developers as $id => $dev )
 	{
 		if ( $dev->m_real_name != "" && $dev->m_disabled_text == "" )

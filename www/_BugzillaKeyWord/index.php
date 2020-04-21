@@ -60,6 +60,7 @@ class CGenerateBugzillaPage extends CGeneratePage
 
         echo "<script type='text/javascript' src='../tools/select_ctrl.js'></script>"; 		
         echo "<script type='text/javascript' src='../tools/date_time_util.js'></script>";
+        echo "<script type='text/javascript' src='../tools/table_util.js'></script>";
         
         echo "<script type='text/javascript' src='bugzilla_keyword.js'></script>\n"; 
     }

@@ -25,8 +25,8 @@ function draw_developer_pie_chart()
 {
     try
     {
-        var height = $("#bugs_pie_chart").parent().parent().height();       
-        var values = $("#bugs_pie_data").html();
+        let height = $("#bugs_pie_chart").parent().parent().height();       
+        let values = $("#bugs_pie_data").html();
         
         //alert(values);
         $("#bugs_pie_chart").height(height);
@@ -50,8 +50,7 @@ function draw_developer_pie_chart()
         });
         //  alert("ok");
     }
-    catch (e)
-    {
+    catch (e) {
         alert(e.message);
     }
 }

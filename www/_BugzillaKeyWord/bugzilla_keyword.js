@@ -94,10 +94,8 @@ function create_gantt_chart(keyword)
     try
     {
         let values  = "Keyword="+keyword;
-        jsonPost("ajax_json_get_keyword_bugs.php?"+values, "", function(gantt_data) 
-        {
-            if ( !gantt_data || gantt_data.length <= 0)
-            {
+        jsonPost("ajax_json_get_keyword_bugs.php?"+values, "", function(gantt_data) {
+            if ( !gantt_data || gantt_data.length <= 0) {
                 jQuery("#product_gantt").html("");
                 return;
             }
@@ -222,7 +220,7 @@ function init_keyword_bugs_by_url()
 	}
 	
     keyword_change();
-	
+    
     g_keyword_change_mode = false;
 }
 

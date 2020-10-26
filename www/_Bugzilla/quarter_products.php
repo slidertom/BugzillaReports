@@ -12,7 +12,7 @@ require_once (__DIR__)."/../func/bugs_operations.php";
 
 function bugs_get_quarter_bugs(&$dbh, &$users, &$products, $product_id)
 {
-	$year = current_year();
+	$year = DateTimeUtil::get_current_year();
 	$quat = current_quater() - 1;
 	return bugs_get_product_quarter_bugs($dbh, $users, $products, $product_id, $year, $quat);
 }

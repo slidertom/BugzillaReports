@@ -8,6 +8,7 @@ abstract class DeveloperFilters
 {
     const Open           = "open_bugs";
     const Assigned       = "assigned_bugs";
+    const WeeklyProgress = "weekly_progress";
     const PrevQuaterProd = "quarter_bugs_product";
     const ThisQuaterProd = "this_quarter_bugs_product";
     const PrevQuaterMile = "quarter_bugs";
@@ -27,6 +28,9 @@ function get_developer_filter_name($filter)
         break;
     case DeveloperFilters::Assigned:
         return "&nbsp;- In Progress Bugs -";
+        break;
+    case DeveloperFilters::WeeklyProgress:
+        return "&nbsp;- Weekly Progress -";
         break;
     case DeveloperFilters::PrevQuaterProd:    
         return "&nbsp;- Prev. Quarter Bugs by Product   -";

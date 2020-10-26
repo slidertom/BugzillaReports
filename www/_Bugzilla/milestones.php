@@ -63,13 +63,13 @@ function milestones_to_combo(&$milestones, $sel)
         echo "<option value='open_bugs'> - Open Bugs - </option>\n";
     }
     
-    if ( $sel == "assigned_bugs" )   {
+    if ( $sel == "assigned_bugs" )  {
         echo "<option selected value='assigned_bugs'> - In Progress Bugs - </option>\n";
     }
     else {
         echo "<option value='assigned_bugs'> - In Progress Bugs - </option>\n";
     }
-	
+
     if ( $sel == "quarter" )     {
         echo "<option selected value='quarter'> - Quarter Bugs - </option>\n";
     }

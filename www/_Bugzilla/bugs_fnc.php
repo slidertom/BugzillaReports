@@ -300,7 +300,7 @@ function bugs_create_product_table(&$dbh, $product_id, $milestone)
     }
     
     if ($milestone == "month") {
-        $year  = isset($_GET['year'])  ? $_GET['year']  : current_year();
+        $year  = isset($_GET['year'])  ? $_GET['year']  : DateTimeUtil::get_current_year();
         $month = isset($_GET['month']) ? $_GET['month'] : current_month();
         echo "<br>";
         create_year_month_select_table($year, $month);

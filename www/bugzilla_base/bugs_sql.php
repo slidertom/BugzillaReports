@@ -215,7 +215,10 @@ function get_changed_developer_bugs_by_dates($dbh, $developer_id, $quat_beg, $qu
 // $field_id = 13; => priority changhe
 // $field_id = 15; => reassigned
 // $field_id = 19; => created
+// $field_id = 20; => depends
+// $field_id = 21; => blocks
 // $field_id = 26; => milestone
+// $field_id = 50; => estimation
 function get_managed_developer_bugs_by_dates($dbh, $developer_id, $quat_beg, $quat_end, &$users, &$products, $field_id)
 {
     

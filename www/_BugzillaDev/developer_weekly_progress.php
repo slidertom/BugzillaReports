@@ -2,11 +2,15 @@
 
 require_once (__DIR__).'/../func/bugs_operations.php';
 
-function echo_bug_numbers_with_links($bugs)
+function print_bug_numbers_with_links($bugs)
 {
-    foreach ($bugs as $bug ) {
-        echo "<span>".$bug->m_bug_id."&nbsp;</span>";
+    $ret = "";
+    foreach ($bugs as $bug_id_key => $bug ) {
+        //$bug_id = isset($bug['m_bug_id']) ? $bug['m_bug_id']: $bug_id_key;
+        $bug_id = $bug_id_key; //isset($bug['m_bug_id']) ? $bug['m_bug_id']: $bug_id_key;
+        $ret = $ret."<span>".generate_bug_link_href($bug_id)."&nbsp;</span>";
     }
+    return $ret;
 }
 
 function developer_weekly_progress($dbh, $users, $products, $developer_id)
@@ -36,42 +40,34 @@ function developer_weekly_progress($dbh, $users, $products, $developer_id)
     $bugs_reopen     = get_changed_developer_bugs_by_dates($dbh, $developer_id, $week_start, $week_end, $users, $products, "REOPENED");
     $bugs_verified   = get_changed_developer_bugs_by_dates($dbh, $developer_id, $week_start, $week_end, $users, $products, "VERIFIED");
     $bugs_created    = get_managed_developer_bugs_by_dates($dbh, $developer_id, $week_start, $week_end, $users, $products, 19);
+    $bugs_estimated  = get_managed_developer_bugs_by_dates($dbh, $developer_id, $week_start, $week_end, $users, $products, 50);
 
     echo "<h3>Development</h3>";
     
-    echo "<table>";
+    echo "<table class='tablesorter'>";
         echo "<tr>";
-            $worked_bugs_cnt = count($bugs);
-            echo "<td>Worked on bugs by Developer:</td><td>$worked_bugs_cnt</td>";
-            echo "<td>";
-                echo_bug_numbers_with_links($bugs);
-            echo "</td>";
+            echo "<td>Worked on bugs by Developer:</td><td>".count($bugs)."</td>";
+            echo "<td>".print_bug_numbers_with_links($bugs)."</td>";
         echo "</tr>";
         echo "<tr>";
-            $fixed_bugs_cnt = count($bugs_fixed);
-            echo "<td>Fixed status applied by Developer:</td><td>$fixed_bugs_cnt</td>";
-            echo "<td>";
-                echo_bug_numbers_with_links($bugs_fixed);
-            echo "</td>";
+            echo "<td>Fixed status applied by Developer:</td><td>".count($bugs_fixed)."</td>";
+            echo "<td>".print_bug_numbers_with_links($bugs_fixed)."</td>";
         echo "</tr>";
         echo "<tr>";
-            $created_bugs_cnt = count($bugs_created);
-            echo "<td>Created bugs by Developer</td><td>$created_bugs_cnt</td>";
-            echo "<td>";
-                echo_bug_numbers_with_links($bugs_created);
-            echo "</td>";
+            echo "<td>Estimated bugs by Developer:</td><td>".count($bugs_estimated)."</td>";
+            echo "<td>".print_bug_numbers_with_links($bugs_estimated)."</td>";
         echo "</tr>";
         echo "<tr>";
-            $reopen_bugs_cnt = count($bugs_reopen);
-            echo "<td>Reopened status applied by Developer</td><td>$reopen_bugs_cnt</td>";
-            echo "<td>";
-                echo_bug_numbers_with_links($bugs_reopen);
-            echo "</td>";
+            echo "<td>Created bugs by Developer</td><td>".count($bugs_created)."</td>";
+            echo "<td>".print_bug_numbers_with_links($bugs_created)."</td>";
         echo "</tr>";
         echo "<tr>";
-            $verify_bugs_cnt = count($bugs_verified);
-            echo "<td>Verified status applied by Developer</td><td>$verify_bugs_cnt</td>";
-            echo "<td>".echo_bug_numbers_with_links($bugs_verified)."</td>";
+            echo "<td>Reopened status applied by Developer</td><td>".count($bugs_reopen)."</td>";
+            echo "<td>".print_bug_numbers_with_links($bugs_reopen)."</td>";
+        echo "</tr>";
+        echo "<tr>";
+            echo "<td>Verified status applied by Developer</td><td>".count($bugs_verified)."</td>";
+            echo "<td>".print_bug_numbers_with_links($bugs_verified)."</td>";
         echo "</tr>";
     echo "</table>";    
 
@@ -85,44 +81,50 @@ function developer_weekly_progress($dbh, $users, $products, $developer_id)
     $bugs_product_change  = get_managed_developer_bugs_by_dates($dbh, $developer_id, $week_start, $week_end, $users, $products, 3);
     $bugs_severity_change = get_managed_developer_bugs_by_dates($dbh, $developer_id, $week_start, $week_end, $users, $products, 12);
 
-    $duplicate_bugs_cnt  = count($bugs_duplicate);
-    $invalid_bugs_cnt    = count($bugs_invalid);
-    $reassigned_bugs_cnt = count($bugs_reassigned);
-    $keyworded_bugs_cnt  = count($bugs_keyworded);
-    $sumarry_bugs_cnt    = count($bugs_summarry);
-    $milestone_cnt       = count($bugs_milestone);
-    $product_cnt         = count($bugs_product_change);
-    $severity_cnt        = count($bugs_severity_change);
+    $bugs_dependency_change = get_managed_developer_bugs_by_dates($dbh, $developer_id, $week_start, $week_end, $users, $products, 20);
+    $bugs_dependency_change += get_managed_developer_bugs_by_dates($dbh, $developer_id, $week_start, $week_end, $users, $products, 21);
 
     echo "<h3>Management</h3>";
-    echo "<table>";
+    echo "<table class='tablesorter'>";
         echo "<tr>";
-            $prioritized_cnt = count($bugs_prioritized);
-            echo "<td>Priority changed by Developer</td><td>$prioritized_cnt</td>";
+            echo "<td>Priority changed by Developer</td><td>".count($bugs_prioritized)."</td>";
+            echo "<td>".print_bug_numbers_with_links($bugs_prioritized)."</td>";
         echo "</tr>";
         echo "<tr>";
-            echo "<td>Severity changed by Developer</td><td>$severity_cnt</td>";
+            echo "<td>Severity changed by Developer</td><td>".count($bugs_severity_change)."</td>";
+            echo "<td>".print_bug_numbers_with_links($bugs_severity_change)."</td>";
         echo "</tr>";
         echo "<tr>";
-            echo "<td>Reassigned done by Developer</td><td>$reassigned_bugs_cnt</td>";
+            echo "<td>Reassigned done by Developer</td><td>".count($bugs_reassigned)."</td>";
+            echo "<td>".print_bug_numbers_with_links($bugs_reassigned)."</td>";
         echo "</tr>";
         echo "<tr>";
-            echo "<td>Milestone changed by Developer</td><td>$milestone_cnt</td>";
+            echo "<td>Milestone changed by Developer</td><td>".count($bugs_milestone)."</td>";
+            echo "<td>".print_bug_numbers_with_links($bugs_milestone)."</td>";
         echo "</tr>";
         echo "<tr>";
-            echo "<td>Product changed by Developer</td><td>$product_cnt</td>";
+            echo "<td>Product changed by Developer</td><td>".count($bugs_product_change)."</td>";
+            echo "<td>".print_bug_numbers_with_links($bugs_product_change)."</td>";
         echo "</tr>";
         echo "<tr>";
-            echo "<td>Duplicate bugs found by Developer</td><td>$duplicate_bugs_cnt</td>";
+            echo "<td>Duplicate bugs found by Developer</td><td>".count($bugs_duplicate)."</td>";
+            echo "<td>".print_bug_numbers_with_links($bugs_duplicate)."</td>";
         echo "</tr>";
         echo "<tr>";
-            echo "<td>Invalid bugs found by Developer</td><td>$invalid_bugs_cnt</td>";
+            echo "<td>Invalid bugs found by Developer</td><td>".count($bugs_invalid)."</td>";
+            echo "<td>".print_bug_numbers_with_links($bugs_invalid)."</td>";
         echo "</tr>";
         echo "<tr>";
-            echo "<td>Keyword applied by Developer</td><td>$keyworded_bugs_cnt</td>";
+            echo "<td>Keyword applied by Developer</td><td>".count($bugs_keyworded)."</td>";
+            echo "<td>".print_bug_numbers_with_links($bugs_keyworded)."</td>";
         echo "</tr>";
         echo "<tr>";
-            echo "<td>Summary updated by Developer</td><td>$sumarry_bugs_cnt</td>";
+            echo "<td>Summary updated by Developer</td><td>".count($bugs_summarry)."</td>";
+            echo "<td>".print_bug_numbers_with_links($bugs_summarry)."</td>";
+        echo "</tr>";
+        echo "<tr>";
+            echo "<td>Dependable bugs change by Developer</td><td>".count($bugs_dependency_change)."</td>";
+            echo "<td>".print_bug_numbers_with_links($bugs_dependency_change)."</td>";
         echo "</tr>";
         
     echo "</table>";

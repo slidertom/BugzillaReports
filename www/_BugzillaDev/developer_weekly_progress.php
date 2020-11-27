@@ -41,9 +41,9 @@ function developer_weekly_progress($dbh, $users, $products, $developer_id)
     
     echo "<table>";
         echo "<tr>";
+            $worked_bugs_cnt = count($bugs);
             echo "<td>Worked on bugs by Developer:</td><td>$worked_bugs_cnt</td>";
             echo "<td>";
-                $worked_bugs_cnt = count($bugs);
                 echo_bug_numbers_with_links($bugs);
             echo "</td>";
         echo "</tr>";
@@ -55,9 +55,9 @@ function developer_weekly_progress($dbh, $users, $products, $developer_id)
             echo "</td>";
         echo "</tr>";
         echo "<tr>";
+            $created_bugs_cnt = count($bugs_created);
             echo "<td>Created bugs by Developer</td><td>$created_bugs_cnt</td>";
             echo "<td>";
-                $created_bugs_cnt = count($bugs_created);
                 echo_bug_numbers_with_links($bugs_created);
             echo "</td>";
         echo "</tr>";
@@ -71,9 +71,7 @@ function developer_weekly_progress($dbh, $users, $products, $developer_id)
         echo "<tr>";
             $verify_bugs_cnt = count($bugs_verified);
             echo "<td>Verified status applied by Developer</td><td>$verify_bugs_cnt</td>";
-            echo "<td>";
-                echo_bug_numbers_with_links($bugs_verified);
-            echo "</td>";
+            echo "<td>".echo_bug_numbers_with_links($bugs_verified)."</td>";
         echo "</tr>";
     echo "</table>";    
 
@@ -87,7 +85,6 @@ function developer_weekly_progress($dbh, $users, $products, $developer_id)
     $bugs_product_change  = get_managed_developer_bugs_by_dates($dbh, $developer_id, $week_start, $week_end, $users, $products, 3);
     $bugs_severity_change = get_managed_developer_bugs_by_dates($dbh, $developer_id, $week_start, $week_end, $users, $products, 12);
 
-    $prioritized_cnt     = count($bugs_prioritized);
     $duplicate_bugs_cnt  = count($bugs_duplicate);
     $invalid_bugs_cnt    = count($bugs_invalid);
     $reassigned_bugs_cnt = count($bugs_reassigned);
@@ -100,6 +97,7 @@ function developer_weekly_progress($dbh, $users, $products, $developer_id)
     echo "<h3>Management</h3>";
     echo "<table>";
         echo "<tr>";
+            $prioritized_cnt = count($bugs_prioritized);
             echo "<td>Priority changed by Developer</td><td>$prioritized_cnt</td>";
         echo "</tr>";
         echo "<tr>";

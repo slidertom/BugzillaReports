@@ -34,7 +34,9 @@ function bugs_by_developer_echo_table(&$dbh, $developer_id, $filter)
         $bugs = bugs_get_assigned_by_developer($dbh, $users, $products, $developer_id);
     }
     else if ( $filter == DeveloperFilters::WeeklyProgress ) {
-        developer_weekly_progress($dbh, $users, $products, $developer_id);
+        $year  = isset($_GET['year']) ? ($_GET['year'] != 'current' ? intval($_GET['year']) : DateTimeUtil::get_current_year()) : DateTimeUtil::get_current_year();
+        $week  = isset($_GET['week']) ? ($_GET['week'] != 'current' ? intval($_GET['week']) : DateTimeUtil::get_current_week()) : DateTimeUtil::get_current_week();
+        developer_weekly_progress($dbh, $users, $products, $developer_id, $year, $week);
         return;
     }
     else if ( $filter == DeveloperFilters::ThisYear ) {
@@ -44,21 +46,21 @@ function bugs_by_developer_echo_table(&$dbh, $developer_id, $filter)
     }
     else if ( $filter == DeveloperFilters::ThisMonth ) {
         $year  = isset($_GET['year'])  ? $_GET['year']  : DateTimeUtil::get_current_year();
-        $month = current_month();
+        $month = DateTimeUtil::current_month();
         $bugs = bugs_get_developer_month_bugs($dbh, $users, $products, $developer_id, $year, $month);
         developer_bugs_to_table_by_product($bugs);
         return;
     }
     else if ( $filter == DeveloperFilters::PrevMonth ) {
         $year  = isset($_GET['year'])  ? $_GET['year']  : DateTimeUtil::get_current_year();
-        $month = current_month() - 1;
+        $month = DateTimeUtil::current_month() - 1;
         $bugs = bugs_get_developer_month_bugs($dbh, $users, $products, $developer_id, $year, $month);
         developer_bugs_to_table_by_product($bugs);
         return;
     }
     else if ( $filter == DeveloperFilters::MonthMile ) {
         $year  = isset($_GET['year'])  ? $_GET['year']  : DateTimeUtil::get_current_year();
-        $month = isset($_GET['month']) ? $_GET['month'] : current_month();
+        $month = isset($_GET['month']) ? $_GET['month'] : DateTimeUtil::current_month();
         developer_bugs_by_moth_by_mile($dbh, $users, $products, $developer_id, $year, $month);
         return;
     }

@@ -13,23 +13,15 @@ function print_bug_numbers_with_links($bugs)
     return $ret;
 }
 
-function developer_weekly_progress($dbh, $users, $products, $developer_id)
+function developer_weekly_progress($dbh, $users, $products, $developer_id, $year, $week)
 {
-    $curren_week = DateTimeUtil::get_current_week();
-    $curren_year = DateTimeUtil::get_current_year();
+    echo "<br>";
+    create_year_week_select_table($year, $week);
+
+    
     $week_start;
     $week_end;
-    DateTimeUtil::get_week_begin_end($curren_year, $curren_week, $week_start, $week_end);
-
-    echo "<table>";
-        echo "<tr>";
-            echo "<td>Week Start Date:</td><td>$week_start</td>";
-        echo "</tr>";
-        echo "<tr>";
-            echo "<td>Week Start Date:</td><td>$week_end</td>";
-        echo "</tr>";
-    echo "</table>";
-
+    DateTimeUtil::get_week_begin_end($year, $week, $week_start, $week_end);
 
     $bugs = get_worked_developer_bugs_by_dates($dbh, $developer_id, $week_start, $week_end, $users, $products);
     if ( $bugs ) {

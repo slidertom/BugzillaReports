@@ -6,11 +6,6 @@ function hours_to_days($hours) {
     return $all_days;
 }
 
-function current_month() {
-     $n = date('n');
-     return $n;
-}
-
 function current_quater() {
      $n = date('n');
      if($n < 4){
@@ -148,6 +143,24 @@ class DateTimeUtil
         $week_start = $dto->format('Y-m-d');
         $dto->modify('+6 days');
         $week_end = $dto->format('Y-m-d');
+    }
+
+    static function get_week_count_in_year($year)
+    {
+        $ddate = "$year-12-31";
+        $date = new DateTime($ddate);
+        $week = $date->format("W");
+        if ($week <= 1) {
+            $ddate = "$year-12-24";
+            $date = new DateTime($ddate);
+            $week = $date->format("W");
+        }
+        return $week;
+    }
+
+    static function current_month() {
+        $n = date('n');
+        return $n;
     }
 }
 

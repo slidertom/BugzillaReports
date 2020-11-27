@@ -121,96 +121,101 @@ function LoadDeveloperBugs(developer, filter, add_param=null)
                 draw_developer_pie_chart();
             }
         }
-		
-		bind_year_select_change();  // currently it's additional item every time is regenerated
-		bind_month_select_change(); // currently it's additional item every time is regenerated
+        
+        bind_year_select_change();  // currently it's additional item every time is regenerated
+        bind_month_select_change(); // currently it's additional item every time is regenerated
+        bind_week_select_change();
     });
 }
 
 function history_update()
 {
-	let urlParams = new URLSearchParams(window.location.search);
-	
-	let developer = select_get_value('Developer');
-	let filter    = select_get_value("Developer_Filters_Combo");
-	
-	update_history_with_date_time(urlParams);
-	
-	urlParams.set('developer', developer);
-	urlParams.set('filter',    filter);
-	
-	let page = window.location.pathname.split("/").pop();
-	let new_url_params = urlParams.toString();
-	history.pushState({id: 'dev_page'}, '', page + '?' + new_url_params);
+    let urlParams = new URLSearchParams(window.location.search);
+    
+    let developer = select_get_value('Developer');
+    let filter    = select_get_value("Developer_Filters_Combo");
+    
+    update_history_with_date_time(urlParams);
+    
+    urlParams.set('developer', developer);
+    urlParams.set('filter',    filter);
+    
+    let page = window.location.pathname.split("/").pop();
+    let new_url_params = urlParams.toString();
+    history.pushState({id: 'dev_page'}, '', page + '?' + new_url_params);
 }
 
 var g_internal_change = false;	
 function refresh_developer_bugs()
 {
-	if ( g_internal_change ) {
-		return;
-	}
-	
-	g_internal_change = true;
-	let add_param  = format_additional_date_time_ajax_params();            
-    let developer  = select_get_value('Developer');
-    let filter     = select_get_value("Developer_Filters_Combo");
-	LoadDeveloperBugs(developer, filter, add_param);
-	history_update();
-	g_internal_change = false;
+    if ( g_internal_change ) {
+        return;
+    }
+    
+    g_internal_change = true;
+    const add_param  = format_additional_date_time_ajax_params();            
+    const developer  = select_get_value('Developer');
+    const filter     = select_get_value("Developer_Filters_Combo");
+    LoadDeveloperBugs(developer, filter, add_param);
+    history_update();
+    g_internal_change = false;
 }
 
 function bind_year_select_change() {
-	bind_select_change("year_select", refresh_developer_bugs);
+    bind_select_change("year_select", refresh_developer_bugs);
 }
 
 function bind_month_select_change() {
-	bind_select_change("month_select", refresh_developer_bugs);
+    bind_select_change("month_select", refresh_developer_bugs);
+}
+
+function bind_week_select_change() {
+    bind_select_change("week_select", refresh_developer_bugs);
 }
 
 $(document).ready(function() 
 {
-	let refresh_developer_bugs_and_filters = function()
-	{
-		let developer = select_get_value('Developer');
-		let filter    = select_get_value('Developer_Filters_Combo');
-		let values = "Developer="+developer+"&Filter="+filter;
-		ajaxPost("ajax_developer_filters.php?"+values, "", function(data) 
-		{
-			let filter_ctrl = document.getElementById("openedDevFilters");
-			filter_ctrl.innerHTML=data;   
-			refresh_developer_bugs();
-			bind_select_change('Developer_Filters_Combo', refresh_developer_bugs);
-		});
-	};
+    let refresh_developer_bugs_and_filters = function()
+    {
+        let developer = select_get_value('Developer');
+        let filter    = select_get_value('Developer_Filters_Combo');
+        let values = "Developer="+developer+"&Filter="+filter;
+        ajaxPost("ajax_developer_filters.php?"+values, "", function(data) 
+        {
+            let filter_ctrl = document.getElementById("openedDevFilters");
+            filter_ctrl.innerHTML=data;   
+            refresh_developer_bugs();
+            bind_select_change('Developer_Filters_Combo', refresh_developer_bugs);
+        });
+    };
 
-	refresh_developer_bugs();
-	
-	bind_select_change('Developer_Filters_Combo', refresh_developer_bugs);
-	bind_select_change('Developer', refresh_developer_bugs_and_filters);
-	
-	let bind_history_change = function()
-	{
-		window.addEventListener('popstate', function (event) {
-			if (history.state && history.state.id === 'dev_page') {		
-				const urlParams = new URLSearchParams(window.location.search);
-				const developer = urlParams.get('developer');
-				const filter    = urlParams.get('filter');
-				const year      = urlParams.get('year');
-				const month     = urlParams.get('month');
-				let add_param = "";
-				if ( year ) {
-					add_param += "year="+year; 
-				}
-				if ( month && year ) {
-					add_param += "&";
-				}
-				if ( month ) {
-					add_param += "month="+month;
-				}
-				LoadDeveloperBugs(developer, filter, add_param);
-			}
-		}, false);
-	};
-	bind_history_change();
+    refresh_developer_bugs();
+    
+    bind_select_change('Developer_Filters_Combo', refresh_developer_bugs);
+    bind_select_change('Developer', refresh_developer_bugs_and_filters);
+    
+    let bind_history_change = function()
+    {
+        window.addEventListener('popstate', function (event) {
+            if (history.state && history.state.id === 'dev_page') {		
+                const urlParams = new URLSearchParams(window.location.search);
+                const developer = urlParams.get('developer');
+                const filter    = urlParams.get('filter');
+                const year      = urlParams.get('year');
+                const month     = urlParams.get('month');
+                let add_param = "";
+                if ( year ) {
+                    add_param += "year="+year; 
+                }
+                if ( month && year ) {
+                    add_param += "&";
+                }
+                if ( month ) {
+                    add_param += "month="+month;
+                }
+                LoadDeveloperBugs(developer, filter, add_param);
+            }
+        }, false);
+    };
+    bind_history_change();
 });

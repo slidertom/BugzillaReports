@@ -122,12 +122,10 @@ function developer_milestone_bugs_to_table(&$bugs_array)
 				//if ( $perc_round > 0 )
 				{
 					$pie_data[$product_name." ".$mile_name] = $perc_round;
-					if ( isset($pie_product_data[$product_name]) )
-					{
+					if ( isset($pie_product_data[$product_name]) ) {
 						$pie_product_data[$product_name] += $perc_round;
 					}
-					else
-					{
+					else {
 						$pie_product_data[$product_name] = $perc_round;
 					}
 				}

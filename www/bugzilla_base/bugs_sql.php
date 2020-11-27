@@ -168,12 +168,99 @@ function is_non_web_kozinjn_bug($bug)
     return $bug->m_product->m_id != "26"; // special case to filter some products TODO: must be moved into the settings
 }
 
+// $added:
+// VERIFIED
+// REOPENED
+// FIXED
+function get_changed_developer_bugs_by_dates($dbh, $developer_id, $quat_beg, $quat_end, &$users, &$products, $added)
+{
+    // SELECT * FROM `bugs`.`bugs_activity` where who=65
+    $sql   = "SELECT bugs.*, bugs_activity.bug_when, bugs_activity.who 
+              FROM bugs_activity,bugs 
+              where bugs_activity.bug_when 
+              between '".$quat_beg." 00:00:00' and '".$quat_end." 23:59:59' 
+              and 
+              bugs.bug_id = bugs_activity.bug_id
+              and
+              bugs_activity.added='".$added."' 
+              and
+              bugs_activity.who='".$developer_id."'";
+    //var_dump($sql);
+    $times = $dbh->query($sql);
+    
+    $bugs  = array();
+    foreach ($times as $row)
+    {
+        $bug_id = $row['bug_id'];
+        
+        if ( isset($bugs[$bug_id]) ) {
+            $bugs[$bug_id]->m_worked_time += 1;
+        }
+        else {
+            $bug = parse_row_to_bug_data($row, $users, $products);
+            $bug->m_worked_time = 1; // used as counter to count same actions on the same bug
+            $bugs[$bug_id] = $bug;
+        }
+    }
+    
+    $bugs = array_filter($bugs, "is_non_web_kozinjn_bug");
+    
+    return $bugs;
+}
+
+// $field_id = 2;  => summary updated
+// $field_id = 3;  => product changed
+// $field_id = 10; => keyword changhe
+// $field_id = 12; => severity changhe
+// $field_id = 13; => priority changhe
+// $field_id = 15; => reassigned
+// $field_id = 19; => created
+// $field_id = 26; => milestone
+function get_managed_developer_bugs_by_dates($dbh, $developer_id, $quat_beg, $quat_end, &$users, &$products, $field_id)
+{
+    
+    // SELECT * FROM `bugs`.`bugs_activity` where who=65
+    $sql   = "SELECT bugs.*, bugs_activity.bug_when, bugs_activity.fieldid 
+              FROM bugs_activity,bugs 
+              where bugs_activity.bug_when 
+              between '".$quat_beg." 00:00:00' and '".$quat_end." 23:59:59' 
+              and 
+              bugs.bug_id = bugs_activity.bug_id
+              and
+              bugs_activity.fieldid='".$field_id."' 
+              and
+              bugs_activity.who='".$developer_id."'";
+    //var_dump($sql);
+    $times = $dbh->query($sql);
+    
+    $bugs  = array();
+    foreach ($times as $row)
+    {
+        $bug_id = $row['bug_id'];
+        
+        if ( isset($bugs[$bug_id]) ) {
+            $bugs[$bug_id]->m_worked_time += 1;
+        }
+        else {
+            $bug = parse_row_to_bug_data($row, $users, $products);
+            $bug->m_worked_time = 1; // used as counter to count same actions on the same bug
+            $bugs[$bug_id] = $bug;
+        }
+    }
+    
+    $bugs = array_filter($bugs, "is_non_web_kozinjn_bug");
+    
+    return $bugs;
+}
+
 function get_worked_developer_bugs_by_dates($dbh, $developer_id, $quat_beg, $quat_end, &$users, &$products)
 {
     // https://stackoverflow.com/questions/7691742/add-time-235959-999-to-end-date-for-between
     $sql   = "SELECT bugs.*,longdescs.work_time FROM longdescs,bugs where longdescs.bug_when between '".$quat_beg." 00:00:00' and '".$quat_end." 23:59:59' and longdescs.work_time!=0 and longdescs.who='".$developer_id."'and bugs.bug_id = longdescs.bug_id";
+    
     //var_dump($sql);
     //echo "<br>";
+
     $times = $dbh->query($sql);
     $bugs  = array();
     foreach ($times as $row)

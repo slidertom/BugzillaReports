@@ -49,6 +49,7 @@ function create_developer_filters_combo($dbh, $sel_dev_id, $filter)
         create_filter_option(DeveloperFilters::Open,           $filter);
         create_filter_option(DeveloperFilters::Assigned,       $filter);
         create_filter_option(DeveloperFilters::WeeklyProgress, $filter);
+        create_filter_option(DeveloperFilters::NextWeekPlan,   $filter);
         create_filter_option(DeveloperFilters::PrevQuaterProd, $filter);
         create_filter_option(DeveloperFilters::PrevQuaterMile, $filter);
         create_filter_option(DeveloperFilters::ThisQuaterProd, $filter);

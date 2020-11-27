@@ -1,9 +1,9 @@
 <?php
 
 /*
-	Copyright by Tomas Rapkauskas bugzilla_base/license.txt 
-	All rights reserved.
-	To use this component please contact slidertom@gmail.com to obtain a license.
+    Copyright by Tomas Rapkauskas bugzilla_base/license.txt 
+    All rights reserved.
+    To use this component please contact slidertom@gmail.com to obtain a license.
 */
 
 require_once("../bugzilla_base/connect_to_bugzilla_db.php");
@@ -15,9 +15,9 @@ $json_array = array();
 
 if ( !isset($_GET["bug_id"]) )
 {
-	echo json_encode($json_array);
-	//echo "no bug id defined";
-	return;
+    echo json_encode($json_array);
+    //echo "no bug id defined";
+    return;
 }
 
 $bug_id = $_GET["bug_id"];
@@ -25,19 +25,19 @@ $bug_id = $_GET["bug_id"];
 $dbh = connect_to_bugzilla_db();
 if ( $dbh == NULL ) 
 {
-	echo json_encode($json_array);
-	//echo "connection to the database failed!";
-	return;
-}	
+    echo json_encode($json_array);
+    //echo "connection to the database failed!";
+    return;
+}
 
 $users    = get_user_profiles($dbh);
 $products = products_get($dbh);
 $bug = bug_get_by_bug_id($dbh, $users, $products, $bug_id);
 if ( !$bug )
 {
-	echo json_encode($json_array);
-	//echo "bug was not found!";
-	return;
+    echo json_encode($json_array);
+    //echo "bug was not found!";
+    return;
 }
 
 $bug->m_worked_time = get_bug_work_time($dbh, $bug->m_bug_id);

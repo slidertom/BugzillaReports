@@ -24,30 +24,34 @@ class CBugData
     public $m_start_date;
     public $m_end_date;
     
-    public function IsOpened()
-    {
-        if ( $this->m_status == "NEW" || $this->m_status=="ASSIGNED" || $this->m_status=="REOPENED" )
-        {
+    public function IsOpened() {
+        if ( $this->m_status == "NEW" || $this->m_status=="ASSIGNED" || $this->m_status=="REOPENED" ) {
             return true;
         }
-        
         return false;
     }
     
+    public function InProgress() {
+        if ( $this->m_status=="ASSIGNED" || $this->m_status=="REOPENED" ) {
+            return true;
+        }
+        if ( $this->m_severity=="blocker" || $this->m_severity=="critical") {
+            return true;
+        }
+        return false;
+    }
+
     public function get_bug_remaining_time()
     {
         if ( $this->IsOpened() )
         {
-            if ($this->m_remaining_time > 0 )
-            {
+            if ($this->m_remaining_time > 0 ) {
                 return $this->m_remaining_time;
             }
-            else if ( $this->m_estimated_time > $this->m_worked_time )
-            {
+            else if ( $this->m_estimated_time > $this->m_worked_time ) {
                 return $this->m_estimated_time - $this->m_worked_time; // Database value is not OK.
             }
-            else if ( $this->m_estimated_time <= $this->m_worked_time )
-            {
+            else if ( $this->m_estimated_time <= $this->m_worked_time ) {
                 return 0;
             }
         }
@@ -60,7 +64,17 @@ class CBugData
         $rem = $this->get_bug_remaining_time();
         $wrk = $this->m_worked_time;
         $all = $rem + $wrk;
-        $per = $all > 0 ? $wrk / $all * 100 : 0;
+        if ( $this->IsOpened() ) {
+            if ( $rem <= 0 ) {
+                $per = 0;
+            }
+            else {
+                $per = $all > 0 ? $wrk / $all * 100 : 0;
+            }
+        }
+        else {
+            $per = $all > 0 ? $wrk / $all * 100 : 0;
+        }
         $per = number_format($per, 0);
         $per = $per. "%";
         return $per;
@@ -148,7 +162,7 @@ function bugs_echo_table_header()
 
 function bug_echo_row_summary(&$bug)
 {
-    $unestimated    = ($bug->IsOpened() && ($bug->m_estimated_time <= 0));
+    $unestimated    = ($bug->get_bug_remaining_time() <= 0) && $bug->IsOpened();
     $unest_class    = $unestimated ? "class='unestimated'" : "";
     $bug_class      = $bug->m_severity;
 
@@ -157,7 +171,7 @@ function bug_echo_row_summary(&$bug)
     $remaining_time = $unestimated ? "X" : $bug->get_bug_remaining_time();
     $email          = $bug->m_assigned_to->m_login_name;
     $name           = $bug->m_assigned_to->m_real_name;
-    $git_changes    = '../_GIT/index.php?filter=%23' . $bug->m_bug_id;
+    $git_changes    = '../_GIT/index.php?filter=%23'.$bug->m_bug_id;
     $product_name   = $bug->m_product->m_name;
     $milestone      = $bug->m_target_milestone;
     $start_date     = "";
@@ -165,8 +179,8 @@ function bug_echo_row_summary(&$bug)
     
     if ( $bug->m_start_date && $bug->m_end_date)
     {
-        $start_date     = $bug->m_start_date->format('Y-m-d');
-        $end_date       = $bug->m_end_date->format('Y-m-d');
+        $start_date = $bug->m_start_date->format('Y-m-d');
+        $end_date   = $bug->m_end_date->format('Y-m-d');
     }
     
     echo "<tr>\n";

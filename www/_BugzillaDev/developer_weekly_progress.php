@@ -87,7 +87,7 @@ function developer_weekly_progress($dbh, $users, $products, $developer_id, $year
             echo "<td>".print_bug_numbers_with_links($bugs_severity_change)."</td>";
         echo "</tr>";
         echo "<tr>";
-            echo "<td>Reassigned done by Developer</td><td>".count($bugs_reassigned)."</td>";
+            echo "<td>Reassigned bugs by Developer</td><td>".count($bugs_reassigned)."</td>";
             echo "<td>".print_bug_numbers_with_links($bugs_reassigned)."</td>";
         echo "</tr>";
         echo "<tr>";

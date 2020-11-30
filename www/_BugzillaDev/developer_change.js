@@ -91,7 +91,7 @@ function draw_developer_pie_mile_chart()
     }
 }
 
-function LoadDeveloperBugs(developer, filter, add_param=null)
+function load_developer_bugs(developer, filter, add_param=null)
 {
     let values = "Developer="+developer+"&Filter="+filter;
     if ( add_param ) {
@@ -109,11 +109,11 @@ function LoadDeveloperBugs(developer, filter, add_param=null)
         
         $(".summary").tablesorter({widgets: ['zebra']}); 
         
+        $(".openTable").find('td:nth-child(10),th:nth-child(10)').hide(); // start date 
+        $(".openTable").find('td:nth-child(11),th:nth-child(11)').hide(); // end date   
+        
         if ( document.getElementById("bugs_pie_chart") )
         {
-            $(".openTable").find('td:nth-child(10),th:nth-child(10)').hide(); // start date 
-            $(".openTable").find('td:nth-child(11),th:nth-child(11)').hide(); // end date   
-        
             if ( document.getElementById("bugs_pie_mile_data") ) {
                 draw_developer_pie_mile_chart();
             }
@@ -156,7 +156,7 @@ function refresh_developer_bugs()
     const add_param  = format_additional_date_time_ajax_params();            
     const developer  = select_get_value('Developer');
     const filter     = select_get_value("Developer_Filters_Combo");
-    LoadDeveloperBugs(developer, filter, add_param);
+    load_developer_bugs(developer, filter, add_param);
     history_update();
     g_internal_change = false;
 }
@@ -213,7 +213,7 @@ $(document).ready(function()
                 if ( month ) {
                     add_param += "month="+month;
                 }
-                LoadDeveloperBugs(developer, filter, add_param);
+                load_developer_bugs(developer, filter, add_param);
             }
         }, false);
     };

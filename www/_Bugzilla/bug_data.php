@@ -156,6 +156,7 @@ function bugs_echo_table_header()
     /* 9*/echo "\t<th>           Start d. </th>\n";
     /* 9*/echo "\t<th>           End d. </th>\n";
     /*10*/echo "\t<th>           Summary  </th>\n";
+    /*11*/echo "\t<th>           Reporter </th>\n";
     echo "</tr>\n";
     echo "</thead>\n";
 }
@@ -169,8 +170,8 @@ function bug_echo_row_summary(&$bug)
     $worked_time    = $bug->m_worked_time;
     $complete       = $bug->get_complete();
     $remaining_time = $unestimated ? "X" : $bug->get_bug_remaining_time();
-    $email          = $bug->m_assigned_to->m_login_name;
-    $name           = $bug->m_assigned_to->m_real_name;
+    $assignee_email = $bug->m_assigned_to->m_login_name;
+    $assignee_name  = $bug->m_assigned_to->m_real_name;
     $git_changes    = '../_GIT/index.php?filter=%23'.$bug->m_bug_id;
     $product_name   = $bug->m_product->m_name;
     $milestone      = $bug->m_target_milestone;
@@ -183,19 +184,23 @@ function bug_echo_row_summary(&$bug)
         $end_date   = $bug->m_end_date->format('Y-m-d');
     }
     
+    $reporter_name  = $bug->m_reporter->m_real_name;
+    $reporter_email = $bug->m_reporter->m_login_name;
+    
     echo "<tr>\n";
     /* 1*/echo "\t<td>".generate_bug_link_href($bug->m_bug_id)."                                </td>\n";
     /* 2*/echo "\t<td class = '$bug_class'>                          $bug->m_severity           </td>\n";
     /* 3*/echo "\t<td>                                               $bug->m_priority           </td>\n";
-    /* 4*/echo "\t<td>                      <a href=mailto:'$email'> $name               </a>   </td>\n";
+    /* 4*/echo "\t<td>             <a href=mailto:'$assignee_email'> $assignee_name      </a>   </td>\n";
     /* 5*/echo "\t<td align=right>                                   $bug->m_worked_time        </td>\n";
-    /* 6*/echo "\t<td $unest_class align=right>               		 $remaining_time            </td>\n";
+    /* 6*/echo "\t<td $unest_class align=right>                      $remaining_time            </td>\n";
     /* 7*/echo "\t<td align=right>          <a href='$git_changes'>  $complete           </a>   </td>\n";
-    /* 8*/echo "\t<td>											     $product_name</td>\n";
-    /* 9*/echo "\t<td>											     $milestone</td>\n";
-    /* 9*/echo "\t<td>											     $start_date</td>\n";
-    /* 9*/echo "\t<td>											     $end_date</td>\n";
+    /* 8*/echo "\t<td>                                               $product_name</td>\n";
+    /* 9*/echo "\t<td>                                               $milestone</td>\n";
+    /* 9*/echo "\t<td>                                               $start_date</td>\n";
+    /* 9*/echo "\t<td>                                               $end_date</td>\n";
     /*10*/echo "\t<td class = '$bug_class'>                          &nbsp;&nbsp;$bug->m_summary</td>\n";
+    /*11*/echo "\t<td>             <a href=mailto:'$reporter_email'> $reporter_name      </a>   </td>\n";
     echo "</tr>\n\n";
 }
 

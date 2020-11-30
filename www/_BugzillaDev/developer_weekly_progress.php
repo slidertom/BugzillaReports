@@ -31,7 +31,7 @@ function developer_weekly_progress($dbh, $users, $products, $developer_id, $year
     $bugs_fixed      = get_changed_developer_bugs_by_dates($dbh, $developer_id, $week_start, $week_end, $users, $products, "FIXED");
     $bugs_reopen     = get_changed_developer_bugs_by_dates($dbh, $developer_id, $week_start, $week_end, $users, $products, "REOPENED");
     $bugs_verified   = get_changed_developer_bugs_by_dates($dbh, $developer_id, $week_start, $week_end, $users, $products, "VERIFIED");
-    $bugs_created    = get_managed_developer_bugs_by_dates($dbh, $developer_id, $week_start, $week_end, $users, $products, 19);
+    $bugs_reported   = get_reported_developer_bugs_by_dates($dbh, $developer_id, $week_start, $week_end, $users, $products);
     $bugs_estimated  = get_managed_developer_bugs_by_dates($dbh, $developer_id, $week_start, $week_end, $users, $products, 50);
 
     echo "<h3>Development</h3>";
@@ -50,8 +50,8 @@ function developer_weekly_progress($dbh, $users, $products, $developer_id, $year
             echo "<td>".print_bug_numbers_with_links($bugs_estimated)."</td>";
         echo "</tr>";
         echo "<tr>";
-            echo "<td>Created bugs by Developer</td><td>".count($bugs_created)."</td>";
-            echo "<td>".print_bug_numbers_with_links($bugs_created)."</td>";
+            echo "<td>Reported bugs by Developer</td><td>".count($bugs_reported)."</td>";
+            echo "<td>".print_bug_numbers_with_links($bugs_reported)."</td>";
         echo "</tr>";
         echo "<tr>";
             echo "<td>Reopened status applied by Developer</td><td>".count($bugs_reopen)."</td>";

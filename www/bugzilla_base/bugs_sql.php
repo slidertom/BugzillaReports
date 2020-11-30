@@ -204,7 +204,6 @@ function get_changed_developer_bugs_by_dates($dbh, $developer_id, $quat_beg, $qu
     }
     
     $bugs = array_filter($bugs, "is_non_web_kozinjn_bug");
-    
     return $bugs;
 }
 
@@ -214,7 +213,6 @@ function get_changed_developer_bugs_by_dates($dbh, $developer_id, $quat_beg, $qu
 // $field_id = 12; => severity changhe
 // $field_id = 13; => priority changhe
 // $field_id = 15; => reassigned
-// $field_id = 19; => created
 // $field_id = 20; => depends
 // $field_id = 21; => blocks
 // $field_id = 26; => milestone
@@ -252,7 +250,6 @@ function get_managed_developer_bugs_by_dates($dbh, $developer_id, $quat_beg, $qu
     }
     
     $bugs = array_filter($bugs, "is_non_web_kozinjn_bug");
-    
     return $bugs;
 }
 
@@ -282,7 +279,31 @@ function get_worked_developer_bugs_by_dates($dbh, $developer_id, $quat_beg, $qua
     }
     
     $bugs = array_filter($bugs, "is_non_web_kozinjn_bug");
+    return $bugs;
+}
+
+function get_reported_developer_bugs_by_dates($dbh, $developer_id, $quat_beg, $quat_end, &$users, &$products)
+{
+    $sql   = "SELECT bugs.* 
+              FROM bugs 
+              where bugs.creation_ts 
+              between '".$quat_beg." 00:00:00' and '".$quat_end." 23:59:59' 
+              and
+              bugs.bug_status='NEW' 
+              and
+              bugs.reporter='".$developer_id."'";
+    //var_dump($sql);
+    $times = $dbh->query($sql);
+    // var_dump($times);
+    $bugs  = array();
+    foreach ($times as $row)
+    {
+        $bug_id = $row['bug_id'];
+        $bug = parse_row_to_bug_data($row, $users, $products);
+        $bugs[$bug_id] = $bug;
+    }
     
+    $bugs = array_filter($bugs, "is_non_web_kozinjn_bug");
     return $bugs;
 }
 

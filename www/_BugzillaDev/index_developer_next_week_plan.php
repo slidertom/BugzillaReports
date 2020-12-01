@@ -59,8 +59,8 @@ class CGenerateDeveloperNextWeelPlanPage
         echo "<script type='text/javascript' src='../jquery/jgplot/jquery.jqplot.min.js'></script>";
         echo "<script type='text/javascript' src='../jquery/jgplot/plugins/jqplot.pieRenderer.min.js'></script>";
         echo "<script type='text/javascript' src='../jquery/jgplot/plugins/jqplot.donutRenderer.min.js'></script>";
-        //echo "<script type='text/javascript' src='../tools/select_ctrl.js'></script>"; 		
-        //echo "<script type='text/javascript' src='../tools/date_time_util.js'></script>"; 		
+        //echo "<script type='text/javascript' src='../tools/select_ctrl.js'></script>"; 
+        //echo "<script type='text/javascript' src='../tools/date_time_util.js'></script>";
         //echo "<script type='text/javascript' src='developer_change.js'></script>"; 
     }
     

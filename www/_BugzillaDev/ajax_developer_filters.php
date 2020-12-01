@@ -20,8 +20,8 @@ $filter       = isset($_GET['Filter']) ? $_GET['Filter'] : "open_bugs";
 
 $dbh = connect_to_bugzilla_db();
 if ( $dbh == NULL ) {
-	return;
-}	
+    return;
+}
 
 create_developer_filters_combo($dbh, $developer_id, $filter);
 ?>

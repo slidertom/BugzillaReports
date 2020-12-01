@@ -23,22 +23,21 @@ function json_key_string_to_array(values)
 
 function draw_developer_pie_chart()
 {
-    try
-    {
+    try {
         let height = $("#bugs_pie_chart").parent().parent().height();       
         let values = $("#bugs_pie_data").html();
-        
         //alert(values);
+        if ( height < 150 ) {
+            height = 150;
+        }
         $("#bugs_pie_chart").height(height);
         
         var data = json_key_string_to_array(values);
-        
         var plot1 = jQuery.jqplot('bugs_pie_chart', [data],
         {
               seriesColors: [ "#3366cc", "#990099", "#109618", "#dc3912", "#ff9900", "#958c12", "#953579", "#4b5de4", "#d8b83f", "#ff5800", "#0085cc"], 
               seriesDefaults: {
-                // Make this a pie chart.
-                renderer: jQuery.jqplot.PieRenderer,
+                renderer: jQuery.jqplot.PieRenderer, // Make this a pie chart.
                 rendererOptions: {
                   // Put data labels on the pie slices.
                   // By default, labels show the percentage of the slice.
@@ -48,7 +47,6 @@ function draw_developer_pie_chart()
               },
               legend: { show:true, location: 'e' }
         });
-        //  alert("ok");
     }
     catch (e) {
         alert(e.message);
@@ -57,23 +55,29 @@ function draw_developer_pie_chart()
 
 function draw_developer_pie_mile_chart()
 {
-    try
-    {
-        var height = $("#bugs_pie_chart").parent().parent().height();       
-        var prod_values = $("#bugs_pie_data").html();
-        var mile_values = $("#bugs_pie_mile_data").html();
+    try {
+        const prod_values = $("#bugs_pie_data").html();
+        const mile_values = $("#bugs_pie_mile_data").html();
+        const mile_data = json_key_string_to_array(mile_values);
+        const prod_data = json_key_string_to_array(prod_values);
         
+        if ( mile_data.length <= 1) {
+            draw_developer_pie_chart(); // switch into pie chart as only one milestone
+            return;
+        }
+        
+        let height = $("#bugs_pie_chart").parent().parent().height();       
+        if ( height < 150 ) {
+            height = 150;
+        }
+
         $("#bugs_pie_chart").height(height);
-        
-        var mile_data = json_key_string_to_array(mile_values);
-        var prod_data = json_key_string_to_array(prod_values);
         
         var plot1 = jQuery.jqplot('bugs_pie_chart', [mile_data, prod_data],
         {
               seriesColors: [ "#3366cc", "#990099", "#109618", "#dc3912", "#ff9900", "#958c12", "#953579", "#4b5de4", "#d8b83f", "#ff5800", "#0085cc", "#222222"], 
               seriesDefaults: {
-                // Make this a pie chart.
-                renderer: jQuery.jqplot.DonutRenderer,
+                renderer: jQuery.jqplot.DonutRenderer, 
                 rendererOptions: {
                   // Put data labels on the pie slices.
                   // By default, labels show the percentage of the slice.
@@ -101,16 +105,16 @@ function load_developer_bugs(developer, filter, add_param=null)
     
     ajaxPostSync("ajax_developer_bugs.php?"+values, "", function(data) 
     {
-        var open_hint = document.getElementById("OpenedHint");
+        const open_hint = document.getElementById("OpenedHint");
         open_hint.innerHTML=data;   
-        // This tells tablesorter to sort on third column in ascending order.
-        $(".openTable").tablesorter({sortList: [[2,0], [1, 0]], widgets: ['zebra']}); 
-        //$('td:nth-child(2),th:nth-child(2)').hide();
-        
-        $(".summary").tablesorter({widgets: ['zebra']}); 
 
-        $(".openTable").find('td:nth-child(10),th:nth-child(10)').hide(); // start date 
-        $(".openTable").find('td:nth-child(11),th:nth-child(11)').hide(); // end date   
+        // This tells tablesorter to sort on third column in ascending order.
+        const bugs_tables = $(".openTable");
+        bugs_tables.tablesorter({sortList: [[2,0], [1, 0]], widgets: ['zebra']}); 
+        //$('td:nth-child(2),th:nth-child(2)').hide();
+        $(".summary").tablesorter({widgets: ['zebra']}); 
+        bugs_tables.find('td:nth-child(10),th:nth-child(10)').hide(); // start date 
+        bugs_tables.find('td:nth-child(11),th:nth-child(11)').hide(); // end date   
         
         if ( document.getElementById("bugs_pie_chart") )
         {
@@ -177,9 +181,9 @@ $(document).ready(function()
 {
     let refresh_developer_bugs_and_filters = function()
     {
-        let developer = select_get_value('Developer');
-        let filter    = select_get_value('Developer_Filters_Combo');
-        let values = "developer="+developer+"&Filter="+filter;
+        const developer = select_get_value('Developer');
+        const filter    = select_get_value('Developer_Filters_Combo');
+        const values = "developer="+developer+"&Filter="+filter;
         ajaxPost("ajax_developer_filters.php?"+values, "", function(data) 
         {
             let filter_ctrl = document.getElementById("openedDevFilters");

@@ -13,7 +13,8 @@ $g_username          = 'reporter';      // bugzilla mysql username
 $g_password          = 'password';      // bugzilla mysql user password
 $g_bugzilla_link     = "http://localhost/bugzilla";  // bugzilla http link, used to generate <a href> bug links, 
                                                      // do check out generate_bug_link function                                                          
-                                                     
+$server_title        = "Bugzilla Reports";
+
 function generate_bug_link($bug_id)
 {
 	global $g_bugzilla_link;

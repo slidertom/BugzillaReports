@@ -55,7 +55,6 @@ function developer_bugs_to_table_by_product(&$bugs_array)
     ksort($product_bugs);
     
     developer_bugs_by_product_summary_table($bugs_array, $product_bugs);
-    
     developer_bugs_by_products_tables($product_bugs);
 }
 

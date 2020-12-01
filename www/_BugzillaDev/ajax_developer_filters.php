@@ -11,11 +11,11 @@ ob_start('ob_gzhandler');
 require_once 'developer_filters.php';
 require_once '../bugzilla_base/connect_to_bugzilla_db.php';
 
-if ( !isset($_GET['Developer']) ) {
-	return;
+if ( !isset($_GET['developer']) ) {
+    return;
 }
 
-$developer_id = $_GET['Developer'];
+$developer_id = $_GET['developer'];
 $filter       = isset($_GET['Filter']) ? $_GET['Filter'] : "open_bugs";
 
 $dbh = connect_to_bugzilla_db();

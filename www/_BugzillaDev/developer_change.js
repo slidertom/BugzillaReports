@@ -93,7 +93,7 @@ function draw_developer_pie_mile_chart()
 
 function load_developer_bugs(developer, filter, add_param=null)
 {
-    let values = "Developer="+developer+"&Filter="+filter;
+    let values = "developer="+developer+"&Filter="+filter;
     if ( add_param ) {
         values += "&";
         values += add_param;
@@ -108,7 +108,7 @@ function load_developer_bugs(developer, filter, add_param=null)
         //$('td:nth-child(2),th:nth-child(2)').hide();
         
         $(".summary").tablesorter({widgets: ['zebra']}); 
-        
+
         $(".openTable").find('td:nth-child(10),th:nth-child(10)').hide(); // start date 
         $(".openTable").find('td:nth-child(11),th:nth-child(11)').hide(); // end date   
         
@@ -179,7 +179,7 @@ $(document).ready(function()
     {
         let developer = select_get_value('Developer');
         let filter    = select_get_value('Developer_Filters_Combo');
-        let values = "Developer="+developer+"&Filter="+filter;
+        let values = "developer="+developer+"&Filter="+filter;
         ajaxPost("ajax_developer_filters.php?"+values, "", function(data) 
         {
             let filter_ctrl = document.getElementById("openedDevFilters");

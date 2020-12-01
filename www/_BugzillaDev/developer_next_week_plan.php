@@ -1,4 +1,7 @@
 <?php
+require_once 'developer_milestone_table.php';
+require_once (__DIR__).'/../_Bugzilla/bugs_start_end_dates.php';
+
 function cmp_bug_priority($bug1, $bug2)
 {
     if (strcmp($bug1->m_priority, $bug2->m_priority) == 0) {
@@ -45,5 +48,16 @@ function filter_bugs_till_remain_40h($bugs)
     return $bugs_ret;
 }
 
+function echo_developer_next_week_plan($dbh, $users, $products, $developer_id)
+{
+    $bugs = bugs_get_by_developer($dbh, $users, $products, $developer_id);
+    $bugs = array_filter($bugs, "is_non_web_kozinjn_bug");
+    bugs_update_worked_time($dbh, $bugs);
+    bugs_init_start_end_dates($bugs);
+    $bugs = filter_bugs_till_remain_40h($bugs);
+    $work_time_left = get_bugs_work_time($bugs);
+    echo "<br><div><b>Remaining time:</b> $work_time_left h</div>";
+    developer_milestone_bugs_to_table($bugs);
+}
 
 ?>

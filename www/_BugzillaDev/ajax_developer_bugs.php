@@ -27,8 +27,8 @@ function filter_by_product($bug)
 
 function bugs_by_developer_echo_table(&$dbh, $developer_id, $filter)
 {
-    $users        = get_user_profiles($dbh); // <userid><login_name>
-    $products     = products_get($dbh);
+    $users    = get_user_profiles($dbh); // <userid><login_name>
+    $products = products_get($dbh);
     $bugs;
     
     if ( $filter == DeveloperFilters::Assigned ) {
@@ -41,14 +41,7 @@ function bugs_by_developer_echo_table(&$dbh, $developer_id, $filter)
         return;
     }
     else if ( $filter == DeveloperFilters::NextWeekPlan) {
-        $bugs = bugs_get_by_developer($dbh, $users, $products, $developer_id);
-        $bugs = array_filter($bugs, "is_non_web_kozinjn_bug");
-        bugs_update_worked_time($dbh, $bugs);
-        bugs_init_start_end_dates($bugs);
-        $bugs = filter_bugs_till_remain_40h($bugs);
-        $work_time_left = get_bugs_work_time($bugs);
-        echo "<br><div><b>Remaining time:</b> $work_time_left h</div>";
-        developer_milestone_bugs_to_table($bugs);
+        echo_developer_next_week_plan($dbh, $users, $products, $developer_id);
         return;
     }
     else if ( $filter == DeveloperFilters::ThisYear ) {
@@ -130,12 +123,12 @@ function bugs_by_developer_echo_table(&$dbh, $developer_id, $filter)
     
     bugs_echo_table($bugs, " ", "openTable tablesorter");
 }
-
-if ( !isset($_GET['Developer']) ) {
+//var_dump($_GET);
+if ( !isset($_GET['developer']) ) {
     return;
 }
 
-$developer_id = $_GET['Developer'];
+$developer_id = $_GET['developer'];
 $filter       = isset($_GET['Filter']) ? $_GET['Filter'] : "open_bugs";
 
 $dbh = connect_to_bugzilla_db();

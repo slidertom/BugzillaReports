@@ -89,8 +89,7 @@ function draw_developer_pie_mile_chart()
         });
         //  alert("ok");
     }
-    catch (e)
-    {
+    catch (e) {
         alert(e.message);
     }
 }

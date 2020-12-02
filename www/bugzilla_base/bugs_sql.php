@@ -289,11 +289,10 @@ function get_reported_developer_bugs_by_dates($dbh, $developer_id, $quat_beg, $q
               where bugs.creation_ts 
               between '".$quat_beg." 00:00:00' and '".$quat_end." 23:59:59' 
               and
-              bugs.bug_status='NEW' 
-              and
               bugs.reporter='".$developer_id."'";
     //var_dump($sql);
     $times = $dbh->query($sql);
+    echo "<br>";
     // var_dump($times);
     $bugs  = array();
     foreach ($times as $row)

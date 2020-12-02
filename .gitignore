@@ -1,3 +1,4 @@
 *.log
 *.pid
 __*.php
+/www/weekly_plans

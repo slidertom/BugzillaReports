@@ -80,6 +80,11 @@ class CGenerateDeveloperNextWeelPlanPage
     
         $users    = get_user_profiles($dbh); // <userid><login_name>
         $products = products_get($dbh);
+
+        $developer = $users[$developer_id];
+        $date = date("Y-m-d H:i");
+        echo "<h3>$developer->m_real_name $date</h3>";
+        
         echo_developer_next_week_plan($dbh, $users, $products, $developer_id);
     }
 }

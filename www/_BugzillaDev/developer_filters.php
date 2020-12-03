@@ -19,7 +19,7 @@ function get_developer_products($dbh, $developer_id)
     
     bugs_explode_by_product($pro_bugs, $bugs);
     
-    foreach ($bugs as $bug )
+    foreach ($bugs as $bug)
     {
         if ( !isset($dev_products[$bug->m_product->m_id] ) ) {
             $count = count($pro_bugs[$bug->m_product->m_name]);

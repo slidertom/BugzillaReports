@@ -50,6 +50,14 @@ function filter_bugs_till_remain_40h($bugs)
 
 function echo_developer_next_week_plan($dbh, $users, $products, $developer_id)
 {
+    $date = date("Y-m-d");
+    
+    $week = DateTimeUtil::get_current_week();
+    $week_start = $date;
+    $week_end   = date('Y-m-d', strtotime(' +7 day'));
+
+    echo "<br>Next Week Plan: [$week_start - $week_end]<br>";
+    
     $bugs = bugs_get_by_developer($dbh, $users, $products, $developer_id);
     $bugs = array_filter($bugs, "is_non_web_kozinjn_bug");
     bugs_update_worked_time($dbh, $bugs);

@@ -9,12 +9,11 @@ if ($dbh == NULL) {
 }
 
 $dir = (__DIR__)."/../weekly_plans";
-$dir = realpath($dir);
 if ( !file_exists($dir) ) {
     mkdir($dir);
 }
 
- 
+$dir = realpath($dir);
 $index_dir = $dir."/../tools/folder_to_html.php";
 $index_dir = realpath($index_dir);
 copy($index_dir, $dir."/index.php");

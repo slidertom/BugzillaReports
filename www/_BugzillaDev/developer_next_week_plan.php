@@ -48,7 +48,7 @@ function filter_bugs_till_remain_40h($bugs)
     return $bugs_ret;
 }
 
-function echo_developer_next_week_plan($dbh, $users, $products, $developer_id)
+function echo_developer_next_week_plan($dbh, $users, $products, $developer_id, $create_link)
 {
     $date = date("Y-m-d");
     
@@ -56,8 +56,28 @@ function echo_developer_next_week_plan($dbh, $users, $products, $developer_id)
     $week_start = $date;
     $week_end   = date('Y-m-d', strtotime(' +7 day'));
 
-    echo "<br>Next Week Plan: [$week_start - $week_end]<br>";
-    
+    echo "<br>Next Week Plan: [$week_start - $week_end]";
+    if ( $create_link ) {
+        $dir = (__DIR__)."/../weekly_plans";
+        $dir = realpath($dir);
+        $login_name = $users[$developer_id]->m_login_name;
+        $developer_path = $dir."/".$login_name;
+        $year = DateTimeUtil::get_current_year();
+        $files = glob($developer_path."/".$year."-".$week."*.pdf");
+        //var_dump($files);
+        foreach ($files as $file) {
+            $fileList[filemtime($file)] = $file;
+        }
+        ksort($fileList);
+        foreach ($fileList as $file) {
+            $basename = basename($file);
+            echo "<span>&nbsp&nbsp&nbsp&nbspGenerated document:&nbsp</span>";
+            $show_name = str_replace("__", ":", $basename);
+            echo "<a href='/weekly_plans/$login_name/$basename'>$show_name</a><br>";
+            break;
+        }
+    }
+    echo "<br>";
     $bugs = bugs_get_by_developer($dbh, $users, $products, $developer_id);
     $bugs = array_filter($bugs, "is_non_web_kozinjn_bug");
     bugs_update_worked_time($dbh, $bugs);

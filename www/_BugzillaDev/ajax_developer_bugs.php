@@ -41,7 +41,7 @@ function bugs_by_developer_echo_table(&$dbh, $developer_id, $filter)
         return;
     }
     else if ( $filter == DeveloperFilters::NextWeekPlan) {
-        echo_developer_next_week_plan($dbh, $users, $products, $developer_id);
+        echo_developer_next_week_plan($dbh, $users, $products, $developer_id, true);
         return;
     }
     else if ( $filter == DeveloperFilters::ThisYear ) {

@@ -85,7 +85,7 @@ class CGenerateDeveloperNextWeelPlanPage
         $date = date("Y-m-d H:i");
         echo "<h3>$developer->m_real_name $date</h3>";
         
-        echo_developer_next_week_plan($dbh, $users, $products, $developer_id);
+        echo_developer_next_week_plan($dbh, $users, $products, $developer_id, false);
     }
 }
 

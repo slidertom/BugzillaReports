@@ -65,6 +65,7 @@ function echo_developer_next_week_plan($dbh, $users, $products, $developer_id, $
         $year = DateTimeUtil::get_current_year();
         $files = glob($developer_path."/".$year."-".$week."*.pdf");
         //var_dump($files);
+        $fileList = [];
         foreach ($files as $file) {
             $fileList[filemtime($file)] = $file;
         }

@@ -59,7 +59,7 @@ foreach($users as $id => $user) {
     $week_start_end_format = "[".$week_start."-".$week_end."][".$now_time."]";
     $report_pdf = $developer_path."/".$year."-".$week."_".$week_start_end_format.".pdf";
     //var_dump($id);
-    $cmd = $converter_path." --javascript-delay 2000 "."\"".$developer_call."\""." "."\"".$report_pdf."\"";
+    $cmd = $converter_path." --javascript-delay 2000 -O landscape "."\"".$developer_call."\""." "."\"".$report_pdf."\"";
     $re = shell_exec("$cmd 2>&1");
     echo "<br><div>$cmd</div>";
     //http://localhost:89/_BugzillaDev/index.php?developer=19&filter=next_week_plan

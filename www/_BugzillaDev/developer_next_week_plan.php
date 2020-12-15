@@ -5,7 +5,7 @@ require_once (__DIR__).'/../_Bugzilla/bugs_start_end_dates.php';
 function cmp_bug_priority($bug1, $bug2)
 {
     if (strcmp($bug1->m_priority, $bug2->m_priority) == 0) {
-        return 0; // TODO compare by severity
+        return strcmp($bug1->m_severity, $bug2->m_severity);
     }
 
     $p1 = intval(ltrim($bug1->m_priority, 'P'));

@@ -2,7 +2,7 @@
 require_once 'developer_milestone_table.php';
 require_once (__DIR__).'/../_Bugzilla/bugs_start_end_dates.php';
 
-function cmp_bug_priority($bug1, $bug2)
+function cmp_bug_priority_severity($bug1, $bug2)
 {
     if (strcmp($bug1->m_priority, $bug2->m_priority) == 0) {
         return strcmp($bug1->m_severity, $bug2->m_severity);
@@ -15,7 +15,7 @@ function cmp_bug_priority($bug1, $bug2)
 
 function filter_bugs_till_remain_40h($bugs)
 {
-    usort($bugs, "cmp_bug_priority");
+    usort($bugs, "cmp_bug_priority_severity");
     $all_time = 0;
     $bugs_ret = [];
     $bugs_review = [];
@@ -40,11 +40,13 @@ function filter_bugs_till_remain_40h($bugs)
             $bugs_ret[$key] = $bug;
             if ($all_time > 40) {
                 //var_dump($all_time);
+                usort($bugs_ret, "cmp_bug_priority_severity");
                 return $bugs_ret;    
             }
         }
     }
     //var_dump($all_time);
+    usort($bugs_ret, "cmp_bug_priority_severity");
     return $bugs_ret;
 }
 

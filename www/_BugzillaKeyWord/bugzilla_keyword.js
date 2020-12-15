@@ -117,6 +117,9 @@ function create_gantt_chart(keyword)
                 },
                 onAddClick: function(dt, rowId) {
                     //alert("Empty space clicked - add an item!");
+                },
+                onRender: function() {
+                    gantt_tooltips.init_tooltips();
                 }
             });     
         });
@@ -125,63 +128,6 @@ function create_gantt_chart(keyword)
         //alert(e.message);
     }
 }
-
-function create_bug_tooltip(item_id, bug_id_text, bug_data)
-{
-    try
-    {
-        var title           = bug_id_text+": "      +bug_data.summary;
-        var reporter_div    = "<div>Reporter:       "+bug_data.reporter+"</div>";
-        var remain_time_div = "<div>Remaining time: "+bug_data.remain_time+" h</div>";
-        var priority_div    = "<div>Priority:       "+bug_data.priority+"</div>";
-        var severity_div    = "<div>Severity:       "+bug_data.severity+"</div>";
-        var complete_div    = "<div>Completed:      "+bug_data.complete+"</div>";
-        var worked_div      = "<div>Worked:         "+bug_data.worked_time+" h</div>";
-        
-        var content = priority_div + severity_div + reporter_div + remain_time_div+worked_div+complete_div;
-        // now just create a tooltip
-        jQuery(item_id).addTip(content, title, { target: true, stem: true, tipJoint: [ "left", "middle" ], showOn: "creation", showEffect: 'appear' });
-        // next time please show tooltip on mouseover
-        jQuery(item_id).addTip(content, title, { target: true, stem: true, tipJoint: [ "left", "middle" ], showEffect: 'appear' });
-    }
-    catch (e) {
-        alert(e.message);
-    }
-}
-
-jQuery('.GanttBug').on('mouseover', function() 
-{ 
-    try
-    {
-        var child = jQuery(this).find(".fn-label").first();
-        if ( !child ) {
-            return;
-        }
-        
-        //var str_id = parseInt(jQuery(this).attr("id"));
-        var str_id = jQuery(this).attr("id");
-        if ( typeof str_id !== "undefined" ) {
-            return;
-        }
-        
-        var bug_id_text = child.text();
-        var values = "bug_id="+bug_id_text;
-        
-        var external_bug_data;
-        jsonPostSync("ajax_json_get_bug_info.php?"+values, "", function(bug_data) {   
-            external_bug_data = bug_data;
-        });
-        
-        var item_id = "bug_" + bug_id_text;
-        //alert(item_id);
-        jQuery(this).attr("id", item_id);
-        //alert(child.text());
-        create_bug_tooltip(item_id, bug_id_text, external_bug_data);
-    }
-    catch (e) {
-        alert(e.message);
-    }
-});
 
 function history_update()
 {

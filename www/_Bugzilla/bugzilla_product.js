@@ -8,26 +8,26 @@ jQuery.noConflict();
 
 function update_milestone_dropdown() 
 { 
-	let product = select_get_value("Product");
-	if ( !product ) {
-		return;
-	}
-	
-	const urlParams = new URLSearchParams(window.location.search);
-	let filter = urlParams.get('filter');
+    let product = select_get_value("Product");
+    if ( !product ) {
+        return;
+    }
+    
+    const urlParams = new URLSearchParams(window.location.search);
+    let filter = urlParams.get('filter');
         filter = filter ? filter : "";
     let values = "Product="+product+"&Milestone="+filter;
     ajaxPostSync("milestones.php?"+values, "", function(data) {
         document.getElementById("milestoneHint").innerHTML=data;
-		bind_milestone_change();
+        bind_milestone_change();
     });	
 } 
 
 function Milestone_ChangeWithProduct() 
 { 
-	let product   = select_get_value("Product");
+    let product   = select_get_value("Product");
     let milestone = select_get_value("Milestone");
-	
+    
     create_gantt_chart(product, milestone);
     
     if (!milestone || !product) {
@@ -88,8 +88,8 @@ function Milestone_ChangeWithProduct()
             }
         });
     }
-	
-	bind_year_select_change();
+    
+    bind_year_select_change();
     bind_month_select_change();
 } 
   
@@ -111,109 +111,44 @@ function open_in_new_tab(url)
 
 function create_gantt_chart(product, milestone)
 {
-	let gantt_ctrl = document.getElementById('product_gantt');
-	if ( !gantt_ctrl ) {
-		return;
-	}
-	
-    try
+    const gantt_ctrl = document.getElementById('product_gantt');
+    if ( !gantt_ctrl ) {
+        return;
+    }
+
+    const values = "Product="+product+"&Milestone="+milestone;
+    jsonPost("ajax_json_get_product_bugs.php?"+values, "", function(gantt_data) 
     {
-        let values  = "Product="+product+"&Milestone="+milestone;
-        jsonPost("ajax_json_get_product_bugs.php?"+values, "", function(gantt_data) 
+        if ( !gantt_data || gantt_data.length <= 0) {
+            jQuery("#product_gantt").html("");
+            return;
+        }
+        
+        const gantt_chart = jQuery("#product_gantt")
+        gantt_chart.gantt(
         {
-            if ( !gantt_data || gantt_data.length <= 0)
-            {
-                jQuery("#product_gantt").html("");
-                return;
-            }
-			
-            jQuery("#product_gantt").gantt(
-            {
-                source:   gantt_data,
-                scale:    "days",
-                minScale: "days",
-                maxScale: "months",
-                onItemClick: function(data) {
-                    if ( jQuery("#bug_tab").val() == "true" ) {
-                        open_in_new_tab(data);
-                    }
-                    else {
-                        window.location.href = data;
-                    }
-                    //alert("Item clicked - show some details");
-                },
-                onAddClick: function(dt, rowId) {
-                    //alert("Empty space clicked - add an item!");
+            source:   gantt_data,
+            scale:    "days",
+            minScale: "days",
+            maxScale: "months",
+            onItemClick: function(data) {
+                if ( jQuery("#bug_tab").val() == "true" ) {
+                    open_in_new_tab(data);
                 }
-            });     
-        });
-    }
-    catch (e) {
-        //alert(e.message);
-    }
+                else {
+                    window.location.href = data;
+                }
+                //alert("Item clicked - show some details");
+            },
+            onAddClick: function(dt, rowId) {
+                //alert("Empty space clicked - add an item!");
+            },
+            onRender: function() {
+                gantt_tooltips.init_tooltips();
+            }
+        });  
+    });
 }
-
-function create_bug_tooltip(item_id, bug_id_text, bug_data)
-{
-    try
-    {
-        var title           = bug_id_text+": "      +bug_data.summary;
-        var reporter_div    = "<div>Reporter:       "+bug_data.reporter+"</div>";
-        var remain_time_div = "<div>Remaining time: "+bug_data.remain_time+" h</div>";
-        var priority_div    = "<div>Priority:       "+bug_data.priority+"</div>";
-        var severity_div    = "<div>Severity:       "+bug_data.severity+"</div>";
-        var complete_div    = "<div>Completed:      "+bug_data.complete+"</div>";
-        var worked_div      = "<div>Worked:         "+bug_data.worked_time+" h</div>";
-        
-        var content = priority_div + severity_div + reporter_div + remain_time_div+worked_div+complete_div;
-        // now just create a tooltip
-        $(item_id).addTip(content, title, { target: true, stem: true, tipJoint: [ "left", "middle" ], showOn: "creation", showEffect: 'appear' });
-        // next time please show tooltip on mouseover
-        $(item_id).addTip(content, title, { target: true, stem: true, tipJoint: [ "left", "middle" ], showEffect: 'appear' });
-    }
-    catch (e)
-    {
-        alert(e.message);
-    }
-}
-
-jQuery('.GanttBug').on('mouseover', function() 
-{ 
-    try
-    {
-        var child = jQuery(this).find(".fn-label").first();
-        if ( !child )
-        {
-            return;
-        }
-        
-        //var str_id = parseInt(jQuery(this).attr("id"));
-        var str_id = jQuery(this).attr("id");
-        if ( typeof str_id !== "undefined" ) {
-            return;
-        }
-        
-        var bug_id_text = child.text();
-        var values = "bug_id="+bug_id_text;
-        
-        //ajaxPostSync("ajax_json_get_bug_info.php?"+values, "", function(bug_data) 
-        var external_bug_data;
-        jsonPostSync("ajax_json_get_bug_info.php?"+values, "", function(bug_data) 
-        {   
-            external_bug_data = bug_data;
-        });
-        
-        var item_id = "bug_" + bug_id_text;
-        //alert(item_id);
-        jQuery(this).attr("id", item_id);
-    
-        //alert(child.text());
-        create_bug_tooltip(item_id, bug_id_text, external_bug_data);
-    }
-    catch (e) {
-        alert(e.message);
-    }
-});
 
 function history_update()
 {
@@ -238,7 +173,7 @@ function refresh_product_bugs()
         return;
     }
     g_product_change_mode = true;
-	Milestone_ChangeWithProduct();
+    Milestone_ChangeWithProduct();
     history_update();
     g_product_change_mode = false;
 }
@@ -271,33 +206,32 @@ function refresh_milestones_and_product_bugs()
 
 function init_product_bugs_by_url()
 {
-	const urlParams = new URLSearchParams(window.location.search);
-	let product = urlParams.get('product');
-	
+    const urlParams = new URLSearchParams(window.location.search);
+    let product = urlParams.get('product');
+    
     g_product_change_mode = true;
     if ( product ) {
-		select_set_value("Product", product);	
-	}
-	update_milestone_dropdown();
+        select_set_value("Product", product);	
+    }
+    update_milestone_dropdown();
     Milestone_ChangeWithProduct();
-	
+    
     g_product_change_mode = false;
 }
 
 jQuery(document).ready(function() 
 {
     init_product_bugs_by_url();
-	
+    
     bind_select_change('Product', refresh_milestones_and_product_bugs);
   
-	let bind_history_change = function()
-	{
-		window.addEventListener('popstate', function (event) {
-			if (history.state && history.state.id === 'product_page') {		
-				init_product_bugs_by_url();
-			}
-		}, false);
-	};
-	bind_history_change();
+    let bind_history_change = function()
+    {
+        window.addEventListener('popstate', function (event) {
+            if (history.state && history.state.id === 'product_page') {		
+                init_product_bugs_by_url();
+            }
+        }, false);
+    };
+    bind_history_change();
 });
-

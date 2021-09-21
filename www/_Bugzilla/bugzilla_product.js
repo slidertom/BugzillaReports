@@ -65,6 +65,7 @@ function Milestone_ChangeWithProduct()
             filter_input.value = ''; // reset filter value   
             bind_key_up_event('#product_filter', function() {
                 filter_table('open_bugs_table', this.value);
+                filter_table('closed_bugs_table', this.value);
             });
         }
     });

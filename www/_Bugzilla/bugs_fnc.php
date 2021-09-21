@@ -270,7 +270,7 @@ function bugs_to_table(&$bugs_opened_array, &$bugs_closed_array, $filter_id = -1
     if ( is_array($bugs_closed_array) && count($bugs_closed_array) > 0 )
     {
         echo "<h3> ${closed_bugs}: </h3>";
-        bugs_echo_table($bugs_closed_array, "", "closeTable tablesorter");
+        bugs_echo_table($bugs_closed_array, "closed_bugs_table", "closeTable tablesorter");
     }
 }
 

@@ -1,6 +1,12 @@
 function filter_table(table_id, filter_value) {
   var filter = filter_value.toUpperCase();
   var table = document.getElementById(table_id);
+  if (!table) {
+      return;
+  }
+  if (table.length == 0) {
+      return;
+  }
   var tr = table.getElementsByTagName("tr");
   for (var i = 0; i < tr.length; ++i) {
     var td = tr[i].getElementsByTagName("td");

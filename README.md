@@ -27,6 +27,7 @@ Linux system copy www folder into the Apache server www folder. (Apache php modu
 
 ### Screenshots
 
+
 ![Alt text](/screenshots/bug_reports.jpg?raw=true "Optional Title")
 ![Alt text](/screenshots/product_report.jpg?raw=true "Optional Title")
  	

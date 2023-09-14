@@ -19,6 +19,9 @@ $g_bugzilla_link     = "http://localhost/bugzilla";  // bugzilla http link, used
 ``` 
 ### Run
 Windows system: do launch launch.cmd and open http://127.0.0.1:89 in the browser.
+(It's also required Visual Studio 2012 redist package. 
+Do download x86 version from: https://www.microsoft.com/en-us/download/details.aspx?id=30679#
+)
 
 Linux system copy www folder into the Apache server www folder. (Apache php module must be installed)
 

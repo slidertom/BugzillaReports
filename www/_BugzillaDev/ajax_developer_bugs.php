@@ -27,9 +27,6 @@ function filter_by_product($bug)
 
 function bugs_by_developer_echo_table(&$dbh, $developer_id, $filter)
 {
-    echo "<br>";
-    tablesorter_create_filter("developer_filter");
-
     $users    = get_user_profiles($dbh); // <userid><login_name>
     $products = products_get($dbh);
     $bugs;
@@ -118,6 +115,9 @@ function bugs_by_developer_echo_table(&$dbh, $developer_id, $filter)
     bugs_update_worked_time($dbh, $bugs);
     bugs_init_start_end_dates($bugs);
     
+    echo "<br>";
+    tablesorter_create_filter("developer_filter");
+
     $cnt          = count($bugs);
     $work_time    = get_bugs_work_time($bugs);
     

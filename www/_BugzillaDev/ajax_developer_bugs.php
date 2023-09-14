@@ -27,6 +27,9 @@ function filter_by_product($bug)
 
 function bugs_by_developer_echo_table(&$dbh, $developer_id, $filter)
 {
+    echo "<br>";
+    tablesorter_create_filter("developer_filter");
+
     $users    = get_user_profiles($dbh); // <userid><login_name>
     $products = products_get($dbh);
     $bugs;
@@ -121,7 +124,7 @@ function bugs_by_developer_echo_table(&$dbh, $developer_id, $filter)
     echo "<br>\n";
     echo "<p><span>Opened bugs count: $cnt</span><span>&nbsp;&nbsp;&nbsp;&nbsp;Remaining time: $work_time&nbsp;h</span></p>";
     
-    bugs_echo_table($bugs, " ", "openTable tablesorter");
+    bugs_echo_table($bugs, "developer_table", "openTable tablesorter");
 }
 //var_dump($_GET);
 if ( !isset($_GET['developer']) ) {

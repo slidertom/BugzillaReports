@@ -6,11 +6,11 @@
 
 function json_key_string_to_array(values)
 {
-    var objs = jQuery.parseJSON(values);
-    var data = new Array();
-    for (var key in objs) {
+    let objs = jQuery.parseJSON(values);
+    let data = new Array();
+    for (let key in objs) {
         if (objs.hasOwnProperty(key)) {
-            var element = new Array();
+            let element = new Array();
             element.push(key);
             element.push(objs[key]);
             data.push(element);
@@ -128,6 +128,14 @@ function load_developer_bugs(developer, filter, add_param=null)
         bind_year_select_change();  // currently it's additional item every time is regenerated
         bind_month_select_change(); // currently it's additional item every time is regenerated
         bind_week_select_change();
+
+        const filter_input = document.getElementById('developer_filter');
+        if ( filter_input ) {    
+            filter_input.value = ''; // reset filter value   
+            bind_key_up_event('#developer_filter', function() {
+                filter_table('developer_table',   this.value);
+            });
+        }
     });
 }
 

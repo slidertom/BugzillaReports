@@ -35,7 +35,7 @@ class CGenerateBugzillaPage extends CGeneratePage
                             echo "</div>";
                         }
                         else
-                        {					
+                        {
                             echo "<div id='milestoneHint'><b>Milestones info will be listed here.</b></div>";
                         }
                 echo "</td>\n";

@@ -7,13 +7,13 @@
 
 // do not use these global variables directly, please use predefined functions instead.
 
-$g_hostname          = 'localhost';     // bugzilla mysql hostname 
+$g_hostname          = '172.17.0.202';     // bugzilla mysql hostname 
 $g_bugs_db_name      = 'bugs';          // bugzilla mysql database name
 $g_username          = 'reporter';      // bugzilla mysql username 
-$g_password          = 'password';      // bugzilla mysql user password
-$g_bugzilla_link     = "http://localhost/bugzilla";  // bugzilla http link, used to generate <a href> bug links, 
-                                                    
-
+$g_password          = '';      // bugzilla mysql user password
+$g_bugzilla_link     = "http://bugzilla.matrixlt.local";  // bugzilla http link, used to generate <a href> bug links, 
+                                                     // do check out generate_bug_link function                                                          
+        
 function generate_bug_link($bug_id)
 {
     global $g_bugzilla_link;

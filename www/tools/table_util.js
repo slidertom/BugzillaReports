@@ -1,7 +1,7 @@
 function filter_table(table_id, filter_value) 
 {
-    var filter = filter_value.toUpperCase();
-    var table = document.getElementById(table_id);
+    let filter = filter_value.toUpperCase();
+    let table = document.getElementById(table_id);
     if (!table) {
         return;
     }
@@ -10,13 +10,13 @@ function filter_table(table_id, filter_value)
         return;
     }
 
-    var tr = table.getElementsByTagName("tr");
-    for (var i = 0; i < tr.length; ++i) {
-        var td = tr[i].getElementsByTagName("td");
-        for (var j = 0; j < td.length; ++j) {
-            var cell = tr[i].getElementsByTagName("td")[j];
+    let tr = table.getElementsByTagName("tr");
+    for (let i = 0; i < tr.length; ++i) {
+        let td = tr[i].getElementsByTagName("td");
+        for (let j = 0; j < td.length; ++j) {
+            let cell = tr[i].getElementsByTagName("td")[j];
             if (cell) {
-                var txtValue = cell.textContent || cell.innerText;
+                let txtValue = cell.textContent || cell.innerText;
                 if (txtValue.toUpperCase().indexOf(filter) > -1) {
                     tr[i].style.display = "";
                     break;

@@ -111,62 +111,62 @@ function open_bugs_to_table(&$bugs_opened_array)
 function create_input($options)
 {
     $options += [
-        'ID'				=> '',
-        'Value'				=> '',
+        'ID'                => '',
+        'Value'             => '',
         //'Title'             => '',
-        'Type'				=> 'text',
-        'Step'				=> 'any',	//only when type === number
-        'Class'				=> '',
-        'Hidden'			=> false, /* display: none */
-        'Invisible'			=> false, /* visibility:hidden */
-        'Label'				=> '',
-        'LabelPos'			=> 'left',
-        'LabelClass'		=> '',
-        'MaxLen'			=> '',
-        'Min'				=> '',
-        'Max'				=> '',
-        'Size'				=> '',  // The size attribute specifies the visible width, in characters, of an <input> element.
-        'Name'				=> '',
-        'Autocomplete'		=> '',
-        'Role'				=> '',
-        'AdditionalData'	=> [],
-        'Special'			=> '',
-        'Placeholder'		=> '',
-        'Html'				=> false,
-        'Readonly'			=> false,
-        'Disabled'			=> false,
-        'TextStyle'			=> 'text ui-widget-content ui-corner-all',
+        'Type'              => 'text',
+        'Step'              => 'any',   //only when type === number
+        'Class'             => '',
+        'Hidden'            => false, /* display: none */
+        'Invisible'         => false, /* visibility:hidden */
+        'Label'             => '',
+        'LabelPos'          => 'left',
+        'LabelClass'        => '',
+        'MaxLen'            => '',
+        'Min'               => '',
+        'Max'               => '',
+        'Size'              => '',  // The size attribute specifies the visible width, in characters, of an <input> element.
+        'Name'              => '',
+        'Autocomplete'      => '',
+        'Role'              => '',
+        'AdditionalData'    => [],
+        'Special'           => '',
+        'Placeholder'       => '',
+        'Html'              => false,
+        'Readonly'          => false,
+        'Disabled'          => false,
+        'TextStyle'         => 'text ui-widget-content ui-corner-all',
         
-        'ValidatorInteger'	        => false,
-        'ValidatorFloat'	        => false,
+        'ValidatorInteger'          => false,
+        'ValidatorFloat'            => false,
         'ValidatorDecimalPlaces'    => false,
         'ValidatorMax'              => false,
     ];
     
-    $id				= $options['ID']			!== ''	? " id='{$options["ID"]}'" 						: '';
-    $value			= $options['Value']			!== ''	? " value='{$options["Value"]}'"				: '';
-    $class			= $options['Class']			!== ''	? " " . $options["Class"]						: '';
-    $role			= $options['Role']			!== ''	? " role='{$options["Role"]}'"					: '';
-    $maxlen			= $options['MaxLen']		!== ''	? " maxlength='{$options["MaxLen"]}'"			: '';
-    $min			= $options['Min']			!== ''	? " min='{$options["Min"]}'"					: '';
-    $size			= $options['Size']			!== ''	? " size='{$options["Size"]}'"					: '';
-    $max			= $options['Max']			!== ''	? " max='{$options["Max"]}'"					: '';
-    $name			= $options['Name']			!== ''	? " name='{$options["Name"]}'"					: '';
-    $name			= $options['Autocomplete']	!== ''	? " autocomplete='{$options["Autocomplete"]}'"	: '';
-    $special		= $options['Special']		!== ''	? " " . $options["Special"]						: '';
-    $step			= $options['Type'] === 'number' ? " step='{$options["Step"]}'"						: '';
-    $readonly		= $options['Readonly']				? " readonly"									: '';
-    $disabled		= $options['Disabled']				? " disabled"									: '';
-    $invisible		= $options['Invisible']				? " style='visibility:hidden'"					: '';
-    $placeholder	= $options['Placeholder']	!== ''	? " placeholder='{$options["Placeholder"]}'"	: '';
+    $id             = $options['ID']            !== ''  ? " id='{$options["ID"]}'"                      : '';
+    $value          = $options['Value']         !== ''  ? " value='{$options["Value"]}'"                : '';
+    $class          = $options['Class']         !== ''  ? " " . $options["Class"]                       : '';
+    $role           = $options['Role']          !== ''  ? " role='{$options["Role"]}'"                  : '';
+    $maxlen         = $options['MaxLen']        !== ''  ? " maxlength='{$options["MaxLen"]}'"           : '';
+    $min            = $options['Min']           !== ''  ? " min='{$options["Min"]}'"                    : '';
+    $size           = $options['Size']          !== ''  ? " size='{$options["Size"]}'"                  : '';
+    $max            = $options['Max']           !== ''  ? " max='{$options["Max"]}'"                    : '';
+    $name           = $options['Name']          !== ''  ? " name='{$options["Name"]}'"                  : '';
+    $name           = $options['Autocomplete']  !== ''  ? " autocomplete='{$options["Autocomplete"]}'"  : '';
+    $special        = $options['Special']       !== ''  ? " " . $options["Special"]                     : '';
+    $step           = $options['Type'] === 'number' ? " step='{$options["Step"]}'"                      : '';
+    $readonly       = $options['Readonly']              ? " readonly"                                   : '';
+    $disabled       = $options['Disabled']              ? " disabled"                                   : '';
+    $invisible      = $options['Invisible']             ? " style='visibility:hidden'"                  : '';
+    $placeholder    = $options['Placeholder']   !== ''  ? " placeholder='{$options["Placeholder"]}'"    : '';
     $hidden         = $options["Hidden"]                ? " style='display:none'" : '';
     $text_style     = $options['TextStyle'];
     
     $label = '';
     if ($options["Label"] !== '')
     {
-        $label_class	= $options["LabelClass"]		!== ''	? " class='{$options["LabelClass"]}'"		: "";
-        $for			= $options["ID"]				!== ''	? " for='{$options["ID"]}'"					: "";
+        $label_class    = $options["LabelClass"]        !== ''  ? " class='{$options["LabelClass"]}'"       : "";
+        $for            = $options["ID"]                !== ''  ? " for='{$options["ID"]}'"                 : "";
         $label = "<label$label_class$for>{$options["Label"]}</label>";
     }
     
@@ -185,11 +185,11 @@ function create_input($options)
     }
 
     if ($options['ValidatorInteger']) {
-        $class			.= ' validator-integer';
+        $class          .= ' validator-integer';
     }
 
     if ($options['ValidatorFloat'] || $options['ValidatorDecimalPlaces']) {
-        $class			.= ' validator-float';
+        $class          .= ' validator-float';
 
         if ($options['ValidatorDecimalPlaces']) {
             $additional_data .= " data-valid-dec-places='{$options["ValidatorDecimalPlaces"]}'";
@@ -197,7 +197,7 @@ function create_input($options)
     }    
 
     if ($options['Max']) {
-        $class			.= ' validator-max';
+        $class          .= ' validator-max';
         $additional_data .= " data-valid-max='{$options["Max"]}'";
     }    
     
@@ -214,9 +214,9 @@ function create_input($options)
 function tablesorter_create_filter($id) {
     echo "<span class='font-10 bold padded_label'>".'Filter: '.'</span>';
     create_input([
-        'ID'			=> $id,
-        'MaxLen'		=> 30,
-        'Size'			=> 30,
+        'ID'            => $id,
+        'MaxLen'        => 30,
+        'Size'          => 30,
     ]);
 }
 

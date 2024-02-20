@@ -60,15 +60,15 @@ function sql_release_notees_result_to_bugs($bugs, $users, $products)
 
 function release_notes_bugs_to_table($bugs_array)
 {
+    if ( count($bugs_array) == 0 ) {
+        return;
+    }
+
     $opened_bugs = "Release Notes";
     
     echo "<br>";
     echo "<p><em>TIP!</em> Sort multiple columns simultaneously by holding down the shift key and clicking a second, third or even fourth column header.</p>\n";
     
-    if ( count($bugs_array) == 0 ) {
-        return;
-    }
-
     tablesorter_create_filter('product_filter');
 
     echo "<h3> ${opened_bugs} </h3>";
@@ -92,9 +92,10 @@ class bugs_release_notes_table
         /* 1*/echo "\t<th width= 50> Bug         </th>\n";
         /* 2*/echo "\t<th width= 90> Sev         </th>\n";
         /* 3*/echo "\t<th width= 40> Pri         </th>\n";
+        /* 3*/echo "\t<th width= 40> Status      </th>\n"; // Resolution
         /* 4*/echo "\t<th> Release Note          </th>\n";
         /* 6*/echo "\t<th>           Bug Summary </th>\n";
-        /* 7*/echo "\t<th>           Reporter</th>\n";
+        /* 7*/echo "\t<th style='min-width:100px;'> Note Reporter</th>\n";
         echo "</tr>\n";
         echo "</thead>\n";
     }
@@ -120,6 +121,7 @@ class bugs_release_notes_table
         /* 1*/echo "\t<td>".generate_bug_link_href($bug->m_bug_id)."                                </td>\n";
         /* 2*/echo "\t<td class = '$bug_class'>                          $bug->m_severity           </td>\n";
         /* 3*/echo "\t<td>                                               $bug->m_priority           </td>\n";
+        /* 3*/echo "\t<td>                                               $bug->m_status             </td>\n";
         /* 5*/echo "\t<td>                                               $release_note              </td>\n";
         /* 7*/echo "\t<td class = '$bug_class'>                          &nbsp;&nbsp;$bug->m_summary</td>\n";
         /* 8*/echo "\t<td>             <a href=mailto:'$reporter_email'> $reporter_name      </a>   </td>\n";

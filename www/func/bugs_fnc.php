@@ -236,9 +236,9 @@ function bugs_to_table(&$bugs_opened_array, &$bugs_closed_array, $filter_id = -1
     //$bug_all_cnt              = $bug_opened_cnt."/".$all_bugs_cnt;
     $all_complete             = bugs_get_complete($all_opened_remaining_time, $all_work_time);
     
-    $opened_bugs = "Release Notes";
-    $closed_bugs = "Closed bugs";
-    $all_bugs    = "All bugs";
+    $opened_bugs = "Open Bugs";
+    $closed_bugs = "Closed Bugs";
+    $all_bugs    = "All Bugs";
     
     echo "<h3> Summary: </h3>";
     echo "<table class = 'summary'>\n";
@@ -264,13 +264,13 @@ function bugs_to_table(&$bugs_opened_array, &$bugs_closed_array, $filter_id = -1
     echo "<p><em>TIP!</em> Sort multiple columns simultaneously by holding down the shift key and clicking a second, third or even fourth column header.</p>\n";
     
     if ( count($bugs_opened_array) > 0 ) {
-        echo "<h3> ${opened_bugs}: </h3>";
+        echo "<h3> ${opened_bugs} </h3>";
         bugs_echo_table($bugs_opened_array, "open_bugs_table", "openTable tablesorter");
     }
     
     if ( is_array($bugs_closed_array) && count($bugs_closed_array) > 0 )
     {
-        echo "<h3> ${closed_bugs}: </h3>";
+        echo "<h3> ${closed_bugs} </h3>";
         bugs_echo_table($bugs_closed_array, "closed_bugs_table", "closeTable tablesorter");
     }
 }

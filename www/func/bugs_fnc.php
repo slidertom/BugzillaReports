@@ -8,6 +8,8 @@
 require_once (__DIR__).'/../func/profiles.php';
 require_once (__DIR__).'/../func/products.php';
 require_once (__DIR__).'/../func/bug_data.php';
+require_once (__DIR__).'/../func/bugs_operations.php';
+require_once (__DIR__).'/../_Bugzilla/quarter_products.php';
 
 require_once (__DIR__).'/../bugzilla_base/bugs_sql.php';
 

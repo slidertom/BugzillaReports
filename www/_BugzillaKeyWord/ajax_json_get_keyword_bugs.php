@@ -10,7 +10,7 @@ if ( !ob_start("ob_gzhandler") ) {
 }
 
 require_once "../bugzilla_base/connect_to_bugzilla_db.php";
-require_once "../_Bugzilla/bugs_fnc.php";
+require_once "../func/bugs_fnc.php";
 require_once "../_Bugzilla/init_product_bugs_dates.php";
 
 $json_array = array();

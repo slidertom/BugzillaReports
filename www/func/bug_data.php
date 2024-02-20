@@ -24,6 +24,7 @@ class CBugData
     public $m_start_date;
     public $m_end_date;
     
+    public $m_add_info_array;
     public function IsOpened() {
         if ( $this->m_status == "NEW" || $this->m_status=="ASSIGNED" || $this->m_status=="REOPENED" ) {
             return true;

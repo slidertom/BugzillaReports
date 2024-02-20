@@ -7,49 +7,24 @@
 
 require_once (__DIR__)."/../bugzilla_base/connect_to_bugzilla_db.php";
 require_once (__DIR__).'/../func/bugs_milestones.php';
+//SELECT * FROM `bugs`.`longdescs` WHERE `thetext`LIKE '%RELEASENOTE:%'
 
+//SELECT * FROM `bugs`.`longdescs_tags`
+//comment_id
+
+//SELECT * FROM `bugs`.`longdescs` WHERE `thetext`LIKE '%RELEASENOTE:%'
+// SELECT * FROM `bugs`.`longdescs_tags` WHERE longdescs_tags.tag='RELEASENOTE'
 function milestones_to_combo(&$milestones, $sel)
 {
-    if ( $sel == "open_bugs" )   {
-        echo "<option selected value='open_bugs'> - Open Bugs - </option>\n";
-    }
-    else {
-        echo "<option value='open_bugs'> - Open Bugs - </option>\n";
-    }
-    
-    if ( $sel == "assigned_bugs" )  {
-        echo "<option selected value='assigned_bugs'> - In Progress Bugs - </option>\n";
-    }
-    else {
-        echo "<option value='assigned_bugs'> - In Progress Bugs - </option>\n";
-    }
-
-    if ( $sel == "quarter" )     {
-        echo "<option selected value='quarter'> - Quarter Bugs - </option>\n";
-    }
-    else {
-        echo "<option value='quarter'> - Quarter bugs - </option>\n";
-    }
-	
-	$month_bugs_descr = "- Month Bugs -";
-	if ( $sel == "month" )     {
-        echo "<option selected value='month'>$month_bugs_descr</option>\n";
-    }
-    else {
-        echo "<option value='month'>$month_bugs_descr</option>\n";
-    }
     
     $milestones_rev = array_reverse($milestones);
     foreach($milestones_rev as $milestone)
     {
         $bug_count = $milestone->m_open_bug_count;
-        
-        if ( $milestone->m_name == $sel )
-        {
+        if ( $milestone->m_name == $sel ) {
             echo "<option selected value='$milestone->m_name'>$milestone->m_name (bugs count: $bug_count)</option>\n";
         }
-        else
-        {
+        else {
             echo "<option value='$milestone->m_name'>$milestone->m_name (bugs count: $bug_count)</option>\n";
         }
     }

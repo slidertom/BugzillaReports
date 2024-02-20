@@ -1,6 +1,6 @@
 <?php
 require_once "../bugzilla_base/connect_to_bugzilla_db.php";
-require_once (__DIR__)."/../_Bugzilla/profiles.php";
+require_once (__DIR__)."/../func/profiles.php";
 require_once (__DIR__)."/../tools/date_time_util.php";
 
 $dbh = connect_to_bugzilla_db();        

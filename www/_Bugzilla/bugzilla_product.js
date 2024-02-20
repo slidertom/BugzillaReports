@@ -70,7 +70,7 @@ function Milestone_ChangeWithProduct()
         }
     });
     
-    var release_hint = document.getElementById("ReleaseHint");
+    const release_hint = document.getElementById("ReleaseHint");
     if ( release_hint )
     {
         ajaxPost("ajax_get_product_release_date.php?"+values, "", function(data) 

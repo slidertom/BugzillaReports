@@ -9,7 +9,7 @@ require_once (__DIR__)."/../common/header.php";
 
 require_once (__DIR__)."/../bugzilla_base/connect_to_bugzilla_db.php";
 require_once (__DIR__)."/../func/products.php";
-require_once (__DIR__)."/milestones.php";
+require_once (__DIR__).'/ajax_get_milestones_combo.php';
 
 class CGenerateBugzillaPage extends CGeneratePage
 {
@@ -31,7 +31,7 @@ class CGenerateBugzillaPage extends CGeneratePage
                         if ( $prod_id != -1 )
                         {   // create milestones combo with default product id
                             echo "<div id='milestoneHint'>";
-                            $mil_str = milestones_create_combo($dbh, $prod_id, "");
+                            milestones_create_combo($dbh, $prod_id, "");
                             echo "</div>";
                         }
                         else
@@ -40,7 +40,6 @@ class CGenerateBugzillaPage extends CGeneratePage
                         }
                 echo "</td>\n";
                 echo "<td>";
-                echo "<span id='ReleaseHint'></span>";
                 echo "</td>\n";
             echo "</tr>\n";
         echo "</table>\n";
@@ -53,7 +52,6 @@ class CGenerateBugzillaPage extends CGeneratePage
     {
         echo "<link rel='stylesheet' type='text/css' href='bugzilla.css' />\n";
         echo "<link rel='stylesheet' type='text/css' href='sort_style.css' />\n";
-        echo "<link rel='stylesheet' type='text/css' href='gantt/css/style.css' />\n";
         echo "<link rel='stylesheet' type='text/css' href='../jquery/opentip/opentip.css' />";
     }
     
@@ -64,17 +62,13 @@ class CGenerateBugzillaPage extends CGeneratePage
         echo "<script type='text/javascript' src='../jquery/priority_sort.js'></script>\n";
         echo "<script type='text/javascript' src='../jquery/table_hover.js'></script>\n";
         echo "<script type='text/javascript' src='../jquery/ajaxPost.js'></script>\n";
-        echo "<script type='text/javascript' src='gantt/js/jquery.fn.gantt.js'></script>\n";
         // opentip
         echo "<script type='text/javascript' src='../jquery/prototype.js'></script>";
         echo "<script type='text/javascript' src='../jquery/opentip/test/scriptaculous-1.9.0/scriptaculous.js'></script>"; 
         echo "<script type='text/javascript' src='../jquery/opentip/opentip.js'></script>"; 
         echo "<script type='text/javascript' src='../jquery/opentip/excanvas.js'></script>";
         // end opentip
-        echo "<script type='text/javascript' src='../tools/gantt_tooltips.js'></script>";
-
         echo "<script type='text/javascript' src='../tools/select_ctrl.js'></script>"; 		
-        echo "<script type='text/javascript' src='../tools/date_time_util.js'></script>";
         echo "<script type='text/javascript' src='../tools/table_util.js'></script>";
            
         echo "<script type='text/javascript' src='bugzilla_product.js'></script>\n"; 

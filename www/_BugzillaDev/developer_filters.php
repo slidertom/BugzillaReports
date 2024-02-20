@@ -5,7 +5,7 @@
     To use this component please contact slidertom@gmail.com to obtain a license.
 */
 
-require_once '../_Bugzilla/bugs_fnc.php';
+require_once '../func/bugs_fnc.php';
 require_once 'developer_filters_class.php';
 
 function get_developer_products($dbh, $developer_id)

@@ -1,5 +1,5 @@
 <?php
-require_once '../_Bugzilla/bug_data.php';
+require_once '../func/bug_data.php';
 require_once '../bugzilla_base/bugs_sql.php';
 
 function get_pie_colors_array()

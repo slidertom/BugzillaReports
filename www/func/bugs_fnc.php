@@ -8,8 +8,9 @@
 require_once (__DIR__).'/../func/profiles.php';
 require_once (__DIR__).'/../func/products.php';
 require_once (__DIR__).'/../func/bug_data.php';
-require_once (__DIR__).'/quarter_products.php';
+
 require_once (__DIR__).'/../bugzilla_base/bugs_sql.php';
+
 require_once (__DIR__).'/../tools/date_time_util.php';
 require_once (__DIR__).'/../tools/date_time_select.php';
 
@@ -235,7 +236,7 @@ function bugs_to_table(&$bugs_opened_array, &$bugs_closed_array, $filter_id = -1
     //$bug_all_cnt              = $bug_opened_cnt."/".$all_bugs_cnt;
     $all_complete             = bugs_get_complete($all_opened_remaining_time, $all_work_time);
     
-    $opened_bugs = "Opened bugs";
+    $opened_bugs = "Release Notes";
     $closed_bugs = "Closed bugs";
     $all_bugs    = "All bugs";
     

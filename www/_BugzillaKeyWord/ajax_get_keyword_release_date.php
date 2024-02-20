@@ -6,7 +6,7 @@
 */
 
 require_once "../bugzilla_base/connect_to_bugzilla_db.php";
-require_once "../_Bugzilla/bugs_fnc.php";
+require_once "../func/bugs_fnc.php";
 require_once "../_Bugzilla/bugs_start_end_dates.php";
 
 if ( !isset($_GET['Keyword']) ) {

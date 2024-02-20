@@ -5,7 +5,7 @@
     To use this component please contact slidertom@gmail.com to obtain a license.
 */
 
-require_once (__DIR__)."/../tools/date_time_util.php";
+require_once (__DIR__).'/../tools/date_time_util.php';
 
 function bugs_split_by_milestone(&$bugs)
 {

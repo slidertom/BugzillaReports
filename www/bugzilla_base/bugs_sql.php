@@ -41,16 +41,21 @@ function bugs_status_to_sql($defines)
     return $status_sql;	
 }
 
-function bugs_get(&$dbh, &$users, &$products, $sql)
+function sql_result_to_bugs($bugs, $users, $products)
 {
-    //var_dump($sql);
-    $bugs = $dbh->query($sql);
     $bugs_array = array();
     foreach ($bugs as $row) {
         $bug = parse_row_to_bug_data($row, $users, $products);
         $bugs_array[$bug->m_bug_id] = $bug;
     }
     return $bugs_array;
+}
+
+function bugs_get(&$dbh, &$users, &$products, $sql)
+{
+    //var_dump($sql);
+    $bugs = $dbh->query($sql);
+    return sql_result_to_bugs($bugs, $users, $products);
 }
 
 function get_bug_work_time(&$dbh, $bug_id)
@@ -177,8 +182,8 @@ function get_changed_developer_bugs_by_dates($dbh, $developer_id, $quat_beg, $qu
     // SELECT * FROM `bugs`.`bugs_activity` where who=65
     $sql   = "SELECT bugs.*, bugs_activity.bug_when, bugs_activity.who 
               FROM bugs_activity,bugs 
-              where bugs_activity.bug_when 
-              between '".$quat_beg." 00:00:00' and '".$quat_end." 23:59:59' 
+              WHERE bugs_activity.bug_when 
+              BETWEEN '".$quat_beg." 00:00:00' and '".$quat_end." 23:59:59' 
               and 
               bugs.bug_id = bugs_activity.bug_id
               and
@@ -256,7 +261,10 @@ function get_managed_developer_bugs_by_dates($dbh, $developer_id, $quat_beg, $qu
 function get_worked_developer_bugs_by_dates($dbh, $developer_id, $quat_beg, $quat_end, &$users, &$products)
 {
     // https://stackoverflow.com/questions/7691742/add-time-235959-999-to-end-date-for-between
-    $sql   = "SELECT bugs.*,longdescs.work_time FROM longdescs,bugs where longdescs.bug_when between '".$quat_beg." 00:00:00' and '".$quat_end." 23:59:59' and longdescs.work_time!=0 and longdescs.who='".$developer_id."'and bugs.bug_id = longdescs.bug_id";
+    $sql   = "SELECT bugs.*,longdescs.work_time 
+              FROM longdescs,bugs 
+              WHERE longdescs.bug_when 
+              between '".$quat_beg." 00:00:00' and '".$quat_end." 23:59:59' and longdescs.work_time!=0 and longdescs.who='".$developer_id."'and bugs.bug_id = longdescs.bug_id";
     
     //var_dump($sql);
     //echo "<br>";
@@ -304,6 +312,28 @@ function get_reported_developer_bugs_by_dates($dbh, $developer_id, $quat_beg, $q
     
     $bugs = array_filter($bugs, "is_non_web_kozinjn_bug");
     return $bugs;
+}
+
+function get_release_notes_bugs($dbh, $product_id, $mile)
+{
+    $sql = "SELECT * FROM bugs,longdescs_tags,longdescs
+            WHERE longdescs_tags.tag='RELEASENOTE'
+            AND longdescs_tags.comment_id=longdescs.comment_id 
+            AND bugs.bug_id=longdescs.bug_id
+            AND bugs.product_id='$product_id'
+            AND bugs.target_milestone='$mile'";
+    //$sql = "SELECT * FROM longdescs WHERE `thetext`LIKE '%RELEASENOTE:%'";
+
+    $result = array();
+    try {
+        $result = $dbh->query($sql);
+    }
+    catch(PDOException $e) {
+        echo $e->getMessage();
+        return array();
+    }
+    
+    return $result;
 }
 
 ?>

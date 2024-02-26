@@ -40,6 +40,8 @@ class CGenerateBugzillaPage extends CGeneratePage
                         }
                 echo "</td>\n";
                 echo "<td>";
+                    echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+                    echo "<button id='html_button' type='button'>HTML</button>";
                 echo "</td>\n";
             echo "</tr>\n";
         echo "</table>\n";
@@ -71,7 +73,7 @@ class CGenerateBugzillaPage extends CGeneratePage
         echo "<script type='text/javascript' src='../tools/select_ctrl.js'></script>"; 		
         echo "<script type='text/javascript' src='../tools/table_util.js'></script>";
            
-        echo "<script type='text/javascript' src='bugzilla_product.js'></script>\n"; 
+        echo "<script type='text/javascript' src='release_note.js'></script>\n"; 
     }
 }
 

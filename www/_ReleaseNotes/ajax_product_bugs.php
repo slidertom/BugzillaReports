@@ -8,9 +8,7 @@
 ob_start("ob_gzhandler");
     
 require_once '../bugzilla_base/connect_to_bugzilla_db.php';
-require_once '../func/bugs_fnc.php';
-require_once '../func/profiles.php';
-require_once '../func/products.php';
+require_once 'bugs_release_notes.php';
 
 if ( !isset($_GET['Milestone']) ) {
     return;
@@ -36,27 +34,10 @@ else {
     echo "<input type='hidden' id='bug_tab' value='false' />\n";
 }
 
-$users    = get_user_profiles($dbh); // <userid><login_name>
-$products = products_get($dbh);
-
-$result = get_release_notes_bugs($dbh, $product_id, $milestone);
-$bugs_array = sql_release_notees_result_to_bugs($result, $users, $products);
+$bugs_array = get_release_note_bugs_impl($dbh, $product_id, $milestone);
 
 release_notes_bugs_to_table($bugs_array);
 
-function sql_release_notees_result_to_bugs($bugs, $users, $products)
-{
-    $bugs_array = array();
-    foreach ($bugs as $row) 
-    {
-        $bug = parse_row_to_bug_data($row, $users, $products);
-        $bug->m_add_info_array['thetext'] = $row['thetext'];
-        $bug->m_add_info_array['who']     = $users[$row['who']];
-        $bugs_array[$bug->m_bug_id] = $bug;
-    }
-
-    return $bugs_array;
-}
 
 function release_notes_bugs_to_table($bugs_array)
 {

@@ -71,8 +71,8 @@ function history_update()
 {
     const urlParams = new URLSearchParams(window.location.search);
     
-    let product = select_get_value("Product");
-    let filter  = select_get_value("Milestone");
+    const product = select_get_value("Product");
+    const filter  = select_get_value("Milestone");
     
     urlParams.set('product', product);
     urlParams.set('filter',    filter);
@@ -141,4 +141,13 @@ jQuery(document).ready(function()
         }, false);
     };
     bind_history_change();
+
+    const html_button = document.getElementById('html_button');
+    html_button.addEventListener("click", function()
+    { 
+        const product = select_get_value("Product");
+        const filter  = select_get_value("Milestone");
+        const url = "/_ReleaseNotes/ajax_get_html_release_notes.php?Product="+product+"&Milestone="+filter;
+        window.open(url, '_blank').focus();
+    });
 });

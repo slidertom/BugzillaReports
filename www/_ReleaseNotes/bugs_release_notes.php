@@ -23,7 +23,6 @@ function get_release_note_bugs_impl($dbh, $product_id, $milestone)
     $users    = get_user_profiles($dbh); // <userid><login_name>
     $products = products_get($dbh);
 
-
     $result = get_release_notes_bugs($dbh, $product_id, $milestone);
     $bugs_array = sql_release_notes_result_to_bugs($result, $users, $products);
     return $bugs_array;

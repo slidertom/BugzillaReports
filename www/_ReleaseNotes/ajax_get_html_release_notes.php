@@ -30,7 +30,8 @@ foreach ($bugs_array as $bug)
     $descr        = $bug->m_summary;
     $release_note = $bug->m_add_info_array['thetext'];
     echo "<ul>\n";
-        echo "<li><span class='descr'>$descr</span>$release_note</li>\n";
+        //echo "<li><span class='descr'>$descr</span>$release_note</li>\n";
+        echo "<li>$release_note</li>\n";
     echo "</ul>\n";
 }
  

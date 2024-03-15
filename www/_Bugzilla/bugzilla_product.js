@@ -79,7 +79,7 @@ function Milestone_ChangeWithProduct()
             data = jQuery.trim(data);
             
             if ( data.length > 0 ) {
-                var release = "<b>Release date: ";
+                let release = "<b>Release date: ";
                 release += data;
                 release += "</b>";
                 release_hint.innerHTML=release;
@@ -229,10 +229,19 @@ jQuery(document).ready(function()
     let bind_history_change = function()
     {
         window.addEventListener('popstate', function (event) {
-            if (history.state && history.state.id === 'product_page') {		
+            if (history.state && history.state.id === 'product_page') {
                 init_product_bugs_by_url();
             }
         }, false);
     };
     bind_history_change();
+
+    const release_notes_button = document.getElementById('release_notes');
+    release_notes_button.addEventListener("click", function()
+    { 
+        const product = select_get_value("Product");
+        const filter  = select_get_value("Milestone");
+        const url = "/_ReleaseNotes/index.php?product="+product+"&filter="+filter;
+        window.open(url, '_blank').focus();
+    });
 });

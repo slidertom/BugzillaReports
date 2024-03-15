@@ -26,7 +26,7 @@ class CGenerateBugzillaPage extends CGeneratePage
             echo "<tr>\n";
                 echo "<td><b>Product: </b></td>";
                 echo "<td>";$prod_id = products_create_combo($dbh); echo "</td>\n";
-                echo "<td><b>Milestones: </b></td>\n";
+                echo "<td>&emsp;<b>Milestones: </b></td>\n";
                 echo "<td>";
                         if ( $prod_id != -1 )
                         {   // create milestones combo with default product id
@@ -79,5 +79,3 @@ class CGenerateBugzillaPage extends CGeneratePage
 
 $gen_page = new CGenerateBugzillaPage();
 $gen_page->Generate();
-
-?>

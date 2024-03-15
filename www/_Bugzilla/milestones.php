@@ -86,7 +86,3 @@ if ( $dbh == NULL ) {
 
 milestones_create_combo($dbh, $product_id, $milestone);
 /*echo "<script type='text/javascript'>alert('<?php echo $combo_mil ?>');</script>";*/
-
-?>
-
-

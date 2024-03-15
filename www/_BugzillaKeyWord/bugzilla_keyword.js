@@ -56,7 +56,7 @@ function keyword_change()
         ajaxPost("ajax_get_keyword_release_date.php?"+values, "", function(data)  {
             data = jQuery.trim(data);
             if ( data.length > 0 ) {
-                var release = "<b>Release date: ";
+                let release = "<b>Release date: ";
                 release += data;
                 release += "</b>";
                 release_hint.innerHTML=release;

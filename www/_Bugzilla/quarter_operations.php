@@ -44,5 +44,3 @@ function percent($num_amount, $num_total)
     $count = number_format($count2, 2);
     return $count;
 }
-
-?>

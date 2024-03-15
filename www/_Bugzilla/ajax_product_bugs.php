@@ -37,5 +37,3 @@ else {
 }
 
 bugs_create_product_table($dbh, $product_id, $milestone);
-
-?>

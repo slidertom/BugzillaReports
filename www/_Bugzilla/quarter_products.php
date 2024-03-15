@@ -71,5 +71,3 @@ function quarter_bugs_to_table(&$bugs_array)
         bugs_echo_table($mile, "", "openTable tablesorter");    
     }
 }
-
-?>

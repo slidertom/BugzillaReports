@@ -26,7 +26,7 @@ class CGenerateBugzillaPage extends CGeneratePage
             echo "<tr>\n";
                 echo "<td><b>Product: </b></td>";
                 echo "<td>";$prod_id = products_create_combo($dbh); echo "</td>\n";
-                echo "<td><b>Milestones: </b></td>\n";
+                echo "<td>&emsp;<b>Milestones: </b></td>\n";
                 echo "<td>";
                         if ( $prod_id != -1 )
                         {   // create milestones combo with default product id
@@ -39,8 +39,11 @@ class CGenerateBugzillaPage extends CGeneratePage
                             echo "<div id='milestoneHint'><b>Milestones info will be listed here.</b></div>";
                         }
                 echo "</td>\n";
-                echo "<td>";
+                echo "<td>&emsp;";
                 echo "<span id='ReleaseHint'></span>";
+                echo "</td>\n";
+                echo "<td>&emsp;";
+                echo "<button id='release_notes' type='button'>Release Notes</button>";
                 echo "</td>\n";
             echo "</tr>\n";
         echo "</table>\n";
@@ -83,5 +86,3 @@ class CGenerateBugzillaPage extends CGeneratePage
 
 $gen_page = new CGenerateBugzillaPage();
 $gen_page->Generate();
-
-?>

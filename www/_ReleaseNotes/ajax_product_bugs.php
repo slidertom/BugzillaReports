@@ -92,7 +92,7 @@ class bugs_release_notes_table
     
     static private function echo_row($bug)
     {
-        $release_note   = $bug->m_add_info_array['thetext'];
+        $release_note   = htmlspecialchars($bug->m_add_info_array['thetext']);
         $who            = $bug->m_add_info_array['who'];
         $bug_class      = $bug->m_severity;    
         $reporter_name  = $who->m_real_name;

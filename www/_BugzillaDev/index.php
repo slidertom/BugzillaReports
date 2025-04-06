@@ -77,5 +77,3 @@ class CGenerateDeveloperPage extends CGeneratePage
 
 $gen_page = new CGenerateDeveloperPage();
 $gen_page->Generate();
-
-?>

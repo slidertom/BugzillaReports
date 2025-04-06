@@ -21,7 +21,7 @@ function parse_row_to_bug_data($row, &$users, &$products)
     $bug->m_status           = $row['bug_status'];
     $bug->m_product          = $products[$row['product_id']];
     $bug->m_target_milestone = $row['target_milestone'];
-    
+    $bug->m_deadline         = $row['deadline'];
     return $bug;
 }
 
@@ -43,7 +43,7 @@ function bugs_status_to_sql($defines)
 
 function sql_result_to_bugs($bugs, $users, $products)
 {
-    $bugs_array = array();
+    $bugs_array = [];
     foreach ($bugs as $row) {
         $bug = parse_row_to_bug_data($row, $users, $products);
         $bugs_array[$bug->m_bug_id] = $bug;
@@ -335,5 +335,3 @@ function get_release_notes_bugs($dbh, $product_id, $mile)
     
     return $result;
 }
-
-?>

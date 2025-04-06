@@ -29,8 +29,9 @@ function bugs_by_developer_echo_table(&$dbh, $developer_id, $filter)
 {
     $users    = get_user_profiles($dbh); // <userid><login_name>
     $products = products_get($dbh);
-    $bugs;
-    
+    $bugs = null;
+    $show_deadline = false;
+
     if ( $filter == DeveloperFilters::Assigned ) {
         $bugs = bugs_get_assigned_by_developer($dbh, $users, $products, $developer_id);
     }
@@ -95,6 +96,12 @@ function bugs_by_developer_echo_table(&$dbh, $developer_id, $filter)
     }
     else if ( $filter == DeveloperFilters::Open ) {
         $bugs = bugs_get_by_developer($dbh, $users, $products, $developer_id);
+        foreach ($bugs as $bug) {
+            if (isset($bug->m_deadline)) {
+                $show_deadline = true;
+                break;
+            }
+        }
     }
     else if ( strlen($filter) > 0 ) {
         $bugs = bugs_get_by_developer($dbh, $users, $products, $developer_id);
@@ -106,8 +113,13 @@ function bugs_by_developer_echo_table(&$dbh, $developer_id, $filter)
         $bugs = bugs_get_by_developer($dbh, $users, $products, $developer_id);
     }
              
-    if ( !$bugs || count($bugs) == 0 )
-    {
+    if ( !$bugs ) {
+        echo "<h3>There is no bugs fixed.</h3>";
+        return;
+    }
+
+    $cnt = count($bugs);
+    if ( $cnt == 0 ) {
         echo "<h3>There is no bugs fixed.</h3>";
         return;
     }
@@ -118,15 +130,14 @@ function bugs_by_developer_echo_table(&$dbh, $developer_id, $filter)
     echo "<br>";
     tablesorter_create_filter("developer_filter");
 
-    $cnt          = count($bugs);
-    $work_time    = get_bugs_work_time($bugs);
+    $work_time = get_bugs_work_time($bugs);
     
     echo "<br>\n";
     echo "<p><span>Opened bugs count: $cnt</span><span>&nbsp;&nbsp;&nbsp;&nbsp;Remaining time: $work_time&nbsp;h</span></p>";
     
-    bugs_echo_table($bugs, "developer_table", "openTable tablesorter");
+    bugs_echo_table($bugs, "developer_table", "openTable tablesorter", $show_deadline);
 }
-//var_dump($_GET);
+
 if ( !isset($_GET['developer']) ) {
     return;
 }
@@ -137,7 +148,6 @@ $filter       = isset($_GET['Filter']) ? $_GET['Filter'] : "open_bugs";
 $dbh = connect_to_bugzilla_db();
 if ( $dbh == NULL ) {
     return;
-}	
+}   
 
 bugs_by_developer_echo_table($dbh, $developer_id, $filter);
-?>

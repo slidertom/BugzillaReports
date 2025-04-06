@@ -23,8 +23,9 @@ class CBugData
     public $m_target_milestone;
     public $m_start_date;
     public $m_end_date;
-    
     public $m_add_info_array;
+    public $m_deadline;
+
     public function IsOpened() {
         if ( $this->m_status == "NEW" || $this->m_status=="ASSIGNED" || $this->m_status=="REOPENED" ) {
             return true;
@@ -141,7 +142,7 @@ function bugs_explode_by_product_developer_id(&$developer_bugs, &$bugs)
     }
 }
 
-function bugs_echo_table_header()
+function bugs_echo_table_header($show_deadline = false)
 {
     echo "<thead>\n";
     echo "<tr class='header'>\n";
@@ -155,14 +156,17 @@ function bugs_echo_table_header()
     /* 8*/echo "\t<th>           Product  </th>\n";
     /* 9*/echo "\t<th width= 70> TargetM  </th>\n";
     /* 9*/echo "\t<th>           Start d. </th>\n";
-    /* 9*/echo "\t<th>           End d. </th>\n";
+    /* 9*/echo "\t<th>           End d.   </th>\n";
     /*10*/echo "\t<th>           Summary  </th>\n";
     /*11*/echo "\t<th>           Reporter </th>\n";
+    if ($show_deadline) {
+    /*12*/echo "\t<th>           Deadline </th>\n";
+    }
     echo "</tr>\n";
     echo "</thead>\n";
 }
 
-function bug_echo_row_summary(&$bug)
+function bug_echo_row_summary(&$bug, $show_deadline)
 {
     $unestimated    = ($bug->get_bug_remaining_time() <= 0) && $bug->IsOpened();
     $unest_class    = $unestimated ? "class='unestimated'" : "";
@@ -187,7 +191,7 @@ function bug_echo_row_summary(&$bug)
     
     $reporter_name  = $bug->m_reporter->m_real_name;
     $reporter_email = $bug->m_reporter->m_login_name;
-    
+
     echo "<tr>\n";
     /* 1*/echo "\t<td>".generate_bug_link_href($bug->m_bug_id)."                                </td>\n";
     /* 2*/echo "\t<td class = '$bug_class'>                          $bug->m_severity           </td>\n";
@@ -202,24 +206,26 @@ function bug_echo_row_summary(&$bug)
     /* 9*/echo "\t<td>                                               $end_date</td>\n";
     /*10*/echo "\t<td class = '$bug_class'>                          &nbsp;&nbsp;$bug->m_summary</td>\n";
     /*11*/echo "\t<td>             <a href=mailto:'$reporter_email'> $reporter_name      </a>   </td>\n";
+    if ($show_deadline) {
+         $deadline = $bug->m_deadline ? date("Y-m-d", strtotime($bug->m_deadline)) : "";
+    /*12*/echo "\t<td>$deadline</td>\n";
+    }
     echo "</tr>\n\n";
 }
 
-function bugs_echo_tbody_summary(&$bugs)
+function bugs_echo_tbody_summary(&$bugs, $show_deadline = false)
 {
     echo "<tbody>\n";
     foreach ($bugs as $bug) {
-        bug_echo_row_summary($bug);
+        bug_echo_row_summary($bug, $show_deadline);
     }
     echo "</tbody>\n";
 }
 
-function bugs_echo_table(&$bugs, $table_id, $table_class)
+function bugs_echo_table(&$bugs, $table_id, $table_class, $show_deadline = false)
 {
     echo "<table id='$table_id' class='$table_class'>\n";
-    bugs_echo_table_header();
-    bugs_echo_tbody_summary($bugs);
+    bugs_echo_table_header($show_deadline);
+    bugs_echo_tbody_summary($bugs, $show_deadline);
     echo "</table>\n";
 }
-
-?>

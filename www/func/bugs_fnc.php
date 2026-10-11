@@ -100,6 +100,7 @@ function open_bugs_to_table(&$bugs_opened_array)
     echo "<tbody>";
     echo_table_summary($bug_opened_cnt, $all_opened_work_time, $all_opened_remaining_time, $all_opened_complete, $opened_bugs);
     echo "</table>\n";
+    tablesorter_create_filter("product_filter");
     
     echo "<br>";
     echo "<p><em>TIP!</em> Sort multiple columns simultaneously by holding down the shift key and clicking a second, third or even fourth column header.</p>\n";
@@ -107,7 +108,7 @@ function open_bugs_to_table(&$bugs_opened_array)
     if ( count($bugs_opened_array) > 0 )
     {
         echo "<h3> ${opened_bugs}: </h3>";
-        bugs_echo_table($bugs_opened_array, "", "openTable tablesorter show_milestone");
+        bugs_echo_table($bugs_opened_array, "open_bugs_table", "openTable tablesorter show_milestone");
     }
 }
 

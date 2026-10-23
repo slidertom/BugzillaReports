@@ -1,0 +1,1 @@
+%~dp0\bin\AppClose.exe %~dp0\httpd.pid 

@@ -9,7 +9,7 @@
 require_once("bugs_start_end_dates.php");
 require_once "../func/bugs_fnc.php";
 
-function init_product_bugs_dates($dbh, &$bugs)
+function init_product_bugs_dates($dbh, &$users, &$products, &$bugs)
 {
     $developer_bugs = array();
 

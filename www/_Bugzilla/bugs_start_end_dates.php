@@ -13,7 +13,7 @@ function compare_priority($a, $b)
     $a = intval(trim($a, "P"));
     $b = intval(trim($b, "P"));
     //echo "|".$a."-".$b."|";
-    return $a > $b;
+    return $a <=> $b;
 }
 
 // same priority bugs has same start end dates

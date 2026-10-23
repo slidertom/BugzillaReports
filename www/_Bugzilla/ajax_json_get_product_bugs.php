@@ -38,7 +38,7 @@ if ( count($bugs) <= 0 )
     return;
 }
 
-init_product_bugs_dates($dbh, $bugs);
+init_product_bugs_dates($dbh, $users, $products, $bugs);
 bugs_explode_by_product_developer_id($product_developer_bugs, $bugs);
 
 $bugs_css = array("ganttRed GanttBug", "ganttGreen GanttBug", "ganttOrange GanttBug");

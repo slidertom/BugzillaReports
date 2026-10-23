@@ -52,7 +52,7 @@ function release_notes_bugs_to_table($bugs_array)
     
     tablesorter_create_filter('product_filter');
 
-    echo "<h3> ${opened_bugs} </h3>";
+    echo "<h3> {$opened_bugs} </h3>";
     bugs_release_notes_table::echo_table($bugs_array, "open_bugs_table", "openTable tablesorter show_milestone");
 }
 
